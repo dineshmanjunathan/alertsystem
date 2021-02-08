@@ -1,8 +1,7 @@
 package com.ss.app.vo;
 
-public class Address {
+public class AddressVo {
 	
-	private Long orderNumber;
 	private String addressLineOne;
 	private String addressLineTwo;
 	private String city;
@@ -10,12 +9,6 @@ public class Address {
 	private String postalCode;
 	
 	
-	public Long getOrderNumber() {
-		return orderNumber;
-	}
-	public void setOrderNumber(Long orderNumber) {
-		this.orderNumber = orderNumber;
-	}
 	public String getAddressLineOne() {
 		return addressLineOne;
 	}

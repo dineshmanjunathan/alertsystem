@@ -8,16 +8,19 @@ import javax.servlet.http.HttpServletResponse;
  
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+import com.ss.app.entity.Address;
 import com.ss.app.entity.Purchase;
  
  
 public class OrderPDFExporter {
 	
     private List<Purchase> purchaseList;
+    private Address address;
     private Double total = 0.0;
      
-    public OrderPDFExporter(List<Purchase> purchaseList) {
+    public OrderPDFExporter(List<Purchase> purchaseList, Address address) {
         this.purchaseList = purchaseList;
+        this.address = address;
     }
  
     private void writeTableHeader(PdfPTable table) {
@@ -32,6 +35,9 @@ public class OrderPDFExporter {
         table.addCell(cell);
          
         cell.setPhrase(new Phrase("Quantity", font));
+        table.addCell(cell);
+        
+        cell.setPhrase(new Phrase("BV", font));
         table.addCell(cell);
          
         cell.setPhrase(new Phrase("Price Per Item", font));
@@ -48,6 +54,8 @@ public class OrderPDFExporter {
         	cell.setPhrase(new Phrase(purchase.getProduct().getProdDesc()));
         	table.addCell(cell);
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getQuantity())));
+        	table.addCell(cell);
+        	cell.setPhrase(new Phrase(String.valueOf(purchase.getProduct().getBvPrice())));
         	table.addCell(cell);
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getAmount())));
         	table.addCell(cell);
@@ -71,6 +79,12 @@ public class OrderPDFExporter {
         font1.setSize(14);
         font1.setColor(Color.BLACK);
          
+//        Image image1 = Image.getInstance("/img/logo/logo.jpg");
+//        image1.setAlignment(Element.ALIGN_CENTER);
+//        image1.scaleAbsolute(450, 250);
+//        //Add to document
+//        document.add(image1);
+        
         Paragraph p = new Paragraph("Thank you for your order!!", font);
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
@@ -79,12 +93,18 @@ public class OrderPDFExporter {
         p1.setAlignment(Paragraph.ALIGN_LEFT);
         Paragraph p2 = new Paragraph("Member Id: "+memberId, font1);
         p2.setAlignment(Paragraph.ALIGN_LEFT);
-        Paragraph p3 = new Paragraph("Address:", font1);
+        Paragraph p3 = new Paragraph("Address:" + address.getAddressLineOne() + ", " + address.getAddressLineTwo(), font1);
         p3.setAlignment(Paragraph.ALIGN_LEFT);
+        Paragraph p4 = new Paragraph("-         " + address.getCity() + ", " + address.getPostalCode(), font1);
+        p4.setAlignment(Paragraph.ALIGN_LEFT);
+        Paragraph p5 = new Paragraph("-         " + address.getState(), font1);
+        p5.setAlignment(Paragraph.ALIGN_LEFT);
          
         document.add(p1);
         document.add(p2);
         document.add(p3);
+        document.add(p4);
+        document.add(p5);
          
         PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100f);
@@ -97,9 +117,9 @@ public class OrderPDFExporter {
         
         Paragraph empty = new Paragraph("");
         document.add(empty);
-        Paragraph p4 = new Paragraph("Purchase Total: "+ total, font1);
-        p4.setAlignment(Paragraph.ALIGN_RIGHT);
-        document.add(p4);
+        Paragraph p6 = new Paragraph("Purchase Total: "+ total, font1);
+        p6.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(p6);
         
          
         document.close();
