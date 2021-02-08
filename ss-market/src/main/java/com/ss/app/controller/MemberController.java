@@ -327,10 +327,10 @@ public class MemberController {
 			MemberRewardTree memberRewardTree = new MemberRewardTree();
 			memberRewardTree.setId(member.getId());
 			recursionTree(memberRewardTree, member.getReferencecode(), member.getId());
-			System.out.println(memberRewardTree.toString());
-			MemberLevel.prepareMember(memberRewardTree);
+			MemberLevel.prepareMember(memberRewardTree, 0);
 			System.out.println(memberRewardTree.toString());
 			Map<Integer, MemberStat> memberStat = MemberLevel.prepareLevelAndCount(memberRewardTree);
+			memberStat.remove(0);
 			System.out.println(memberStat);
 			model.addAttribute("memberStat", memberStat);
 		} catch (Exception e) {

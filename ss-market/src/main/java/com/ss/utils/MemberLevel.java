@@ -21,7 +21,7 @@ public class MemberLevel {
 		try {
 			MemberRewardTree e = g.fromJson(a, MemberRewardTree.class);
 			awardMember = e.getId();
-			prepareMember(e);
+			prepareMember(e, -1);
 			rewardMember(e, configMap, rewardTransactionRepository);
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -30,8 +30,8 @@ public class MemberLevel {
 
 	}
 
-	public static void prepareMember(MemberRewardTree e) {
-		setParentAndLevel(e, -1, e.getId());
+	public static void prepareMember(MemberRewardTree e, int level) {
+		setParentAndLevel(e, level, e.getId());
 	}
 
 	private static void setParentAndLevel(MemberRewardTree e, int lvl, String parent) {

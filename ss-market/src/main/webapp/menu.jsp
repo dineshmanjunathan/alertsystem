@@ -41,7 +41,7 @@
 		<a href="/member/stat">
 			<div class="panel-body">
 				<div class="stats-title pull-left">
-					<h5>Member Status</h5>
+					<h5>Member Statistics</h5>
 				</div>
 				<div class="stats-icon pull-right">
 					<i class="educate-icon educate-apps"></i>
