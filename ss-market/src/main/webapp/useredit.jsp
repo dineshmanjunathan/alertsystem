@@ -19,22 +19,14 @@ function getSponserName() {
         cache: false,
         success: function (data) {
 
-            if(data.length>0) {
-            	  var s = document.getElementById("sponsername"); s.value = data;
-
-                 var element = document.getElementById("errmsg");
-                 element.classList.remove("btn-danger");
-              	 element.classList.add("btn-success");
-              	 var msg = document.getElementById("errmsg"); msg.value = "Valid Sponser Id";
-                 document.getElementById("errmsg").style.visibility = "visible";
+        	if(data.length>0) {
+            	var s = document.getElementById("sponsername"); s.value = data;
+            	$("#errmsg").text("");
             }else{
-            	var element = document.getElementById("errmsg");
-            	element.classList.remove("btn-success");
-            	element.classList.add("btn-danger");
-            	
-            	var s = document.getElementById("errmsg"); s.value = "Invalid Sponser Id";
+            	$("#errmsg").text("Invalid Sponsor Id");
+            	$("span").css("color", "red");
                 document.getElementById("errmsg").style.visibility = "visible";
-            	
+                document.getElementById("sponsername").value='';
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -143,6 +135,7 @@ function getSponserName() {
 													</div>
 													</c:otherwise>
 													</c:choose>
+													<span id="errmsg"></span>
 													</div>
 												<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 												<div class="form-group">
@@ -151,7 +144,6 @@ function getSponserName() {
 																		value="${SPONSERNAME}" readonly>
 												</div>
 												</div>
-												<center><input name="errmsg" id="errmsg" class="btn "style="visibility: hidden;" readonly></center>
 												</div>
 												<li class="active"><a href="">User Details:</a></li>
 													<div class="well row">
@@ -164,7 +156,7 @@ function getSponserName() {
 														</div>
 														<div class="form-group">
 															<input name="password" type="password"
-																class="form-control" placeholder="Password"
+																class="form-control" placeholder="Password" minlength="8"  maxlength="10"
 																value="${member.password}" required>
 														</div>
 													<c:choose>
@@ -237,16 +229,13 @@ function getSponserName() {
 														<c:choose>
 															<c:when test="${not empty member.id}">
 																<button class="rmk btn btn-primary waves-effect waves-light"
-																	type="submit" name="submit" value="register">Update</button>
+																	type="submit" name="submit" value="register">Save Changes</button>
 															</c:when>
 															<c:otherwise>
 																<button class="rmk btn btn-primary waves-effect waves-light"
 																	type="submit" name="submit" value="register">Create</button>
 															</c:otherwise>
 														</c:choose>
-														<button class="rmk btn btn-primary waves-effect waves-light"
-															type="reset" name="reset" value="reset">Clear</button>
-
 													</div>
 												</div>
 											</div>

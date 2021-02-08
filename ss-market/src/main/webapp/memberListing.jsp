@@ -30,7 +30,7 @@
 									<td>
 										<a href="/admin/user/edit"
 											class="rmk btn btn-primary m-btn m-btn--custom m-btn--icon col-md-offset-2 col-md-12">
-											<span> <i class="fa fa-plus"></i> <span>User</span>
+											<span> <i class="fa fa-plus"></i> <span>Create Member</span>
 										</span>
 										</a>
 									</td>

@@ -47,6 +47,7 @@
                      	 <div class="col-md-3"></div>
                          <div class="col-md-6">
                               <button class="rmk btn btn-success btn-block loginbtn" type="submit" name="submit" value="login">Login</button>
+                              <a class="rmk btn btn-success btn-block loginbtn" href="/landingPage.jsp">Back</a>
                          </div>
                          <div class="col-md-3"></div>
                      </div>

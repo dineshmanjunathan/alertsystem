@@ -18,22 +18,14 @@ function getSponserName() {
             cache: false,
             success: function (data) {
 
-                if(data.length>0) {
-                	  var s = document.getElementById("sponsername"); s.value = data;
-
-                     var element = document.getElementById("errmsg");
-                     element.classList.remove("btn-danger");
-                  	 element.classList.add("btn-success");
-                  	 var msg = document.getElementById("errmsg"); msg.value = "Valid Sponser Id";
-                     document.getElementById("errmsg").style.visibility = "visible";
+            	if(data.length>0) {
+                	var s = document.getElementById("sponsername"); s.value = data;
+                	$("#errmsg").text("");
                 }else{
-                	var element = document.getElementById("errmsg");
-                	element.classList.remove("btn-success");
-                	element.classList.add("btn-danger");
-                	
-                	var s = document.getElementById("errmsg"); s.value = "Invalid Sponser Id";
+                	$("#errmsg").text("Invalid Sponsor Id");
+                	$("span").css("color", "red");
                     document.getElementById("errmsg").style.visibility = "visible";
-                	
+                    document.getElementById("sponsername").value='';
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -107,6 +99,7 @@ function enableTermsAndCond(){
 													</div>
 													</c:otherwise>
 													</c:choose>
+													<span id="errmsg"></span>
 													</div>
 												<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 												<div class="form-group">
@@ -115,7 +108,6 @@ function enableTermsAndCond(){
 																		value="${SPONSERNAME}" readonly>
 												</div>
 												</div>
-												<center><input name="errmsg" id="errmsg" class="btn "style="visibility: hidden;" readonly></center>
 												</div>
 												<li class="active"><a href="">User Details:</a></li>
 												
@@ -130,8 +122,8 @@ function enableTermsAndCond(){
 														</div>
 
 														<div class="form-group">
-															<input name="password" type="password"
-																class="form-control" placeholder="Password"
+															<input name="password" type="password" 
+																class="form-control" placeholder="Password" minlength="8"  maxlength="10"
 																value="${member.password}" required>
 														</div>
 														<div class="form-group">
@@ -139,14 +131,6 @@ function enableTermsAndCond(){
 																placeholder="Email" value="${member.email}">
 														</div>
 													<br>
-													<div class="form-group">
-														<input type="checkbox" name="pripolicy" id="pripolicy" value="Privacy Policy" onclick="enableTermsAndCond();"> I have read and agree to the following 
-														<a target="_blank" href="/memberTermsCond.jsp" rel="nofollow noopener ugc" >Privacy Policy</a>
-													</div>
-													<div class="form-group">
-														<input type="checkbox" name="terms" id="terms" value="Conditions" onclick="enableTermsAndCond();"> I have read and agree to the following 
-														<a target="_blank" href="/memberTermsCond.jsp" rel="nofollow noopener ugc" >Terms and conditions</a>
-													</div>
 													</div>
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group">
@@ -183,7 +167,22 @@ function enableTermsAndCond(){
 																	class="form-control" placeholder="Confirm Password"
 																	required>
 															</div> --%>
-											
+											<div class="text-center">
+													<div class="form-group">
+														<input type="checkbox" name="pripolicy" id="pripolicy"
+															value="Privacy Policy" onclick="enableTermsAndCond();">
+														"I have read and agree to the following" <a
+															target="_blank" href="/memberTermsCond.jsp"
+															rel="nofollow noopener ugc">Privacy Policy</a>
+													</div>
+													<div class="form-group">
+														<input type="checkbox" name="terms" id="terms"
+															value="Conditions" onclick="enableTermsAndCond();">
+														"I have read and agree to the following" <a
+															target="_blank" href="/memberTermsCond.jsp"
+															rel="nofollow noopener ugc">Terms and conditions</a>
+													</div>
+												</div>
 											</div>
 											<div class="row">
 												<div class="col-lg-12">
