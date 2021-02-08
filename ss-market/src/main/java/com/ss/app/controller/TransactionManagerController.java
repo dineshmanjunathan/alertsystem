@@ -220,7 +220,6 @@ public class TransactionManagerController {
 		sp.setMemberId(member.getId());
 		sp.setProductCode(prod);
 		sp.setQty(c.getQuantity());
-		sp.setCategoryCode(prod.getCategory());
 		stockPointPurchaseRepository.save(sp);
 	}
 

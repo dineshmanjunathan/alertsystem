@@ -27,10 +27,6 @@ public class StockPointPurchase implements Serializable {
 	private String memberId;
 
 	@OneToOne()
-	@JoinColumn(name = "category_code")
-	private Category categoryCode;
-
-	@OneToOne()
 	@JoinColumn(name = "product_code")
 	private Product productCode;
 	private Long qty = 0L;
@@ -74,14 +70,6 @@ public class StockPointPurchase implements Serializable {
 
 	public void setQty(Long qty) {
 		this.qty = qty;
-	}
-
-	public Category getCategoryCode() {
-		return categoryCode;
-	}
-
-	public void setCategoryCode(Category categoryCode) {
-		this.categoryCode = categoryCode;
 	}
 
 	public Double getPrice() {

@@ -74,9 +74,8 @@
 												varStatus="status">
 												<tr>
 													<td>${details.memberId}</td>
-													<td>${details.categoryCode.description}
-														[${details.categoryCode.code}]</td>
-													<td>${details.productCode.prodDesc}</td>
+													<td>${details.productCode.category.description} [${details.productCode.category.code}]</td>
+													<td>${details.productCode.prodDesc} [${details.productCode.code}]</td>		
 													<td>${details.qty}</td>
 													<c:set var="bv" value="${details.productCode.bvPrice * details.qty}" />
 													<td>${bv}</td>	
