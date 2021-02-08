@@ -6,4 +6,5 @@ import com.ss.app.entity.Address;
 
 public interface AddressRepository extends CrudRepository<Address, Long> {
 
+	Address findByOrderNumber(Long orderNumber);
 }

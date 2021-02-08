@@ -7,16 +7,17 @@
 <%@ include file="header.jsp"%>
 <meta charset="ISO-8859-1">
 <script type="text/javascript" charset="utf-8">
+
 </script>
 </head>
 <body>
 	<!-- Single pro tab review Start-->
 	<div class="col-md-10 col-md-offset-1 row">
 		<div class="row">
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="col-lg-12 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
 				<div class="product-payment-inner-st">
 					<ul id="myTabedu1" class="tab-review-design">
-						<li class="active"><a href="">Address</a></li>
+						<li class="active"><a href="">Add delivery Address</a></li>
 					</ul>
 					<!-- <form action="/userlisting" method="get"> -->
 					<div class="payment-adress">
@@ -33,7 +34,7 @@
 							<div class="row">
 								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 									<div class="review-content-section">
-										<form action="/register" method="post">
+										<form action="/purchase/confirm" method="post">
 
 											<p style="color: red" align="center">${errormsg}</p>
 
@@ -52,31 +53,31 @@
 														<div class="form-group">
 															<input name="addressLineOne" id ="addressLineOne" type="text"
 																class="form-control" placeholder="Address Line One"
-																value="${address.addressLineOne}" readonly>
+																value="${address.addressLineOne}" >
 														</div>
 														
 														<div class="form-group">
 															<input name="addressLineTwo" id ="addressLineTwo" type="text"
 																class="form-control" placeholder="Address Line Two"
-																value="${address.addressLineTwo}" readonly>
+																value="${address.addressLineTwo}" >
 														</div>
 														
 														<div class="form-group">
 															<input name="city" id ="city" type="text"
 																class="form-control" placeholder="City"
-																value="${address.city}" readonly>
+																value="${address.city}">
 														</div>
 														
 														<div class="form-group">
 															<input name="state" id ="state" type="text"
 																class="form-control" placeholder="State"
-																value="${address.state}" readonly>
+																value="${address.state}">
 														</div>
 														
 														<div class="form-group">
 															<input name="postalCode" id ="postalCode" type="text"
 																class="form-control" placeholder="Postal Code"
-																value="${address.postalCode}" readonly>
+																value="${address.postalCode}">
 														</div>
 													</div>
 
@@ -87,7 +88,7 @@
 												<div class="col-lg-12">
 													<div class="payment-adress">
 														<button class="rmk btn btn-primary waves-effect waves-light"
-															type="submit" name="submit" value="register">Submit</button>
+															type="submit" name="submit" value="register">Proceed to Pay</button>
 														<button class="rmk btn btn-primary waves-effect waves-light"
 															type="reset" name="reset" value="reset">Clear</button>
 

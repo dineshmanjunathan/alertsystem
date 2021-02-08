@@ -4,7 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.springframework.context.annotation.Lazy;
 
 @Entity
 @Table(name = "t_address")
@@ -13,12 +16,15 @@ public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private Long orderNumber;
+	@Lazy
+	@OneToOne
+	private Member member;
 	private String addressLineOne;
 	private String addressLineTwo;
 	private String city;
 	private String state;
 	private String postalCode;
+	private Long orderNumber;
 	
 	public Long getId() {
 		return id;
@@ -26,11 +32,12 @@ public class Address {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getOrderNumber() {
-		return orderNumber;
+	
+	public Member getMember() {
+		return member;
 	}
-	public void setOrderNumber(Long orderNumber) {
-		this.orderNumber = orderNumber;
+	public void setMember(Member member) {
+		this.member = member;
 	}
 	public String getAddressLineOne() {
 		return addressLineOne;
@@ -62,6 +69,11 @@ public class Address {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-	
+	public Long getOrderNumber() {
+		return orderNumber;
+	}
+	public void setOrderNumber(Long orderNumber) {
+		this.orderNumber = orderNumber;
+	}
 	
 }

@@ -36,7 +36,7 @@ function removeFromCart(prodCode, price) {
 }
 
 function submit() {
-	window.location.href = "/purchase/confirm";
+	window.location.href = "/purchase/address";
 }
 
 </script>
@@ -124,7 +124,7 @@ function submit() {
 											</a>
 											<a href="#" onclick="return submit();"
 														class="rmk btn btn-primary m-btn m-btn--custom m-btn--icon col-md-offset-5 col-md-3">
-														<span> <i class="fa fa-plus"></i> <span>Pay to proceed</span>
+														<span> <i class="fa fa-plus"></i> <span>Proceed</span>
 													</span>
 													</a>
 

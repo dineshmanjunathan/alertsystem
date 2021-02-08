@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lowagie.text.DocumentException;
+import com.ss.app.entity.Address;
 import com.ss.app.entity.Cart;
 import com.ss.app.entity.Category;
 import com.ss.app.entity.Member;
@@ -34,6 +36,7 @@ import com.ss.app.entity.RewardTransaction;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.StockPointProduct;
 import com.ss.app.entity.StockPointPurchase;
+import com.ss.app.model.AddressRepository;
 import com.ss.app.model.CartRepository;
 import com.ss.app.model.CategoryRepository;
 import com.ss.app.model.ProductRepository;
@@ -43,6 +46,7 @@ import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.StockPointProuctRepository;
 import com.ss.app.model.StockPointPurchaseRepository;
 import com.ss.app.model.UserRepository;
+import com.ss.app.vo.AddressVo;
 import com.ss.utils.OrderPDFExporter;
 import com.ss.utils.ReportGenerator;
 import com.ss.utils.Utils;
@@ -80,9 +84,12 @@ public class TransactionManagerController {
 
 	@Autowired
 	private SSConfigRepository ssConfigRepository;
+	
+	@Autowired
+	private AddressRepository addressRepository;
 
-	@RequestMapping(value = "/purchase/confirm", method = RequestMethod.GET)
-	public String savePurchase(HttpServletRequest request, ModelMap model) {
+	@RequestMapping(value = "/purchase/confirm", method = RequestMethod.POST)
+	public String savePurchase(HttpServletRequest request, AddressVo address, ModelMap model) {
 		try {
 			// update active days date in member table
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
@@ -109,6 +116,14 @@ public class TransactionManagerController {
 				totalQty = totalQty + c.getQuantity();
 				activeDays = activeDays + prod.getCategory().getActivedays();
 			}
+			
+			// Save address
+			Address add = new Address();
+			BeanUtils.copyProperties(address, add);
+			add.setMember(member);
+			add.setOrderNumber(orderNumber);
+			addressRepository.save(add);
+			
 			cartRepository.deleteByMemberid(memberId);
 
 			// Reward Customer.
@@ -508,9 +523,10 @@ public class TransactionManagerController {
 			response.setHeader(headerKey, headerValue);
 
 			List<Purchase> purchaseList = purchaseRepository.findByOrderNumber(Long.parseLong(orderNumber));
-
-			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList);
 			Purchase purchase = purchaseList.get(0);
+			Address address = addressRepository.findByOrderNumber(Long.parseLong(orderNumber));
+			
+			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
 			exporter.export(response, purchase.getMemberid(), orderNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
