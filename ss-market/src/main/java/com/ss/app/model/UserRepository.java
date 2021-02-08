@@ -17,9 +17,13 @@ public interface UserRepository extends CrudRepository<Member, String>{
 		
 	Optional<Member> findById(String id);
 	
+	Optional<Member> findByIdAndRole(String id,String role);
+	
 	Optional<Member> findByReferencecode(String id);
 	
 	List<Member> findByReferedby(String id);
+	
+	List<Member> findByReferedbyAndRole(String id,String role);
 	
 	@Query(value="select referencecode from t_member m where m.referencecode=:id", nativeQuery=true)
 	String checkSponserExists(String id);

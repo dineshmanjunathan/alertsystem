@@ -303,7 +303,7 @@ public class MemberController {
 		try {
 			List<MemberTree> treeList = new ArrayList<>();
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
-			Member member = userRepository.findById(memberId).get();
+			Member member = userRepository.findByIdAndRole(memberId,"MEMBER").get();
 			MemberTree tree = new MemberTree();
 			tree.setId(memberId);
 			tree.setParent("#");
@@ -323,7 +323,7 @@ public class MemberController {
 	public String memberStat(HttpServletRequest request, ModelMap model) {
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
-			Member member = userRepository.findById(memberId).get();
+			Member member = userRepository.findByIdAndRole(memberId,"MEMBER").get();
 			MemberRewardTree memberRewardTree = new MemberRewardTree();
 			memberRewardTree.setId(member.getId());
 			recursionTree(memberRewardTree, member.getReferencecode(), member.getId());
@@ -340,7 +340,7 @@ public class MemberController {
 	}
 	
 	private List<String> recursionTree(MemberRewardTree memberRewardTree, String basekeyCode, String memberId) {
-		List<Member> child = userRepository.findByReferedby(basekeyCode);
+		List<Member> child = userRepository.findByReferedbyAndRole(basekeyCode,"MEMBER");
 		List<String> c = new ArrayList<>();
 		List<MemberRewardTree> subTreeList = new ArrayList<MemberRewardTree>();
 		MemberRewardTree subTree = null;
@@ -363,13 +363,13 @@ public class MemberController {
 
 	private void findTree(String basekeyCode, String memberId, List<MemberTree> treeList) {
 		try {
-			List<Member> child = userRepository.findByReferedby(basekeyCode);
+			List<Member> child = userRepository.findByReferedbyAndRole(basekeyCode,"MEMBER");
 			MemberTree subTree = null;
 			for (Member mem : child) {
 				long numOfDays =0;
 				if(mem.getActive_days()!=null && mem.getActive_days().isAfter(LocalDateTime.now())) {
 					numOfDays = ChronoUnit.DAYS.between(LocalDateTime.now(), mem.getActive_days())+1;
-					mem.setMemberStatus("ACTIVE with" + numOfDays+" days left");
+					mem.setMemberStatus(numOfDays+" ACTIVE days left");
 				}else {
 					mem.setMemberStatus("INACTIVE");
 				}

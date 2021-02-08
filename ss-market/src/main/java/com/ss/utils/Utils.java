@@ -1,5 +1,7 @@
 package com.ss.utils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -7,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import com.google.common.collect.Lists;
 import com.ss.app.entity.Member;
@@ -109,6 +114,40 @@ public class Utils {
 
 		return list;
 	}
+	
+	public static void sendSMS(String Message,String MobileNumbers) {
+
+		try {
+			String ApiKey = "";
+			String ClientId = "";
+			String SenderId = "";
+			boolean Is_Unicode = true;
+			boolean Is_Flash = true;
+
+			URL url = new URL(
+					"https://api.mylogin.co.in/api/v2/SendSMS?ApiKey="+ApiKey+"&ClientId="+ClientId+"&SenderId="+SenderId+"&Message="+Message+"&MobileNumbers="+MobileNumbers+"&Is_Unicode="+Is_Unicode+"&Is_Flash="+Is_Flash);// your
+																																														// from
+																																																					// .
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Accept", "application/json");
+			if (conn.getResponseCode() != 200) {
+				throw new RuntimeException("Failed : HTTP Error code : " + conn.getResponseCode());
+			}
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			BufferedReader br = new BufferedReader(in);
+			String output;
+			while ((output = br.readLine()) != null) {
+				System.out.println(output);
+			}
+			conn.disconnect();
+
+		} catch (Exception e) {
+			System.out.println("Exception in NetClientGet:- " + e);
+		}
+	}
+	
+	
 
 	public static void main(String[] arg) {
 		System.out.println(" LocalDateTime.now().plusDays(2)->"+ LocalDate.now().plusDays(2));
