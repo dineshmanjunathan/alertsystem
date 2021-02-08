@@ -28,6 +28,7 @@ public class Purchase {
 	private LocalDateTime purchasedOn = LocalDateTime.now();
 	@Column(name = "order_status")
 	private String orderStatus = "PENDING";
+	private String paymentType;
 
 	public Long getId() {
 		return id;
@@ -92,4 +93,14 @@ public class Purchase {
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+	
+	
 }
