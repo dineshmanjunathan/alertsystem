@@ -20,11 +20,13 @@ import com.ss.app.entity.Member;
 import com.ss.app.entity.Product;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.StockPointPurchase;
+import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.model.CategoryRepository;
 import com.ss.app.model.ProductRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.StockPointPurchaseRepository;
 import com.ss.app.model.UserRepository;
+import com.ss.app.model.WithdrawnPointsRepository;
 import com.ss.app.vo.CategoryVo;
 import com.ss.app.vo.MemberVo;
 import com.ss.app.vo.ProductVo;
@@ -48,6 +50,9 @@ public class AdminController {
 	
 	@Autowired
 	private StockPointPurchaseRepository stockPurchaseRepository;
+	
+	@Autowired
+	private WithdrawnPointsRepository withdrawnPointsRepository;
 	
 	@RequestMapping("/admin/login")
 	public String inlogin(HttpServletRequest request,ModelMap model) {
@@ -380,4 +385,15 @@ public class AdminController {
 		model.addAttribute("ssConfigType", Utils.getSSConfigTypeList()); 
 		return "ssConfigEdit";
 	} 
+	
+	@RequestMapping(value = "/admin/withdrawnPointHistory/list", method = RequestMethod.GET)
+	public String withdrawnPointsHistory(HttpServletRequest request, ModelMap model) {
+		try {
+			Iterable<WithdrawnPoints> withdrawnPointsHistoryList = withdrawnPointsRepository.findAll();
+			model.addAttribute("withdrawnPointsHistoryList", withdrawnPointsHistoryList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "withdrawnPointTxnHistory";
+	}
 }
