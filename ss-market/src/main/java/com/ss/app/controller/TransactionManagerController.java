@@ -87,7 +87,7 @@ public class TransactionManagerController {
 	
 	@Autowired
 	private AddressRepository addressRepository;
-
+	
 	@RequestMapping(value = "/purchase/confirm", method = RequestMethod.POST)
 	public String savePurchase(HttpServletRequest request, AddressVo address, ModelMap model) {
 		try {
@@ -563,5 +563,5 @@ public class TransactionManagerController {
 			e.printStackTrace();
 		}
 		return "memberRewardHistory";
-	}
+	}	
 }

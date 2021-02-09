@@ -117,7 +117,7 @@ function enableTermsAndCond(){
 														<div class="form-group"></div>
 														<div class="form-group">
 															<input name="name" type="text" class="form-control"
-																placeholder="As Pan Card Name" value="${member.name}"
+																placeholder="Name as Per PAN Card" value="${member.name}"
 																required>
 														</div>
 
