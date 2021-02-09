@@ -7,7 +7,7 @@ public class AddressVo {
 	private String city;
 	private String state;
 	private String postalCode;
-	
+	private String paymentType;
 	
 	public String getAddressLineOne() {
 		return addressLineOne;
@@ -39,6 +39,13 @@ public class AddressVo {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
+	public String getPaymentType() {
+		return paymentType;
+	}
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+	
 	
 	
 

@@ -92,6 +92,9 @@ public class TransactionManagerController {
 	public String savePurchase(HttpServletRequest request, AddressVo address, ModelMap model) {
 		try {
 			// update active days date in member table
+			if("EPAY".equals(address.getPaymentType())) {
+				// redirect to payment page
+			}
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			List<Cart> cart = cartRepository.findByMemberid(memberId);
 			// Get order number
@@ -112,6 +115,7 @@ public class TransactionManagerController {
 				productRepository.save(prod);
 
 				// Prepare purchase
+				purchase.setPaymentType(address.getPaymentType());
 				preparePurchase(request.getSession(), member, orderNumber, purchase, c, prod);
 				totalQty = totalQty + c.getQuantity();
 				activeDays = activeDays + prod.getCategory().getActivedays();
