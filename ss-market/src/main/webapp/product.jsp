@@ -55,10 +55,21 @@
 																</c:forEach>
 															</select>
 														</div>
+														<c:choose>
+														<c:when test="${not empty productCode}">
+															<div class="form-group">
+																<input name="code" type="text" class="form-control"
+																	placeholder="Product Code" value="${productCode.code}" readonly>
+															</div>
+														</c:when>
+														
+														<c:otherwise>
 															<div class="form-group">
 																<input name="code" type="text" class="form-control"
 																	placeholder="Product Code" value="${productCode.code}" required>
 															</div>
+														</c:otherwise>	
+														</c:choose>
 															<div class="form-group">
 																<input name="prodDesc" type="text" class="form-control"
 																	placeholder="Product Description" value="${productCode.prodDesc}" required>

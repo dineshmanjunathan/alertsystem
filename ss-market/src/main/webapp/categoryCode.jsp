@@ -61,10 +61,20 @@
 														<div class=" well col-lg-12 col-md-12 col-sm-12 col-xs-12">
 															<div class="form-group">
 															</div>
+															<c:choose>
+															<c:when test="${not empty categoryCode}">
+															<div class="form-group">
+																<input name="code" type="text" class="form-control"
+																	placeholder="Category Code" value="${categoryCode.code}" readonly>
+															</div>
+															</c:when>
+															<c:otherwise>
 															<div class="form-group">
 																<input name="code" type="text" class="form-control"
 																	placeholder="Category Code" value="${categoryCode.code}" required>
 															</div>
+															</c:otherwise>
+															</c:choose>
 															<div class="form-group">
 																<input name="description" type="text" class="form-control"
 																	placeholder="Description" value="${categoryCode.description}" required>
