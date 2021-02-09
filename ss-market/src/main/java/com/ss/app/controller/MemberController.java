@@ -30,9 +30,11 @@ import com.google.gson.Gson;
 import com.ss.app.entity.CountryCode;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.SSConfiguration;
+import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.model.CountryCodeRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.UserRepository;
+import com.ss.app.model.WithdrawnPointsRepository;
 import com.ss.app.vo.CountryCodeVo;
 import com.ss.app.vo.MemberRewardTree;
 import com.ss.app.vo.MemberStat;
@@ -55,6 +57,9 @@ public class MemberController {
 	
 	@Autowired
 	private SSConfigRepository ssConfigRepository;
+	
+	@Autowired
+	private WithdrawnPointsRepository withdrawnPointsRepository;
 
 	@RequestMapping("/")
 	public String landingPage(HttpServletRequest request, ModelMap model) {
@@ -196,6 +201,19 @@ public class MemberController {
 		return "rePurchase";
 	}
 	
+	@RequestMapping(value = "/wallet/withdrawn", method = RequestMethod.POST)
+	public String redirectToWithdrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
+		Member userEntity = new Member();
+		try {
+
+			BeanUtils.copyProperties(user, userEntity);
+			model.addAttribute("member", userEntity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "withdrawn";
+	}
+	
 	@RequestMapping(value = "/wallet/deduction/compute", method = RequestMethod.GET)
 	public String validateRepurchase(HttpServletRequest request, MemberVo user, ModelMap model) {
 		
@@ -285,6 +303,56 @@ public class MemberController {
 			model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
 		}
 		return "rePurchaseWallet";
+	}
+	
+	@RequestMapping(value = "/withdrawn", method = RequestMethod.POST)
+	public String updateToWithdrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
+		try {
+			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
+			Member member = userRepository.findById(userId).get();
+
+			if (user.getWalletBalance() <= user.getWalletWithdrawn()) {
+				model.addAttribute("errormsg", "Given value is greater than available balance!");
+
+				model.addAttribute("member", member);
+
+				return "withdrawn";
+			}
+
+			if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getWalletWithdrawn() != null
+					&& user.getWalletWithdrawn() > 0) {
+
+				Long remaningPoint = user.getWalletBalance();
+				remaningPoint = remaningPoint - user.getWalletWithdrawn();
+				member.setWalletWithdrawn(member.getWalletWithdrawn() + user.getWalletWithdrawn());
+				member.setWalletBalance(remaningPoint);
+				member.setUpdatedon(new Date(System.currentTimeMillis()));
+
+				member = userRepository.save(member);
+
+				member.setTotalbalance(member.getWalletBalance() + member.getWalletWithdrawn());
+				model.addAttribute("userwallet", member);
+				
+				WithdrawnPoints withdrawnPoints = new WithdrawnPoints();
+				Double wd=Double.valueOf(member.getWalletWithdrawn());
+				withdrawnPoints.setAmount(wd);
+				withdrawnPoints.setPoint(wd);
+				withdrawnPoints.setMemberid(member.getId());
+				withdrawnPoints.setUpdatedOb(LocalDateTime.now());
+				withdrawnPointsRepository.save(withdrawnPoints);
+				
+
+				model.addAttribute("successMessage", "Successfully Withdrawn Points.");
+			} else {
+				model.addAttribute("errormsg", "Insufficient balance!");
+				model.addAttribute("member", member);
+				return "wallet";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
+		}
+		return "wallet";
 	}
 
 	@RequestMapping(value = "/userlisting", method = RequestMethod.GET)

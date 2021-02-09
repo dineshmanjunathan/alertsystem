@@ -8,6 +8,7 @@
 <!-- <link rel="stylesheet" href="../../css/bootstrap.css"> -->
 </head>
 <body> 
+<form action="/wallet/withdrawn" method="post" onsubmit="return validateForm(this);">
 		   <div class="col-md-10 col-md-offset-2 row">
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -58,8 +59,8 @@
 									    </div>
 									  </div>
 									</div>
-</div>
-<div class="well row"style="background-image: linear-gradient(#337ab7,#ffe6c5);">
+										</div>
+								<div class="well row"style="background-image: linear-gradient(#337ab7,#ffe6c5);">
 										<div class=" col-lg-4 col-md-offset-4 col-md-4 col-sm-4 col-xs-12">
 									  <div class="col-md-14">
 									    <div class="row">
@@ -96,6 +97,7 @@
 									            </div> -->
 									            <h4 style="text-align: left;"id="thumbnail-label" style="text-decoration: underline;">AVAILABLE POINTS</h4>
 									            <h2 style="text-align: right;"><span class="fa fa-codepen">&nbsp;&nbsp;</span>${userwallet.walletBalance}</h2>
+									            <button class="btn btn-link" type="submit" name="submit" value="withdrawn">(CLICK TO WITHDRAWN POINTS)</button>
 									          </div>
 									        </div>
 									      </div>
@@ -114,5 +116,6 @@
 		</div>
 		<br><br>		
 		   </div>
+		   </form>
 </body>
 </html>
