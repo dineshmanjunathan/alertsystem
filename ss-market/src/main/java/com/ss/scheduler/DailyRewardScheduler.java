@@ -44,11 +44,10 @@ public class DailyRewardScheduler {
 		List<Member> memberList = userRepository.getActiveMembersOnly();
 
 		for (Member member : memberList) {
-			MemberRewardTree memberRewardTree = new MemberRewardTree();
+			MemberRewardTree memberRewardTree = new MemberRewardTree();		
 			memberRewardTree.setId(member.getId());
 			recursionTree(memberRewardTree, member.getReferencecode(), member.getId());
-			Gson f = new Gson();
-			Double awdVal = MemberLevel.process(f.toJson(memberRewardTree), map, rewardTransactionRepository);
+			Double awdVal = MemberLevel.process(memberRewardTree, map, rewardTransactionRepository,getActiveDirectCount(member));
 			if (awdVal > 0) {
 				member.setWalletBalance(member.getWalletBalance() + awdVal.longValue());
 				userRepository.save(member);
@@ -56,6 +55,17 @@ public class DailyRewardScheduler {
 		}
 
 		System.out.println("End Daily Reward!");
+	}
+
+	private int getActiveDirectCount(Member member) {
+		int activeDirectCnt=0;
+		List<Member> child = userRepository.findByReferedby(member.getReferencecode());
+		for (Member chMember : child) {
+			if (chMember.getActive_days() != null && chMember.getActive_days().isAfter(LocalDateTime.now())) {
+				++activeDirectCnt;
+			}
+		}
+		return activeDirectCnt;
 	}
 
 	private List<String> recursionTree(MemberRewardTree memberRewardTree, String basekeyCode, String memberId) {

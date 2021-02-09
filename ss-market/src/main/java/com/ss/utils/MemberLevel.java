@@ -13,14 +13,15 @@ public class MemberLevel {
 
 	static String awardMember = null;
 	static Double awdVal = 0.0;
+	static int activeCnt = 0;
 
-	public static Double process(String a, Map<String, Double> configMap,
-			RewardTransactionRepository rewardTransactionRepository) {
+	public static Double process(MemberRewardTree e, Map<String, Double> configMap,
+			RewardTransactionRepository rewardTransactionRepository, int activeDirectCnt) {
 		Gson g = new Gson();
 		awdVal = 0.0;
 		try {
-			MemberRewardTree e = g.fromJson(a, MemberRewardTree.class);
 			awardMember = e.getId();
+			activeCnt = activeDirectCnt;
 			prepareMember(e, -1);
 			rewardMember(e, configMap, rewardTransactionRepository);
 		} catch (Exception e1) {
@@ -47,22 +48,23 @@ public class MemberLevel {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	static Map<Integer, MemberStat> memberStat = new HashMap<Integer, MemberStat>();
+
 	public static Map<Integer, MemberStat> prepareLevelAndCount(MemberRewardTree e) {
-		
+
 		MemberStat stat = memberStat.get(e.getLevel());
-		if(stat != null) {
-			stat.setTotalCount(stat.getTotalCount()+1);
-			if("ACTIVE".equals(e.getStatus())) {
-				stat.setActiveCount(stat.getActiveCount()+1);
+		if (stat != null) {
+			stat.setTotalCount(stat.getTotalCount() + 1);
+			if ("ACTIVE".equals(e.getStatus())) {
+				stat.setActiveCount(stat.getActiveCount() + 1);
 			} else {
-				stat.setInActiveCount(stat.getInActiveCount()+1);
+				stat.setInActiveCount(stat.getInActiveCount() + 1);
 			}
 		} else {
 			MemberStat s = new MemberStat();
 			s.setTotalCount(1L);
-			if("ACTIVE".equals(e.getStatus())) {
+			if ("ACTIVE".equals(e.getStatus())) {
 				s.setActiveCount(1L);
 			} else {
 				s.setInActiveCount(1L);
@@ -78,16 +80,14 @@ public class MemberLevel {
 		}
 		return memberStat;
 	}
-	
 
 	public static void rewardMember(MemberRewardTree e, Map<String, Double> configMap,
 			RewardTransactionRepository rewardTransactionRepository) {
 		try {
 			System.out.println(e);
 			Double rewardVal = 0.0;
-			if (e.getLevel() > 0) {
-				rewardVal = configMap.get("L" + e.getLevel());
-			}
+			int level = e.getLevel();
+			rewardVal = getRewardValue(configMap, rewardVal, level);
 			if (rewardVal != null && rewardVal > 0) {
 				RewardTransaction reward = prepareRewarTransaction(e, rewardVal);
 				awdVal = awdVal + rewardVal;
@@ -105,6 +105,23 @@ public class MemberLevel {
 		}
 	}
 
+	private static Double getRewardValue(Map<String, Double> configMap, Double rewardVal, int level) {
+		if (level > 0) {
+			if (activeCnt >= level && level <= 7) {
+				rewardVal = configMap.get("L" + level);
+			} else {
+				if (activeCnt == 4 && level == 5) {
+					rewardVal = configMap.get("L" + level);
+				} else if (activeCnt == 5 && (level == 6 || level == 7)) {
+					rewardVal = configMap.get("L" + level);
+				} else {
+					rewardVal = 0.0;
+				}
+			}
+		}
+		return rewardVal;
+	}
+
 	private static RewardTransaction prepareRewarTransaction(MemberRewardTree e, Double rewardVal) {
 		RewardTransaction reward = new RewardTransaction();
 		reward.setMemberid(e.getId());
@@ -114,6 +131,5 @@ public class MemberLevel {
 		reward.setSponserId(e.getSponserId());
 		return reward;
 	}
-	
-	
+
 }

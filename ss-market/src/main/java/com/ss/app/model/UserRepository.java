@@ -25,6 +25,8 @@ public interface UserRepository extends CrudRepository<Member, String>{
 	
 	List<Member> findByReferedbyAndRole(String id,String role);
 	
+	Optional<Member> findByReferencecodeAndRole(String id,String role);
+	
 	@Query(value="select referencecode from t_member m where m.referencecode=:id", nativeQuery=true)
 	String checkSponserExists(String id);
 	

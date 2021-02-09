@@ -241,25 +241,27 @@ public class TransactionManagerController {
 	private void rewardCustomer(String memId, String sponserId, Long orderNumber, Long totalQty, Long activeDays) {
 		RewardTransaction reward = new RewardTransaction();
 		try {
-			Member member = userRepository.findByReferencecode(sponserId).get();
-			reward.setMemberid(memId);
-			SSConfiguration ssConfig = ssConfigRepository.findById("PR").get();
-			reward.setPoint(ssConfig.getValue());
-			reward.setOrderNumber(orderNumber);
-			reward.setSponserId(sponserId);
-			reward.setRewardedMember(member.getId());
-			RewardTransaction response = rewardTransactionRepository.save(reward);
+			Member member = userRepository.findByReferencecodeAndRole(sponserId,"MEMBER").get();
+			if (member != null && member.getId() != null) {
+				reward.setMemberid(memId);
+				SSConfiguration ssConfig = ssConfigRepository.findById("PR").get();
+				reward.setPoint(ssConfig.getValue());
+				reward.setOrderNumber(orderNumber);
+				reward.setSponserId(sponserId);
+				reward.setRewardedMember(member.getId());
+				RewardTransaction response = rewardTransactionRepository.save(reward);
 
-			if (member != null && member.getId() != null && response != null && response.getMemberid() != null) {
-				if (member.getActive_days() != null) {
-					member.setActive_days(member.getActive_days().plusDays(totalQty * activeDays));
-				} else {
-					member.setActive_days(LocalDateTime.now().plusDays(totalQty * activeDays));
+				if (member != null && member.getId() != null && response != null && response.getMemberid() != null) {
+					if (member.getActive_days() != null) {
+						member.setActive_days(member.getActive_days().plusDays(totalQty * activeDays));
+					} else {
+						member.setActive_days(LocalDateTime.now().plusDays(totalQty * activeDays));
+					}
+					if (ssConfig.getValue() > 0) {
+						member.setWalletBalance(member.getWalletBalance() + ssConfig.getValue().longValue());
+					}
+					userRepository.save(member);
 				}
-				if (ssConfig.getValue() > 0) {
-					member.setWalletBalance(member.getWalletBalance() + ssConfig.getValue().longValue());
-				}
-				userRepository.save(member);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
