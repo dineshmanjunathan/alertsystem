@@ -16,8 +16,10 @@ public interface ProductRepository extends CrudRepository<Product, String> {
 	List<Product> findByCategory(String Category);
 
 	@Transactional
-	@OrderBy("Code ASC")
 	Product findByCode(String Code);
+	
+	@Transactional
+	List<Product> findAllByOrderByCode();
 	
 	@Transactional
 	Long deleteByCode(String code);

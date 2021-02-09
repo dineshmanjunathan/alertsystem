@@ -1,5 +1,7 @@
 package com.ss.app.model;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.repository.CrudRepository;
@@ -11,7 +13,9 @@ import com.ss.app.entity.Category;
 public interface CategoryRepository extends CrudRepository<Category, String> {
 
 	Category findByCode(String Code);
-	
+
+	List<Category> findAllByOrderByCode();
+
 	@Transactional
 	void deleteByCode(String Code);
 }

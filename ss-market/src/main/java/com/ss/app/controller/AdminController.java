@@ -1,6 +1,7 @@
 package com.ss.app.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -132,7 +133,7 @@ public class AdminController {
 	@RequestMapping("/admin/categoryCodeListing")
 	public String categoryCodeListing(HttpServletRequest request,ModelMap model) { 
 		try {
-			Iterable<Category> categoryCodeList = categoryRepository.findAll();
+			List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 			model.addAttribute("categoryCodeList", categoryCodeList); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,13 +147,13 @@ public class AdminController {
 			try {
 				categoryRepository.deleteByCode(id);
 			}catch (DataIntegrityViolationException e) {
-				Iterable<Category> categoryCodeList = categoryRepository.findAll();
+				List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 				model.addAttribute("categoryCodeList", categoryCodeList); 
 				model.addAttribute("errormessage","Product avaialbe for this category."); 
 				return "categoryCodeListing";
 			}
 			model.addAttribute("deletesuccessmessage","Category Deleted Successfully."); 
-			Iterable<Category> categoryCodeList = categoryRepository.findAll();
+			List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 			model.addAttribute("categoryCodeList", categoryCodeList); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,7 +181,7 @@ public class AdminController {
 		try {
 			BeanUtils.copyProperties(categoryCodeVo,categoryCode);
 			categoryRepository.save(categoryCode);
-			Iterable<Category> categoryCodeList = categoryRepository.findAll();
+			List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 			model.addAttribute("categoryCodeList", categoryCodeList); 
 			model.addAttribute("successMessage","Category Updated Successfully."); 
 		} catch (Exception e) {
@@ -200,7 +201,7 @@ public class AdminController {
 			Category categoryCode=new Category();
 			BeanUtils.copyProperties(categoryCodeVo,categoryCode);
 			categoryRepository.save(categoryCode);
-			Iterable<Category> categoryCodeList = categoryRepository.findAll();
+			List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 			model.addAttribute("categoryCodeList", categoryCodeList); 
 			model.addAttribute("successMessage","Category Added Successfully."); 
 		} catch (Exception e) {
@@ -213,7 +214,7 @@ public class AdminController {
 	@RequestMapping("/admin/productListing")
 	public String productListing(HttpServletRequest request,ModelMap model) { 
 		try {
-			Iterable<Product> productList = productRepository.findAll();
+			List<Product> productList = productRepository.findAllByOrderByCode();
 			model.addAttribute("productListing", productList); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -231,7 +232,7 @@ public class AdminController {
 			}else {
 				model.addAttribute("deletesuccessmessage","Unable To Deleted Product.");
 			}
-			Iterable<Product> productList = productRepository.findAll();
+			List<Product> productList = productRepository.findAllByOrderByCode();
 			model.addAttribute("productListing", productList); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -245,7 +246,7 @@ public class AdminController {
 			Product productCode = productRepository.findByCode(id);
 			model.addAttribute("productCode", productCode); 
 			
-			Iterable<Category> categoryCodeList = categoryRepository.findAll();
+			List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 			model.addAttribute("categoryCodeList", categoryCodeList); 
 			
 		} catch (Exception e) {
@@ -265,7 +266,7 @@ public class AdminController {
 				product.setImage(imageByte);
 			}
 			productRepository.save(product);
-			Iterable<Product> productList = productRepository.findAll();
+			List<Product> productList = productRepository.findAllByOrderByCode();
 			model.addAttribute("productListing", productList); 
 			model.addAttribute("successMessage","Product Updated Successfully."); 
 		} catch (Exception e) {
@@ -277,7 +278,7 @@ public class AdminController {
 	@RequestMapping("/admin/product")
 	public String inproduct(HttpServletRequest request,ModelMap model) {
 		
-		Iterable<Category> categoryCodeList = categoryRepository.findAll();
+		List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 		model.addAttribute("categoryCodeList", categoryCodeList); 
 		
 		return "product";
@@ -294,7 +295,7 @@ public class AdminController {
 				product.setImage(imageByte);
 			}
 			productRepository.save(product);
-			Iterable<Product> productList = productRepository.findAll();
+			List<Product> productList = productRepository.findAllByOrderByCode();
 			model.addAttribute("productListing", productList); 
 			model.addAttribute("successMessage","Product Added Successfully."); 
 		} catch (Exception e) {
