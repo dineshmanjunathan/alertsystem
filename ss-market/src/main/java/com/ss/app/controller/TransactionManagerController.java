@@ -321,11 +321,22 @@ public class TransactionManagerController {
 	@RequestMapping(value = "/purchase/address", method = RequestMethod.GET)
 	public String purchaseAddress(HttpServletRequest request, ModelMap model) {
 		try {
-
+			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
+			if (userId != null && !userId.isEmpty()) {
+				Member mem = userRepository.findById(userId).get();
+				if (mem != null && mem.getId() != null) {
+					System.out.println(userId);
+					model.addAttribute("member", mem);
+					return "address";
+				}
+			} else {
+				return "login";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "address";
+
+		return "login";
 	}
 
 	@RequestMapping(value = "/purchase/manual/review", method = RequestMethod.GET)

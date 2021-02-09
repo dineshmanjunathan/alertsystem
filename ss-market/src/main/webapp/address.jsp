@@ -46,6 +46,7 @@
 												<p style="color: green" align="center">${successMessage}</p>
 												<p style="color: red" align="center">${deletesuccessmessage}</p>
 
+												<li class="active"><a href="">Address Details:</a></li>
 												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group"></div>
@@ -67,6 +68,10 @@
 																class="form-control" placeholder="City"
 																value="${address.city}">
 														</div>
+													</div>
+													
+													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
+														<div class="form-group"></div>
 														
 														<div class="form-group">
 															<input name="state" id ="state" type="text"
@@ -80,9 +85,37 @@
 																value="${address.postalCode}">
 														</div>
 													</div>
-
+													
 													
 												</div>
+												
+												<li class="active"><a href="">Payment Details:</a></li>
+												<div class="well row">
+													<div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+													</center>
+													<c:choose>
+															<c:when test="${member.repurcahse>0}">
+													<div class="form-check">
+															<input class="form-check-input" type="checkbox" value="" id="repurchase" /> 
+															<label style="font-weight: normal;">
+													   		You have <b>${member.repurcahse}</b> points in <b>Re-Purchase wallet</b>   
+													  		</label>
+													</div><br><br>
+													</c:when>
+													</c:choose>
+														<div class="form-check">
+														<label class="radio-inline">
+													      <input type="radio" name="payment" checked><h4 >Cash On Delivery</h4>
+													    </label>
+													    <label class="radio-inline">
+													      <input type="radio" name="payment"> <h4>e-Payment</h4>
+													    </label>
+													</div>
+												</div>
+												</div>
+												
+												
+												
 											</div>
 											<div class="row">
 												<div class="col-lg-12">
