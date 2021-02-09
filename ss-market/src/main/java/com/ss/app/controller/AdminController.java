@@ -52,12 +52,18 @@ public class AdminController {
 	@RequestMapping("/admin/login")
 	public String inlogin(HttpServletRequest request,ModelMap model) {
 		model.addAttribute("ROLE","ADMIN");
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			request.getSession().invalidate();
+		}
 		return "commonLogin";
 	} 
 	
 	@RequestMapping("/admin")
 	public String adminLogin(HttpServletRequest request,ModelMap model) {
 		model.addAttribute("ROLE","ADMIN");
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			request.getSession().invalidate();
+		}
 		return "commonLogin";
 	} 
 	

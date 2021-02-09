@@ -63,16 +63,25 @@ public class MemberController {
 
 	@RequestMapping("/")
 	public String landingPage(HttpServletRequest request, ModelMap model) {
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			request.getSession().invalidate();
+		}
 		return "landingPage";
 	}
 	
 	@RequestMapping("/landingPage")
 	public String inLandingPage(HttpServletRequest request, ModelMap model) {
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			request.getSession().invalidate();
+		}
 		return "landingPage";
 	}
 
 	@RequestMapping("/login")
 	public String inlogin(HttpServletRequest request, ModelMap model) {
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			request.getSession().invalidate();
+		}
 		return "login";
 	}
 
@@ -94,6 +103,9 @@ public class MemberController {
 		 * Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
 		 * model.addAttribute("countryCodeList", countryCodeList);
 		 */
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			request.getSession().invalidate();
+		}
 		return "user";
 	}
 

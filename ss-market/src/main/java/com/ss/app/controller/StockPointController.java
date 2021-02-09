@@ -36,6 +36,9 @@ public class StockPointController {
 	@RequestMapping("/stock/point/login")
 	public String inlogin(HttpServletRequest request,ModelMap model) {
 		model.addAttribute("ROLE","STOCK_POINT");
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			request.getSession().invalidate();
+		}
 		return "commonLogin";
 	} 
 	

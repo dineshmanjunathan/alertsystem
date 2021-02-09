@@ -329,8 +329,10 @@ public class TransactionManagerController {
 			if (userId != null && !userId.isEmpty()) {
 				Member mem = userRepository.findById(userId).get();
 				if (mem != null && mem.getId() != null) {
-					System.out.println(userId);
+					
+					Double cartTotal=cartRepository.getCartTotal(userId);
 					model.addAttribute("member", mem);
+					model.addAttribute("cartTotal", cartTotal);
 					return "address";
 				}
 			} else {
@@ -367,7 +369,7 @@ public class TransactionManagerController {
 					total = total + (c.getQuantity() * c.getAmount());
 					map.put(c.getCode(), c.getQuantity());
 				}
-				;
+				
 				model.addAttribute("cartMap", map);
 				model.addAttribute("cartTotal", total);
 			}
