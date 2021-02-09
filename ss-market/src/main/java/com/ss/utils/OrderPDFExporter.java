@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.List;
  
 import javax.servlet.http.HttpServletResponse;
- 
+
+import org.springframework.core.io.ClassPathResource;
+
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import com.ss.app.entity.Address;
@@ -79,11 +81,11 @@ public class OrderPDFExporter {
         font1.setSize(14);
         font1.setColor(Color.BLACK);
          
-//        Image image1 = Image.getInstance("/img/logo/logo.jpg");
-//        image1.setAlignment(Element.ALIGN_CENTER);
-//        image1.scaleAbsolute(450, 250);
-//        //Add to document
-//        document.add(image1);
+		ClassPathResource imgResource= new ClassPathResource("src/main/resources/static/img/logo/logo.jpg");
+		Image image1 = Image.getInstance(imgResource.getPath());	
+		image1.setAlignment(Element.ALIGN_CENTER); 
+		image1.scaleAbsolute(300, 150);
+		document.add(image1);
         
         Paragraph p = new Paragraph("Thank you for your order!!", font);
         p.setAlignment(Paragraph.ALIGN_CENTER);
@@ -93,22 +95,33 @@ public class OrderPDFExporter {
         p1.setAlignment(Paragraph.ALIGN_LEFT);
         Paragraph p2 = new Paragraph("Member Id: "+memberId, font1);
         p2.setAlignment(Paragraph.ALIGN_LEFT);
-        Paragraph p3 = new Paragraph("Address:" + address.getAddressLineOne() + ", " + address.getAddressLineTwo(), font1);
+        
+        Paragraph p3 = new Paragraph("Address:" + address.getAddressLineOne() + ",", font1);
         p3.setAlignment(Paragraph.ALIGN_LEFT);
-        Paragraph p4 = new Paragraph("-         " + address.getCity() + ", " + address.getPostalCode(), font1);
-        p4.setAlignment(Paragraph.ALIGN_LEFT);
-        Paragraph p5 = new Paragraph("-         " + address.getState(), font1);
+        
+        Paragraph p4=null;
+        if(address.getAddressLineTwo()!=null && !address.getAddressLineTwo().trim().isEmpty()) {
+        	 p4 = new Paragraph(address.getAddressLineTwo()+",", font1);
+             p4.setAlignment(Paragraph.ALIGN_LEFT);
+        }
+       
+        Paragraph p5 = new Paragraph(address.getCity() + "-" + address.getPostalCode()+",", font1);
         p5.setAlignment(Paragraph.ALIGN_LEFT);
+        Paragraph p6 = new Paragraph(address.getState(), font1);
+        p6.setAlignment(Paragraph.ALIGN_LEFT);
          
         document.add(p1);
         document.add(p2);
         document.add(p3);
-        document.add(p4);
+        if(address.getAddressLineTwo()!=null && !address.getAddressLineTwo().trim().isEmpty()) {
+        	document.add(p4);
+        }
         document.add(p5);
+        document.add(p6);
          
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] {4.5f, 1.5f, 3.0f, 1.5f});
+        table.setWidths(new float[] {4.5f, 1.5f, 1.5f, 1.5f, 1.5f});
         table.setSpacingBefore(10);
          
         writeTableHeader(table);
@@ -117,11 +130,14 @@ public class OrderPDFExporter {
         
         Paragraph empty = new Paragraph("");
         document.add(empty);
-        Paragraph p6 = new Paragraph("Purchase Total: "+ total, font1);
-        p6.setAlignment(Paragraph.ALIGN_RIGHT);
-        document.add(p6);
         
-         
+        Paragraph p7 = new Paragraph("Payment Type: "+ "CARD", font1);
+        p7.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(p7);
+        Paragraph p8 = new Paragraph("Purchase Total: "+ total, font1);
+        p8.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(p8);
+          
         document.close();
          
     }
