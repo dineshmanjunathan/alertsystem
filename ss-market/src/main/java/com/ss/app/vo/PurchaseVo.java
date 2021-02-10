@@ -13,6 +13,7 @@ public class PurchaseVo {
 	private Double amount;
 	private Long quantity;
 	private LocalDateTime purchasedOn = LocalDateTime.now();
+	private Long redeemedPoints;
 
 	public Long getId() {
 		return id;
@@ -68,6 +69,14 @@ public class PurchaseVo {
 
 	public void setPurchasedOn(LocalDateTime purchasedOn) {
 		this.purchasedOn = purchasedOn;
+	}
+
+	public Long getRedeemedPoints() {
+		return redeemedPoints;
+	}
+
+	public void setRedeemedPoints(Long redeemedPoints) {
+		this.redeemedPoints = redeemedPoints;
 	}
 
 }

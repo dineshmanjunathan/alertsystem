@@ -89,16 +89,20 @@ function paytypeFunction(value)
 																class="btn btn-success col-md-offset-9 col-md-3"
 																onclick="return review();" type="button">Check for Charges </a>
 														</div>
-														<br>
+														
 														<c:choose>
 														<c:when test="${not empty DEBIT}">
 														<div class="form-group">
 														<label style="font-size: 15px;">Deduction: ${DEBIT} </label>
 														</div>
 														<div class="form-group">
-														<label style="font-size: 15px;">Point to transfer: ${WITHDRAWN_POINT}</label>
+														<label style="font-size: 15px;">Point to withdrawn: ${WITHDRAWN_POINT}</label>
 														</div>
 														</c:when>
+														<c:otherwise>
+														<div class="form-group"></div>
+														<br>
+														</c:otherwise>
 														</c:choose>	
 														<div class="form-group">
 																<select name="paymentType" id="paymentType" onmousedown="this.value='';" onchange="paytypeFunction(this.value);" class="form-control" required>

@@ -293,8 +293,7 @@ public class TransactionManagerController {
 	@RequestMapping(value = "/purchase/list", method = RequestMethod.GET)
 	public String purchaseList(HttpServletRequest request, ModelMap model) {
 		try {
-			Iterable<Product> productList = productRepository.findAll();
-			model.addAttribute("productList", productList);
+			setActiveProductListToModelMap(model); 
 			Iterable<Category> catIterable = categoryRepository.findAll();
 			model.addAttribute("categoryCodeList", catIterable);
 		} catch (Exception e) {
@@ -379,8 +378,7 @@ public class TransactionManagerController {
 				model.addAttribute("cartMap", map);
 				model.addAttribute("cartTotal", total);
 			}
-			Iterable<Product> productList = productRepository.findAll();
-			model.addAttribute("productList", productList);
+			setActiveProductListToModelMap(model); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -403,8 +401,7 @@ public class TransactionManagerController {
 				model.addAttribute("cartMap", map);
 				model.addAttribute("cartTotal", total);
 			}
-			Iterable<StockPointProduct> productList = stockPointProuctRepository.findByMemberIdAndStatus(memberId,
-					"DELIVERED");
+			Iterable<StockPointProduct> productList = stockPointProuctRepository.findByMemberIdAndStatus(memberId,"DELIVERED");
 			model.addAttribute("productList", productList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -570,4 +567,11 @@ public class TransactionManagerController {
 		}
 		return "memberRewardHistory";
 	}	
+	/**
+	 * @param model
+	 */
+	private void setActiveProductListToModelMap(ModelMap model) {
+		List<Product> productList = productRepository.getActiveProducts();
+		model.addAttribute("productList", productList);
+	}
 }

@@ -291,7 +291,13 @@ public class AdminController {
 	public String categoryCodeSubmit(HttpServletRequest request,ProductVo productVo,ModelMap model, @RequestParam(required = false) MultipartFile image) {
 		try {
 			Product product=new Product();
-
+			Product productCode = productRepository.findByCode(productVo.getCode());
+			if(productCode!=null && productCode.getCode()!=null) {
+				setActiveProductListToModelMap(model); 
+				model.addAttribute("errormsg", "Product code ["+productCode.getCode()+"] already exist!"); 
+				return "productListing";
+			}
+			
 			BeanUtils.copyProperties(productVo,product);
 			if(image != null) {
 				byte[] imageByte = image.getBytes();

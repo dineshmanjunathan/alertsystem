@@ -39,6 +39,7 @@
 								</table>
 								<p style="color: green" align="center">${successMessage}</p>
 								<p style="color: green" align="center">${deletesuccessmessage}</p>
+								<p style="color: red" align="center">${errormsg}</p>
 								<div class="sparkline13-graph">
 									<div class="datatable-dashv1-list custom-datatable-overright">
 										<div id="toolbar">
