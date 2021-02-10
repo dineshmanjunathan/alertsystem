@@ -59,21 +59,11 @@
                             </div>
                     </div>
                     <div class="clearfix"></div>
-                <a class="btn btn-red-4 btn-small" href="/stock/point/login" target="_blank"> Stock Point Login </a> </div>
-
-
-
+                <a class="btn btn-red-4 btn-small" href="/stock/point/login"> Stock Point Login </a> </div>
                 <div class="clearfix"></div>
                 <p>&nbsp;</p><p>&nbsp;</p>
-
-
-
             </div>
-
-
-
         <div class="clearfix"></div>
-
 <br><br><br>
         <!--end section-->
         <div class="clearfix"></div>

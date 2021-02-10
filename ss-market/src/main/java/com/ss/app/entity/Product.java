@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
 @Table(name = "t_product")
 public class Product {
@@ -33,6 +35,8 @@ public class Product {
 	private String base64Image;
 	
 	private Double bvPrice = 0.0;
+	
+	private String status = "ACTIVE";
     
 	public String getBase64Image() {
 		if(this.image != null) {
@@ -99,5 +103,13 @@ public class Product {
 
 	public void setBvPrice(Double bvPrice) {
 		this.bvPrice = bvPrice;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

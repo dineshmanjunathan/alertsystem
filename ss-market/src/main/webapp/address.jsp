@@ -65,7 +65,7 @@ function useWallet() {
 
 											<input type="hidden" name="id" id="id" value="${member.id}">
 											<input type="hidden" name="role" id="role" value="MEMBER">
-											<input type="hidden" name="redeemedPoints" id="redeemedPoints" value="${address.redeemedPoints}">
+											<input type="hidden" name="redeemedPoints" id="redeemedPoints" value="0">
 
 											<div id="dropzone1" class="pro-ad">
 

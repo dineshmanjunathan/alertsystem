@@ -37,25 +37,25 @@ import com.ss.utils.Utils;
 
 @Controller
 public class AdminController {
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
+
 	@Autowired
 	private ProductRepository productRepository;
-	
+
 	@Autowired
 	private SSConfigRepository ssConfigRepo;
-	
+
 	@Autowired
 	private StockPointPurchaseRepository stockPurchaseRepository;
-	
+
 	@Autowired
 	private WithdrawnPointsRepository withdrawnPointsRepository;
-	
+
 	@RequestMapping("/admin/login")
 	public String inlogin(HttpServletRequest request,ModelMap model) {
 		model.addAttribute("ROLE","ADMIN");
@@ -64,7 +64,7 @@ public class AdminController {
 		}
 		return "commonLogin";
 	} 
-	
+
 	@RequestMapping("/admin")
 	public String adminLogin(HttpServletRequest request,ModelMap model) {
 		model.addAttribute("ROLE","ADMIN");
@@ -73,28 +73,28 @@ public class AdminController {
 		}
 		return "commonLogin";
 	} 
-	
+
 	@RequestMapping("/admin/menu")
 	public String adminMenu(HttpServletRequest request,ModelMap model) {
 		model.addAttribute("ROLE","ADMIN");
-		
+
 		Iterable<Member> memberList = userRepository.findAll();
 		if (memberList != null) {
 			Utils utils = new Utils();
 			HashMap<String, Long> countMap = utils.computeMemberCount(memberList);
 			model.mergeAttributes(countMap);
 		}
-		
+
 		return "adminMenu";
 	} 
-	
+
 	@RequestMapping("/admin/member/listing")
 	public String adminListing(HttpServletRequest request,ModelMap model) {
 		Iterable<Member> memberList = userRepository.getAllMemberWithStatus();
 		model.addAttribute("memberList",memberList);
 		return "memberListing";
 	} 
-	
+
 	@RequestMapping(value="/admin/login",method=RequestMethod.POST)
 	public String stockPointLoginSubmit(HttpServletRequest request,MemberVo user,ModelMap model) {
 		try {
@@ -104,14 +104,14 @@ public class AdminController {
 				request.getSession().setAttribute("MEMBER_ID", user.getId());
 				request.getSession().setAttribute("MEMBER_NAME", member.getName());
 				request.getSession().setAttribute("ROLE", member.getRole());
-				
+
 				Iterable<Member> memberList = userRepository.findAll();
 				if (memberList != null) {
 					Utils utils = new Utils();
 					HashMap<String, Long> countMap = utils.computeMemberCount(memberList);
 					model.mergeAttributes(countMap);
 				}
-				
+
 				return "adminMenu";
 			} else {
 				request.getSession().setAttribute("ROLE", "ADMIN");
@@ -123,12 +123,12 @@ public class AdminController {
 		}
 		return "commonLogin";
 	}
-	
+
 	@RequestMapping(value = "/admin/user/edit", method = RequestMethod.GET)
 	public String edit(HttpServletRequest request, ModelMap model) {
 		return "useredit";
 	}
-	
+
 	@RequestMapping("/admin/user/delete")
 	public String delete(@RequestParam("user_id") String userId, HttpServletRequest request, ModelMap model) {
 		try {
@@ -142,7 +142,7 @@ public class AdminController {
 		}
 		return "memberListing";
 	}
-	
+
 	@RequestMapping("/admin/categoryCodeListing")
 	public String categoryCodeListing(HttpServletRequest request,ModelMap model) { 
 		try {
@@ -173,7 +173,7 @@ public class AdminController {
 		}  
 		return "categoryCodeListing";
 	}
-	
+
 	@RequestMapping(value="/admin/categoryCode/edit",method=RequestMethod.GET)
 	public String categoryCodeEdit(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) { 
 		try {
@@ -202,12 +202,12 @@ public class AdminController {
 		}
 		return "categoryCodeListing";
 	}	
-	
+
 	@RequestMapping("/admin/categoryCode")
 	public String incategoryCode(HttpServletRequest request,ModelMap model) {
 		return "categoryCode";
 	} 
-	
+
 	@RequestMapping(value="/admin/categoryCode/save",method=RequestMethod.POST)
 	public String categoryCodeSubmit(HttpServletRequest request,CategoryVo categoryCodeVo,ModelMap model) {
 		try {
@@ -222,13 +222,12 @@ public class AdminController {
 		}
 		return "categoryCodeListing";
 	}
-	
-	
+
+
 	@RequestMapping("/admin/productListing")
 	public String productListing(HttpServletRequest request,ModelMap model) { 
 		try {
-			List<Product> productList = productRepository.findAllByOrderByCode();
-			model.addAttribute("productListing", productList); 
+			setActiveProductListToModelMap(model); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}  
@@ -236,32 +235,24 @@ public class AdminController {
 	}
 
 	@RequestMapping(value="/admin/product/delete",method=RequestMethod.GET)
-	public String productDelete(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) { 
+	public String productDelete(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) {
 		try {
-			
-			Long val=productRepository.deleteByCode(id);
-			if(val>0) {
-				model.addAttribute("deletesuccessmessage","Product Deleted Successfully.");
-			}else {
-				model.addAttribute("deletesuccessmessage","Unable To Deleted Product.");
-			}
-			List<Product> productList = productRepository.findAllByOrderByCode();
-			model.addAttribute("productListing", productList); 
+			productRepository.updateToInactiveProduct(id);
+			model.addAttribute("deletesuccessmessage", "Product Deleted Successfully.");
+			setActiveProductListToModelMap(model); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}  
 		return "productListing";
 	}
-	
+
 	@RequestMapping(value="/admin/product/edit",method=RequestMethod.GET)
 	public String productEdit(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) { 
 		try {
 			Product productCode = productRepository.findByCode(id);
 			model.addAttribute("productCode", productCode); 
-			
 			List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 			model.addAttribute("categoryCodeList", categoryCodeList); 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -279,58 +270,56 @@ public class AdminController {
 				product.setImage(imageByte);
 			}
 			productRepository.save(product);
-			List<Product> productList = productRepository.findAllByOrderByCode();
-			model.addAttribute("productListing", productList); 
+			setActiveProductListToModelMap(model); 
 			model.addAttribute("successMessage","Product Updated Successfully."); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "productListing";
-	}	
-	
+	}
+
 	@RequestMapping("/admin/product")
 	public String inproduct(HttpServletRequest request,ModelMap model) {
-		
+
 		List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 		model.addAttribute("categoryCodeList", categoryCodeList); 
-		
+
 		return "product";
 	} 
-	
+
 	@RequestMapping(value="/admin/product/save",method=RequestMethod.POST)
 	public String categoryCodeSubmit(HttpServletRequest request,ProductVo productVo,ModelMap model, @RequestParam(required = false) MultipartFile image) {
 		try {
 			Product product=new Product();
-			
+
 			BeanUtils.copyProperties(productVo,product);
 			if(image != null) {
 				byte[] imageByte = image.getBytes();
 				product.setImage(imageByte);
 			}
 			productRepository.save(product);
-			List<Product> productList = productRepository.findAllByOrderByCode();
-			model.addAttribute("productListing", productList); 
+			setActiveProductListToModelMap(model); 
 			model.addAttribute("successMessage","Product Added Successfully."); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "productListing";
 	}
-	
+
 	@RequestMapping("/admin/stockpurchase/listing")
 	public String stockpurchaseListing(HttpServletRequest request,ModelMap model) {
 		Iterable<StockPointPurchase> purchaseList = stockPurchaseRepository.findAll();
 		model.addAttribute("stockPoitPurchaseList",purchaseList);
 		return "stockPointSalesHistory";
 	} 
-	
+
 	@RequestMapping("/admin/ssconfig/listing")
 	public String ssconfigListing(HttpServletRequest request,ModelMap model) {
 		Iterable<SSConfiguration> ssConfig = ssConfigRepo.findAll();
 		model.addAttribute("ssConfigList",ssConfig);
 		return "ssConfigList";
 	}
-	
+
 	@RequestMapping(value="/admin/ssconfig/edit",method=RequestMethod.GET)
 	public String ssconfigEdit(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) {
 		SSConfiguration ssConfig = ssConfigRepo.findById(id).get();
@@ -338,7 +327,7 @@ public class AdminController {
 		model.addAttribute("ssConfigType", Utils.getSSConfigTypeList()); 
 		return "ssConfigEdit";
 	}
-	
+
 	@RequestMapping(value="/admin/ssconfig/edit",method=RequestMethod.POST)
 	public String ssconfigEditSubmit(HttpServletRequest request,SSConfigurationVo ssConfigurationVo,ModelMap model) {
 		SSConfiguration ssConfiguration=new SSConfiguration();
@@ -354,7 +343,7 @@ public class AdminController {
 		}
 		return "ssConfigList";
 	}
-	
+
 	@RequestMapping(value="/admin/ssconfig/delete",method=RequestMethod.GET)
 	public String ssconfigDelete(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) { 
 		try {
@@ -362,7 +351,7 @@ public class AdminController {
 			if(val>0) {
 				model.addAttribute("deletesuccessmessage", id+" - Configuration Deleted Successfully.");
 			}else {
-				model.addAttribute("deletesuccessmessage",id+" - Unable to Deleted.");
+				model.addAttribute("deletesuccessmessage",id+" - Unable to Delete");
 			}
 			Iterable<SSConfiguration> ssConfig = ssConfigRepo.findAll();
 			model.addAttribute("ssConfigList",ssConfig);
@@ -371,7 +360,7 @@ public class AdminController {
 		}  
 		return "ssConfigList";
 	}
-	
+
 	@RequestMapping(value="/admin/ssconfig/save",method=RequestMethod.POST)
 	public String ssconfigSave(HttpServletRequest request,SSConfigurationVo ssConfigurationVo,ModelMap model) {
 		try {
@@ -393,7 +382,7 @@ public class AdminController {
 		model.addAttribute("ssConfigType", Utils.getSSConfigTypeList()); 
 		return "ssConfigEdit";
 	} 
-	
+
 	@RequestMapping(value = "/admin/withdrawnPointHistory/list", method = RequestMethod.GET)
 	public String withdrawnPointsHistory(HttpServletRequest request, ModelMap model) {
 		try {
@@ -404,7 +393,7 @@ public class AdminController {
 		}
 		return "withdrawnPointTxnHistory";
 	}
-	
+
 	@RequestMapping(value = "/admin/memberWithdrawnApproval/list", method = RequestMethod.GET)
 	public String approveWithdrawnPoints(HttpServletRequest request, ModelMap model) {
 		try {
@@ -415,7 +404,7 @@ public class AdminController {
 		}
 		return "memberWithdrawnApproval";
 	}
-	
+
 	@RequestMapping(value = "/admin/withdrawn/approve", method = RequestMethod.GET)
 	public String approveWithdrawnTxn(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
 		try {
@@ -435,5 +424,13 @@ public class AdminController {
 			e.printStackTrace();
 		}
 		return "memberWithdrawnApproval";
+	}
+
+	/**
+	 * @param model
+	 */
+	private void setActiveProductListToModelMap(ModelMap model) {
+		List<Product> productList = productRepository.getActiveProducts();
+		model.addAttribute("productListing", productList);
 	}
 }
