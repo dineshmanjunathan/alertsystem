@@ -31,6 +31,7 @@ import com.ss.app.entity.CountryCode;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.WithdrawnPoints;
+import com.ss.app.entity.WithdrawnPointsVo;
 import com.ss.app.model.CountryCodeRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.UserRepository;
@@ -318,12 +319,13 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value = "/withdrawn", method = RequestMethod.POST)
-	public String updateToWithdrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
+	public String updateToWithdrawn(HttpServletRequest request, WithdrawnPointsVo vo, ModelMap model) {
 		try {
+			System.out.println("check");
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
 			Member member = userRepository.findById(userId).get();
 
-			if (user.getWalletBalance() <= user.getWalletWithdrawn()) {
+			if (vo.getWalletBalance() <= vo.getWalletWithdrawn()) {
 				model.addAttribute("errormsg", "Given value is greater than available balance!");
 
 				model.addAttribute("member", member);
@@ -331,12 +333,12 @@ public class MemberController {
 				return "withdrawn";
 			}
 
-			if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getWalletWithdrawn() != null
-					&& user.getWalletWithdrawn() > 0) {
+			if ((vo.getWalletBalance() != null && vo.getWalletBalance() > 0) && vo.getWalletWithdrawn() != null
+					&& vo.getWalletWithdrawn() > 0) {
 
-				Long remaningPoint = user.getWalletBalance();
-				remaningPoint = remaningPoint - user.getWalletWithdrawn();
-				member.setWalletWithdrawn(member.getWalletWithdrawn() + user.getWalletWithdrawn());
+				Long remaningPoint = vo.getWalletBalance();
+				remaningPoint = remaningPoint - vo.getWalletWithdrawn();
+				member.setWalletWithdrawn(member.getWalletWithdrawn() + vo.getWalletWithdrawn());
 				member.setWalletBalance(remaningPoint);
 				member.setUpdatedon(new Date(System.currentTimeMillis()));
 
@@ -351,6 +353,13 @@ public class MemberController {
 				withdrawnPoints.setPoint(wd);
 				withdrawnPoints.setMemberid(member.getId());
 				withdrawnPoints.setUpdatedOb(LocalDateTime.now());
+				
+				withdrawnPoints.setAccountNumber(vo.getAccountNumber());
+				withdrawnPoints.setAccHolderName(vo.getAccHolderName());
+				withdrawnPoints.setsIFSCCode(vo.getsIFSCCode());
+				withdrawnPoints.setPhonenumber(vo.getPhonenumber());
+				withdrawnPoints.setStatus("PENDING");
+				withdrawnPoints.setPaymentType(vo.getPaymentType());
 				withdrawnPointsRepository.save(withdrawnPoints);
 				
 
@@ -365,6 +374,42 @@ public class MemberController {
 			model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
 		}
 		return "wallet";
+	}
+	@RequestMapping(value = "/withdrawn/deduction/compute", method = RequestMethod.GET)
+	public String validateWithDrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
+		
+		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) &&
+				user.getWalletWithdrawn() != null && user.getWalletWithdrawn() > 0) {
+
+			SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
+			SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
+
+			try {
+				Long rp = user.getWalletWithdrawn();
+				Long remaningPoint = user.getWalletBalance();
+
+				if (rp > 0) {
+					Double config1 = configurations1.getValue();
+					Double config2 = configurations2.getValue();
+					Double deductAmt1 = (rp.doubleValue() / 100) * config1;
+					Double deductAmt2 = (rp.doubleValue() / 100) * config2;
+					Long totaldeduct = (long) (deductAmt1 + deductAmt2);
+					remaningPoint = remaningPoint - rp;
+					model.addAttribute("DEBIT", totaldeduct);
+					model.addAttribute("WITHDRAWN_POINT", (rp - totaldeduct));
+				}
+
+				model.addAttribute("member", user);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
+			}
+
+		}else {
+			model.addAttribute("member", user);
+		}
+		return "withdrawn";
 	}
 
 	@RequestMapping(value = "/userlisting", method = RequestMethod.GET)

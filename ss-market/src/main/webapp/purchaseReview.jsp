@@ -62,10 +62,20 @@ function submit() {
 							id="description">
 							<div class="row">
 								<div class="row">
+								<c:choose>
+								<c:when test="${sessionScope.ROLE == 'STOCK_POINT' }">
 									<a href="/stock/point/menu"
 										class="rmk btn btn-primary m-btn m-btn--custom m-btn--icon col-md-offset-1 col-md-2">
 										<span><i class="fa fa-arrow-left"></i> <span>Back to Main</span> </span>
 									</a> 
+									</c:when>
+									<c:otherwise>
+									<a href="/menu"
+										class="rmk btn btn-primary m-btn m-btn--custom m-btn--icon col-md-offset-1 col-md-2">
+										<span><i class="fa fa-arrow-left"></i> <span>Back to Main</span> </span>
+									</a> 
+									</c:otherwise>
+									</c:choose>
 								</div>
 								<br>
 								<div class="sparkline13-graph">

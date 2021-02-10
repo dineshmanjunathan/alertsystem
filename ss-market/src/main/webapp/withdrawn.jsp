@@ -6,7 +6,27 @@
 <head>
 <%@ include file="header.jsp"%>
 <meta charset="ISO-8859-1">
+<script type="text/javascript" charset="utf-8">
 
+function review() {
+	var walletBalance = $('#walletBalance').val();
+	var walletWithdrawn = $('#walletWithdrawn').val();
+	window.location.href = "/withdrawn/deduction/compute?walletBalance="+walletBalance+"&walletWithdrawn="+walletWithdrawn;
+}
+function paytypeFunction(value)
+{
+    if(value=="NEFT"){
+    	document.getElementById("GPAY").style.display = "none";
+    	document.getElementById("NEFT").style.display = "block";
+    }  else if(value=="GPAY"){
+    	document.getElementById("NEFT").style.display = "none";
+		document.getElementById("GPAY").style.display = "block";
+    }  else if(value=="PPAY"){
+    	document.getElementById("NEFT").style.display = "none";
+		document.getElementById("GPAY").style.display = "block";
+    }          
+}
+</script>
 </head>
 <body>
 
@@ -50,15 +70,84 @@
 																<input name="walletBalance" id="walletBalance" type="text" class="form-control"
 																	placeholder="" value="${member.walletBalance}" readonly>
 															</div>
-														
+														<c:choose>
+														<c:when test="${not empty DEBIT}">
 														<div class="form-group">
 															<input name="walletWithdrawn" id="walletWithdrawn" type="number" class="form-control"
-																placeholder="Add Points to Withdrawn"  required>
+																placeholder="Add Points to Withdrawn" value="${member.walletWithdrawn}" required>
+														</div>
+														</c:when>
+														<c:otherwise>
+														<div class="form-group">
+															<input name="walletWithdrawn" id="walletWithdrawn" type="number" class="form-control"
+																placeholder="Add Points to Withdrawn" required>
+														</div>
+														</c:otherwise>
+														</c:choose>
+														<div class="payment-adress">
+															<a
+																class="btn btn-success col-md-offset-9 col-md-3"
+																onclick="return review();" type="button">Check for Charges </a>
 														</div>
 														<br>
+														<c:choose>
+														<c:when test="${not empty DEBIT}">
+														<div class="form-group">
+														<label style="font-size: 15px;">Deduction: ${DEBIT} </label>
+														</div>
+														<div class="form-group">
+														<label style="font-size: 15px;">Point to transfer: ${WITHDRAWN_POINT}</label>
+														</div>
+														</c:when>
+														</c:choose>	
+														<div class="form-group">
+																<select name="paymentType" id="paymentType" onmousedown="this.value='';" onchange="paytypeFunction(this.value);" class="form-control" required>
+																	<option value="">-Select Payment type-</option>
+																	<option value="NEFT">NEFT/IMPS</option>
+																	<option value="PPAY">PhonePay</option>
+																	<option value="GPAY">GPay</option>
+																</select>
+														</div>
+														</div>
+													</div>
+													
+													
+													<div class="row" id="NEFT" style="display: none;">
+														<div class=" well col-lg-12 col-md-12 col-sm-12 col-xs-12">
+															
+														
+														<div class="form-group">
+														<label>Payment Details:</label>
+															<input name="accountNumber" id="accountNumber" type="number" class="form-control"
+																placeholder="Account Number"  required>
+														</div>
+														
+														<div class="form-group">
+															<input name="accHolderName" id="accHolderName" type="text" class="form-control"
+																placeholder="Account Holder Name"  required>
+														</div>
+														
+														<div class="form-group">
+															<input name="sIFSCCode" id="sIFSCCode" type="text" class="form-control"
+																placeholder="IFSC CODE"  required>
+														</div>
+															
 														</div>
 															
 													</div>
+													
+													<div class="row" id="GPAY" style="display: none;">
+														<div class=" well col-lg-12 col-md-12 col-sm-12 col-xs-12">				
+														<div class="form-group">
+														<label>Payment Details:</label>
+															<input name="phonenumber" id="phonenumber" type="text" class="form-control"
+																placeholder="Mobile Number"  required>
+														</div>
+															
+														</div>
+															
+													</div>
+													
 													</div>
 													<div class="row">
 														<div class="col-lg-12">

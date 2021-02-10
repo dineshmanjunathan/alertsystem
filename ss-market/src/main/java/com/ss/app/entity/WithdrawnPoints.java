@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "t_withdrawn_points")
@@ -29,7 +30,13 @@ public class WithdrawnPoints {
 	@Column(name = "IFSC_Code")
 	private String sIFSCCode;
 	@Column(name = "UPI_ID")
-	private String sUPIID;
+	private String phonenumber;
+	private String paymentType;
+
+	@Transient
+	private Long walletBalance = 0L;
+	@Transient
+	private Long walletWithdrawn = 0L;
 
 	public Long getId() {
 		return id;
@@ -111,11 +118,35 @@ public class WithdrawnPoints {
 		this.sIFSCCode = sIFSCCode;
 	}
 
-	public String getsUPIID() {
-		return sUPIID;
+	public String getPhonenumber() {
+		return phonenumber;
 	}
 
-	public void setsUPIID(String sUPIID) {
-		this.sUPIID = sUPIID;
+	public void setPhonenumber(String phonenumber) {
+		this.phonenumber = phonenumber;
+	}
+
+	public Long getWalletBalance() {
+		return walletBalance;
+	}
+
+	public void setWalletBalance(Long walletBalance) {
+		this.walletBalance = walletBalance;
+	}
+
+	public Long getWalletWithdrawn() {
+		return walletWithdrawn;
+	}
+
+	public void setWalletWithdrawn(Long walletWithdrawn) {
+		this.walletWithdrawn = walletWithdrawn;
+	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 }
