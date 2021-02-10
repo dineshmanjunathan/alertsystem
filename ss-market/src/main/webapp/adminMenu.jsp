@@ -208,7 +208,19 @@
 				</div>
 			</div>
 		</a>
-	</div>	
+	</div>
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+		<a href="/admin/memberWithdrawnApproval/list">
+			<div class="panel-body">
+				<div class="stats-title pull-left">
+					<h5>Approve Member Withdrawn </h5>
+				</div>
+				<div class="stats-icon pull-right">
+					<i class="educate-icon educate-apps"></i>
+				</div>
+			</div>
+		</a>
+	</div>
 
 </div>
 </body>

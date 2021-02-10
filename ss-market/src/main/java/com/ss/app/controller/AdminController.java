@@ -18,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ss.app.entity.Category;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.Product;
+import com.ss.app.entity.Purchase;
 import com.ss.app.entity.SSConfiguration;
+import com.ss.app.entity.StockPointProduct;
 import com.ss.app.entity.StockPointPurchase;
 import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.model.CategoryRepository;
@@ -401,5 +403,37 @@ public class AdminController {
 			e.printStackTrace();
 		}
 		return "withdrawnPointTxnHistory";
+	}
+	
+	@RequestMapping(value = "/admin/memberWithdrawnApproval/list", method = RequestMethod.GET)
+	public String approveWithdrawnPoints(HttpServletRequest request, ModelMap model) {
+		try {
+			List<WithdrawnPoints> withdrawnPointsHistoryList = withdrawnPointsRepository.findByStatus("PENDING");
+			model.addAttribute("withdrawnPointsHistoryList", withdrawnPointsHistoryList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "memberWithdrawnApproval";
+	}
+	
+	@RequestMapping(value = "/admin/withdrawn/approve", method = RequestMethod.GET)
+	public String approveWithdrawnTxn(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
+		try {
+			WithdrawnPoints withdrawnPoints = withdrawnPointsRepository.findById(Long.parseLong(id)).get();
+
+			if (withdrawnPoints != null && withdrawnPoints.getId() != null) {
+				withdrawnPoints.setStatus("APPROVED");
+				model.addAttribute("successMessage", "Approved Successfully.");
+				withdrawnPoints = withdrawnPointsRepository.save(withdrawnPoints);
+
+				List<WithdrawnPoints> withdrawnPointsHistoryList = withdrawnPointsRepository.findByStatus("PENDING");
+				model.addAttribute("withdrawnPointsHistoryList", withdrawnPointsHistoryList);
+			} else {
+				model.addAttribute("errorMessage", "Try Again Later!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "memberWithdrawnApproval";
 	}
 }
