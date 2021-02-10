@@ -6,6 +6,7 @@ import java.util.List;
  
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.io.ClassPathResource;
 
 import com.lowagie.text.*;
@@ -19,10 +20,16 @@ public class OrderPDFExporter {
     private List<Purchase> purchaseList;
     private Address address;
     private Double total = 0.0;
+    private Double redeemPoints = 0.0;
+    private String paymentType;
      
     public OrderPDFExporter(List<Purchase> purchaseList, Address address) {
         this.purchaseList = purchaseList;
         this.address = address;
+        if(!CollectionUtils.isEmpty(purchaseList)) {
+        	redeemPoints = purchaseList.get(0).getRedeemedPoints();
+        	paymentType = purchaseList.get(0).getPaymentType();
+        }
     }
  
     private void writeTableHeader(PdfPTable table) {
@@ -62,6 +69,9 @@ public class OrderPDFExporter {
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getAmount())));
         	table.addCell(cell);
         	double totalValue = purchase.getQuantity() * purchase.getAmount();
+        	if(redeemPoints > 0) {
+        		totalValue = totalValue - redeemPoints;
+        	}
         	cell.setPhrase(new Phrase(String.valueOf(totalValue)));
         	table.addCell(cell);
         	total = total + totalValue;
@@ -131,9 +141,15 @@ public class OrderPDFExporter {
         Paragraph empty = new Paragraph("");
         document.add(empty);
         
-        Paragraph p7 = new Paragraph("Payment Type: "+ "CARD", font1);
+        Paragraph p7 = new Paragraph("Payment Type: "+ paymentType, font1);
         p7.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p7);
+        
+        if(redeemPoints > 0) {
+        	 Paragraph p10 = new Paragraph("Points Redeemed: -"+redeemPoints , font1);
+             p10.setAlignment(Paragraph.ALIGN_RIGHT);
+             document.add(p10);
+        }
         Paragraph p8 = new Paragraph("Purchase Total: "+ total, font1);
         p8.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p8);
