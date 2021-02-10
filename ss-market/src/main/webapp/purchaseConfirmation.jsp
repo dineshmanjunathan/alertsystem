@@ -44,9 +44,15 @@
 								<br>
 								<div class="row">
 									<a href="#"
-										class="btn btn-warning col-md-offset-5 col-md-2">
-										<span>Order number : ${orderNumber} </span>
-										<%-- <span>Address : ${orderAddress} </span> --%>
+										class="btn btn-warning col-md-offset-1 col-md-2" style="text-align: left;">
+										<span><strong>Order number :</strong> ${orderNumber} </span>
+									</a> </div><br>
+									<div class="row">
+									<a href="#"
+										class="btn btn-warning col-md-offset-1 col-md-3" style="text-align: left;">
+										<span><strong>Address :</strong> ${address.addressLineOne}, ${address.addressLineTwo} </span><br>
+										<span>${address.city}, ${address.state} </span><br>
+										<span>${address.postalCode} </span>
 									</a> 
 								</div>
 								<div class="sparkline13-graph">
@@ -95,11 +101,19 @@
 										<div class="row">
 											<a href="#"
 												class="btn btn-waring m-btn m-btn--custom m-btn--icon col-md-offset-9 col-md-3">
-												<span> <i class="fa fa-shopping-cart"
-													style="font-size: 20px"></i> <span>Purchase Total:
-														&#x20b9; <span id="cartTotal">${cartTotal}</span>
+												<c:if test="${address.redeemedPoints gt 0}">
+												<span>  <span><strong>Total:
+														&#x20b9;</strong><span id="cartTotal">${cartTotal}</span>
 												</span>
-											</span>
+												</span><br>
+												<span><strong>Re-purchase Used:&#x20b9;</strong> <span id="cartTotal"> -${address.redeemedPoints}</span>
+												</span><br>
+												<c:set var="cartTotal" value="${cartTotal - address.redeemedPoints}" />
+												</c:if>
+												<span>  <span><strong>Purchase Total:
+														&#x20b9;</strong><span id="cartTotal">${cartTotal}</span>
+												</span>
+											</span></a>
 										</div>
 									</div>
 								</div>

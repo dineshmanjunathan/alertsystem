@@ -29,7 +29,7 @@ public class Purchase {
 	@Column(name = "order_status")
 	private String orderStatus = "PENDING";
 	private String paymentType;
-	private Double redeemedPoints = 0.0;
+	private Long redeemedPoints = 0L;
 
 	public Long getId() {
 		return id;
@@ -103,11 +103,11 @@ public class Purchase {
 		this.paymentType = paymentType;
 	}
 
-	public Double getRedeemedPoints() {
+	public Long getRedeemedPoints() {
 		return redeemedPoints;
 	}
 
-	public void setRedeemedPoints(Double redeemedPoints) {
+	public void setRedeemedPoints(Long redeemedPoints) {
 		this.redeemedPoints = redeemedPoints;
 	}
 

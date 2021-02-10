@@ -8,7 +8,7 @@ public class AddressVo {
 	private String state;
 	private String postalCode;
 	private String paymentType;
-	private Double redeemedPoints = 0.0;
+	private Long redeemedPoints = 0L;
 
 	public String getAddressLineOne() {
 		return addressLineOne;
@@ -58,11 +58,11 @@ public class AddressVo {
 		this.paymentType = paymentType;
 	}
 
-	public Double getRedeemedPoints() {
+	public Long getRedeemedPoints() {
 		return redeemedPoints;
 	}
 
-	public void setRedeemedPoints(Double redeemedPoints) {
+	public void setRedeemedPoints(Long redeemedPoints) {
 		this.redeemedPoints = redeemedPoints;
 	}
 

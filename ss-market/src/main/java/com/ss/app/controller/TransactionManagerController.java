@@ -103,6 +103,8 @@ public class TransactionManagerController {
 			Member member = userRepository.findById(memberId).get();
 			Long totalQty = 0L;
 			Long activeDays = 0L;
+			purchase.setPaymentType(address.getPaymentType());
+			purchase.setRedeemedPoints(address.getRedeemedPoints());
 			for (Cart c : cart) {
 				// Update qty in product
 				Product prod = productRepository.findByCode(c.getCode());
@@ -115,7 +117,6 @@ public class TransactionManagerController {
 				productRepository.save(prod);
 
 				// Prepare purchase
-				purchase.setPaymentType(address.getPaymentType());
 				preparePurchase(request.getSession(), member, orderNumber, purchase, c, prod);
 				totalQty = totalQty + c.getQuantity();
 				activeDays = activeDays + prod.getCategory().getActivedays();
@@ -129,12 +130,17 @@ public class TransactionManagerController {
 			addressRepository.save(add);
 			
 			cartRepository.deleteByMemberid(memberId);
+			
+			if(address.getRedeemedPoints() > 0) {
+				member.setRepurcahse(member.getRepurcahse() - address.getRedeemedPoints());
+			}
 
 			// Reward Customer.
 			rewardCustomer(member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays);
 
 			// TODO email to member email address
 			model.addAttribute("cartList", cart);
+			model.addAttribute("address", address);
 			model.addAttribute("orderNumber", orderNumber);
 			model.addAttribute("successMessage", "Item Purchased Successfully");
 		} catch (Exception e) {

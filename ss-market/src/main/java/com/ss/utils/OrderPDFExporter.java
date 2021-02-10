@@ -20,7 +20,7 @@ public class OrderPDFExporter {
     private List<Purchase> purchaseList;
     private Address address;
     private Double total = 0.0;
-    private Double redeemPoints = 0.0;
+    private Long redeemPoints = 0L;
     private String paymentType;
      
     public OrderPDFExporter(List<Purchase> purchaseList, Address address) {

@@ -8,6 +8,31 @@
 <meta charset="ISO-8859-1">
 <script type="text/javascript" charset="utf-8">
 
+$("input[type='checkbox']").change(function() {
+    if(this.checked) {
+        let val = ${member.repurcahse};
+        let cartTotal = ${cartTotal} - val;
+        $('#cartTotal').text(cartTotal);
+        $('#redeemedPoints').val(val);
+    } else {
+    	$('#cartTotal').text(${cartTotal});
+    	$('#redeemedPoints').val(0);
+    }
+});
+
+function useWallet() {
+	  var checkBox = document.getElementById("repurchase");
+	  if (checkBox.checked == true){
+		  let val = ${member.repurcahse};
+	        let cartTotal = ${cartTotal} - val;
+	        $('#cartTotal').text(cartTotal);
+	        $('#redeemedPoints').val(val);
+	  } else {
+		  $('#cartTotal').text(${cartTotal});
+	    	$('#redeemedPoints').val(0);
+	  }
+	}
+
 </script>
 </head>
 <body>
@@ -94,11 +119,10 @@
 												<li class="active"><a href="">Payment Details:</a></li>
 												<div class="well row">
 													<div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-													</center>
 													<c:choose>
 															<c:when test="${member.repurcahse>0}">
 													<div class="form-check">
-															<input class="form-check-input" type="checkbox" value="" id="repurchase" /> 
+															<input class="form-check-input" type="checkbox" value="" id="repurchase" onclick="useWallet()" /> 
 															<label style="font-weight: normal;">
 													   		Use<b> Re-Purchase wallet</b> [<b>${member.repurcahse}</b> points]    
 													  		</label>
@@ -107,10 +131,10 @@
 													</c:choose>
 														<div class="form-check">
 														<label class="radio-inline">
-													      <input type="radio" name="payment" checked><h4 >Cash On Delivery</h4>
+													      <input type="radio" name="paymentType" value="COD" checked><h4 >Cash On Delivery</h4>
 													    </label>
 													    <label class="radio-inline">
-													      <input type="radio" name="payment"> <h4>e-Payment</h4>
+													      <input type="radio" name="paymentType" value="EPAY"> <h4>e-Payment</h4>
 													    </label>
 													</div>
 												</div>
@@ -120,10 +144,13 @@
 												
 											</div>
 											<div class="row">
-											<div class="col-lg-12">
-											Purchase Total: <span id="cartTotal">${cartTotal}</span> 
-											</div>
-											</div>
+											<a href="#"
+												class="btn btn-waring col-md-offset-9 col-md-3">
+												<span> <i class="fa fa-shopping-cart"
+													style="font-size: 20px"></i> <span><strong>Purchase Total:&#x20b9;</strong> <span id="cartTotal">${cartTotal}</span>
+												</span>
+											</span></a>
+										</div>
 											<br>
 											<div class="row">
 												<div class="col-lg-12">
