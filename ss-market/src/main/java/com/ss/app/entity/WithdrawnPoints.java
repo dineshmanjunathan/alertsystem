@@ -2,6 +2,7 @@ package com.ss.app.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,41 +21,101 @@ public class WithdrawnPoints {
 	private double point;
 	private double amount;
 	private LocalDateTime updatedOb = LocalDateTime.now();
+	private String status = "PENDING";
+	@Column(name = "account_number")
+	private String accountNumber;
+	@Column(name = "account_holdername")
+	private String accHolderName;
+	@Column(name = "IFSC_Code")
+	private String sIFSCCode;
+	@Column(name = "UPI_ID")
+	private String sUPIID;
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public Long getOrderNumber() {
 		return orderNumber;
 	}
+
 	public void setOrderNumber(Long orderNumber) {
 		this.orderNumber = orderNumber;
 	}
+
 	public String getMemberid() {
 		return memberid;
 	}
+
 	public void setMemberid(String memberid) {
 		this.memberid = memberid;
 	}
+
 	public double getPoint() {
 		return point;
 	}
+
 	public void setPoint(double point) {
 		this.point = point;
 	}
+
 	public LocalDateTime getUpdatedOb() {
 		return updatedOb;
 	}
+
 	public void setUpdatedOb(LocalDateTime updatedOb) {
 		this.updatedOb = updatedOb;
 	}
+
 	public double getAmount() {
 		return amount;
 	}
+
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public String getAccHolderName() {
+		return accHolderName;
+	}
+
+	public void setAccHolderName(String accHolderName) {
+		this.accHolderName = accHolderName;
+	}
+
+	public String getsIFSCCode() {
+		return sIFSCCode;
+	}
+
+	public void setsIFSCCode(String sIFSCCode) {
+		this.sIFSCCode = sIFSCCode;
+	}
+
+	public String getsUPIID() {
+		return sUPIID;
+	}
+
+	public void setsUPIID(String sUPIID) {
+		this.sUPIID = sUPIID;
+	}
 }
