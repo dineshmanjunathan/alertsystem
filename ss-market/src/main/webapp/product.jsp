@@ -92,6 +92,7 @@
 															<c:choose>
 															<c:when test="${not empty productCode.code}">
 															<div class="form-group">
+																<input type="hidden" name="base64Image" value="${productCode.base64Image}">
 																<img alt="img" src="data:image/jpeg;base64,${productCode.base64Image}" style="width: 100px;height: 100px;"/>
 															</div>
 															</c:when>

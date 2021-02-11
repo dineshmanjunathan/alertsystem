@@ -10,6 +10,7 @@ public class ProductVo {
 	private Long quantity;
 	private Double price;
 	private Double bvPrice;
+	private String base64Image;
 
 	public String getCode() {
 		return code;
@@ -58,4 +59,14 @@ public class ProductVo {
 	public void setBvPrice(Double bvPrice) {
 		this.bvPrice = bvPrice;
 	}
+
+	public String getBase64Image() {
+		return base64Image;
+	}
+
+	public void setBase64Image(String base64Image) {
+		this.base64Image = base64Image;
+	}
+	
+	
 }

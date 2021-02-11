@@ -1,5 +1,6 @@
 package com.ss.app.controller;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,9 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ss.app.entity.Category;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.Product;
-import com.ss.app.entity.Purchase;
 import com.ss.app.entity.SSConfiguration;
-import com.ss.app.entity.StockPointProduct;
 import com.ss.app.entity.StockPointPurchase;
 import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.model.CategoryRepository;
@@ -265,9 +264,11 @@ public class AdminController {
 		Product product=new Product();
 		try {
 			BeanUtils.copyProperties(productVo,product);
-			if(image != null) {
+			if(!image.isEmpty()) {
 				byte[] imageByte = image.getBytes();
 				product.setImage(imageByte);
+			} else if(productVo.getBase64Image() != null) {
+				product.setImage(Base64.getDecoder().decode(productVo.getBase64Image()));
 			}
 			productRepository.save(product);
 			setActiveProductListToModelMap(model); 
