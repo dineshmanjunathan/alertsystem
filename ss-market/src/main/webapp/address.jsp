@@ -121,9 +121,16 @@ function useWallet() {
 												<div class="well row">
 													<div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
 														<div class="form-check">
-														<label class="radio-inline">
+														<c:choose>
+														<c:when test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
+														
+													    </c:when>
+													    <c:otherwise>
+													    <label class="radio-inline">
 													      <input type="radio" name="paymentType" value="CASH" checked><h4 >Cash</h4>
 													    </label>
+													    </c:otherwise>
+													    </c:choose>
 													    <label class="radio-inline">
 													      <input type="radio" name="paymentType" value="EPAY"> <h4>e-Payment</h4>
 													    </label>
