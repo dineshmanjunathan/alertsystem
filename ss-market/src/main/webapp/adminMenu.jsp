@@ -209,6 +209,8 @@
 			</div>
 		</a>
 	</div>
+	</div>
+	<div class="col-md-10 col-md-offset-2 well row">
 	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 		<a href="/admin/memberWithdrawnApproval/list">
 			<div class="panel-body">
