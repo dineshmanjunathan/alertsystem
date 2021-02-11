@@ -67,7 +67,7 @@ public class MemberController {
 		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
 			request.getSession().invalidate();
 		}
-		return "landingPage";
+		return "index";
 	}
 	
 	@RequestMapping("/landingPage")
@@ -75,7 +75,7 @@ public class MemberController {
 		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
 			request.getSession().invalidate();
 		}
-		return "landingPage";
+		return "index";
 	}
 
 	@RequestMapping("/login")

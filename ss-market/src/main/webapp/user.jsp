@@ -57,7 +57,7 @@ function enableTermsAndCond(){
 				 <div class="payment-adress">
 						<a
 							class="rmk btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2"
-							href="/landingPage.jsp" type="submit" name="submit"
+							href="/index.jsp" type="submit" name="submit"
 							value="adminListing">Back</a>
 					</div>
 
