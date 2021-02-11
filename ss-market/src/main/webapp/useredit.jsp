@@ -115,7 +115,7 @@ function getSponserName() {
 
 													}
 												</script>
-												<li class="active"><a href="">Sponsor Details:</a></li>
+												<li class="active"><a >Sponsor Details:</a></li>
 												
 												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
@@ -145,7 +145,7 @@ function getSponserName() {
 												</div>
 												</div>
 												</div>
-												<li class="active"><a href="">User Details:</a></li>
+												<li class="active"><a >User Details:</a></li>
 													<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group"></div>

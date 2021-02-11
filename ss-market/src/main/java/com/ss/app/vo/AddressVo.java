@@ -9,6 +9,7 @@ public class AddressVo {
 	private String postalCode;
 	private String paymentType;
 	private Long redeemedPoints = 0L;
+	private String cartTotal;
 
 	public String getAddressLineOne() {
 		return addressLineOne;
@@ -66,4 +67,11 @@ public class AddressVo {
 		this.redeemedPoints = redeemedPoints;
 	}
 
+	public String getCartTotal() {
+		return cartTotal;
+	}
+
+	public void setCartTotal(String cartTotal) {
+		this.cartTotal = cartTotal;
+	}
 }

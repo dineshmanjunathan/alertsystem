@@ -106,7 +106,7 @@
 														&#x20b9;</strong><span id="cartTotal">${cartTotal}</span>
 												</span>
 												</span><br>
-												<span><strong>Re-purchase Used:&#x20b9;</strong> <span id="cartTotal"> -${address.redeemedPoints}</span>
+												<span><strong>Re-purchase Used:&#x20b9;</strong> <span id="cartTotal"> ${address.redeemedPoints}</span>
 												</span><br>
 												<c:set var="cartTotal" value="${cartTotal - address.redeemedPoints}" />
 												</c:if>

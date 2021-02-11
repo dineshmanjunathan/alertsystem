@@ -65,14 +65,15 @@ function useWallet() {
 
 											<input type="hidden" name="id" id="id" value="${member.id}">
 											<input type="hidden" name="role" id="role" value="MEMBER">
-											<input type="hidden" name="redeemedPoints" id="redeemedPoints" value="0">
+											<input type="hidden" name="redeemedPoints" id="redeemedPoints" value="${member.repurcahse}">
+											<input type="hidden" name="cartTotal" id="cartTotal" value='${cartTotal}'>
 
 											<div id="dropzone1" class="pro-ad">
 
 												<p style="color: green" align="center">${successMessage}</p>
 												<p style="color: red" align="center">${deletesuccessmessage}</p>
 
-												<li class="active"><a href="">Address Details:</a></li>
+												<li class="active"><a >Address Details:</a></li>
 												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group"></div>
@@ -116,33 +117,38 @@ function useWallet() {
 													
 												</div>
 												
-												<li class="active"><a href="">Payment Details:</a></li>
+												<li class="active"><a>Payment Details:</a></li>
 												<div class="well row">
 													<div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-													<c:choose>
-															<c:when test="${member.repurcahse>0}">
-													<div class="form-check">
-															<input class="form-check-input" type="checkbox" value="" id="repurchase" onclick="useWallet()" /> 
-															<label style="font-weight: normal;">
-													   		Use<b> Re-Purchase wallet</b> [<b>${member.repurcahse}</b> points]    
-													  		</label>
-													</div><br><br>
-													</c:when>
-													</c:choose>
 														<div class="form-check">
 														<label class="radio-inline">
-													      <input type="radio" name="paymentType" value="COD" checked><h4 >Cash On Delivery</h4>
+													      <input type="radio" name="paymentType" value="CASH" checked><h4 >Cash</h4>
 													    </label>
 													    <label class="radio-inline">
 													      <input type="radio" name="paymentType" value="EPAY"> <h4>e-Payment</h4>
 													    </label>
+													    <c:choose>
+														<c:when test="${member.repurcahse>=cartTotal}">
+													    <label class="radio-inline">
+													      <input type="radio" name="paymentType" value="REPURCHASE"> <h4>Use Re-Purchase wallet</h4>
+													    </label>
+													    </c:when>
+													</c:choose>
 													</div>
 												</div>
-												</div>
-												
-												
-												
+																						
+											<c:choose>
+											<c:when test="${member.repurcahse>=cartTotal}">
+											<div class="row">
+											<a href="#"
+												class="btn btn-waring col-md-offset-9 col-md-3">
+												<span> <i class="fa fa-cc-mastercard"
+													style="font-size: 20px"></i> <span><strong>Re-Purchase wallet:</strong> <span id="repurcahsewallet">${member.repurcahse}</span>
+												</span>
+											</span></a>
 											</div>
+											</c:when>
+											</c:choose>
 											<div class="row">
 											<a href="#"
 												class="btn btn-waring col-md-offset-9 col-md-3">
@@ -150,8 +156,9 @@ function useWallet() {
 													style="font-size: 20px"></i> <span><strong>Purchase Total:&#x20b9;</strong> <span id="cartTotal">${cartTotal}</span>
 												</span>
 											</span></a>
-										</div>
-											<br>
+											</div>
+											</div>	
+									  </div>
 											<div class="row">
 												<div class="col-lg-12">
 													<div class="payment-adress">

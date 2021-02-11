@@ -104,7 +104,16 @@ public class TransactionManagerController {
 			Long totalQty = 0L;
 			Long activeDays = 0L;
 			purchase.setPaymentType(address.getPaymentType());
-			purchase.setRedeemedPoints(address.getRedeemedPoints());
+
+			if(address.getPaymentType()!=null && address.getPaymentType().equals("REPURCHASE")) {		
+				Double carttotal =Double.parseDouble(address.getCartTotal());
+				purchase.setRedeemedPoints(carttotal.longValue());
+				address.setRedeemedPoints(carttotal.longValue());
+			}else {
+				address.setRedeemedPoints(0L);
+			}
+			ArrayList<String> categoryCodelist = new ArrayList<String>();
+			
 			for (Cart c : cart) {
 				// Update qty in product
 				Product prod = productRepository.findByCode(c.getCode());
@@ -118,8 +127,12 @@ public class TransactionManagerController {
 
 				// Prepare purchase
 				preparePurchase(request.getSession(), member, orderNumber, purchase, c, prod);
+				
 				totalQty = totalQty + c.getQuantity();
-				activeDays = activeDays + prod.getCategory().getActivedays();
+				if(!categoryCodelist.contains(prod.getCategory().getCode())) {
+					categoryCodelist.add(prod.getCategory().getCode());
+					activeDays = activeDays + prod.getCategory().getActivedays();
+				}
 			}
 			
 			// Save address

@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.context.annotation.Lazy;
 
@@ -25,6 +26,8 @@ public class Address {
 	private String state;
 	private String postalCode;
 	private Long orderNumber;
+	@Transient
+	private String cartTotal;
 	
 	public Long getId() {
 		return id;
@@ -75,5 +78,10 @@ public class Address {
 	public void setOrderNumber(Long orderNumber) {
 		this.orderNumber = orderNumber;
 	}
-	
+	public String getCartTotal() {
+		return cartTotal;
+	}
+	public void setCartTotal(String cartTotal) {
+		this.cartTotal = cartTotal;
+	}
 }

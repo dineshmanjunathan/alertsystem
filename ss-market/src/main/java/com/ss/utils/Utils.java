@@ -150,7 +150,8 @@ public class Utils {
 	
 
 	public static void main(String[] arg) {
-		System.out.println(" LocalDateTime.now().plusDays(2)->"+ LocalDate.now().plusDays(2));
-		System.out.println(ChronoUnit.DAYS.between( LocalDate.now().plusDays(2).now(), LocalDate.now().plusDays(2)));
+		String str="1.0";
+		Double d =Double.parseDouble(str);
+		System.out.println(d.longValue());
 	}
 }

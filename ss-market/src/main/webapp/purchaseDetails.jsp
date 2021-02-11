@@ -57,6 +57,7 @@
 											<th data-field="bv" data-editable="false">BV</th>
 											<th data-field="price" data-editable="false">Price</th>
 											<th data-field="total" data-editable="false">Total</th>
+											<th data-field="paymentType" data-editable="false">Payment Type</th>
 											<th data-field="purchasedOn" data-editable="false">Purchased On</th>
 											<th data-field="attachment">Attachment</th>
 										</tr>
@@ -75,6 +76,7 @@
 												<c:set var="total" value="${details.amount * details.quantity}" />
 												<td>${total}</td>
 												<c:set var="cartTotal" value="${cartTotal + total}" />  
+												<td>${details.paymentType}</td>	
 												<td>${details.purchasedOn}</td>	
 											     <td>
 		        								  <a href="<c:url value='/purchase/order/generate/pdf?orderNumber=${details.orderNumber}' />" > <center><i class="fa fa-download" aria-hidden="true"></i></center></a>

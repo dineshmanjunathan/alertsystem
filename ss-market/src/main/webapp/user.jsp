@@ -79,7 +79,7 @@ function enableTermsAndCond(){
 												<p style="color: green" align="center">${successMessage}</p>
 												<p style="color: red" align="center">${deletesuccessmessage}</p>
 												
-												<li class="active"><a href="">Sponsor Details:</a></li>
+												<li class="active"><a >Sponsor Details:</a></li>
 												
 												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
@@ -109,7 +109,7 @@ function enableTermsAndCond(){
 												</div>
 												</div>
 												</div>
-												<li class="active"><a href="">User Details:</a></li>
+												<li class="active"><a >User Details:</a></li>
 												
 
 												<div class="well row">
@@ -157,7 +157,6 @@ function enableTermsAndCond(){
 
 													</div>
 														</div>
-														<div class="well row">
 														<div class="form-group">
 														<input type="checkbox" name="pripolicy" id="pripolicy" value="Privacy Policy" onclick="enableTermsAndCond();" > I have read and agree to the following 
 														<a target="_blank" data-toggle="modal" data-target="#PrivacyPolicy" rel="nofollow noopener ugc" >Privacy Policy</a>
@@ -166,7 +165,6 @@ function enableTermsAndCond(){
 													<div class="form-group">
 														<input type="checkbox" name="terms" id="terms" value="Conditions" onclick="enableTermsAndCond();"> I have read and agree to the following 
 														<a target="_blank" data-toggle="modal" data-target="#Termsandconditions" rel="nofollow noopener ugc" >Terms and conditions</a>
-													</div>
 													</div>
 											</div>
 											<div class="row">
