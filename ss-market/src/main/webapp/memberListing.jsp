@@ -73,8 +73,8 @@
 												<td>${details.gender}</td> 
 												<td>${details.phonenumber}</td>
 												<td>${details.dob}</td>
-												<td>${details.referencecode}</td>
 												<td>${details.referedby}</td>
+												<td>${details.referencecode}</td>
 												<td>${details.role}</td>
 												<td>${details.memberStatus}</td>
                                                 
