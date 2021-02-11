@@ -130,17 +130,7 @@ function enableTermsAndCond(){
 															<input name="email" type="email" class="form-control"
 																placeholder="Email" value="${member.email}">
 														</div>
-													<br>
-													<div class="form-group">
-														<input type="checkbox" name="pripolicy" id="pripolicy" value="Privacy Policy" onclick="enableTermsAndCond();" > I have read and agree to the following 
-														<a target="_blank" data-toggle="modal" data-target="#PrivacyPolicy" rel="nofollow noopener ugc" >Privacy Policy</a>
-													</div>
-  
-													<div class="form-group">
-														<input type="checkbox" name="terms" id="terms" value="Conditions" onclick="enableTermsAndCond();"> I have read and agree to the following 
-														<a target="_blank" data-toggle="modal" data-target="#Termsandconditions" rel="nofollow noopener ugc" >Terms and conditions</a>
-													</div>
-													
+													<br>													
 													</div>
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group">
@@ -167,6 +157,17 @@ function enableTermsAndCond(){
 
 													</div>
 														</div>
+														<div class="well row">
+														<div class="form-group">
+														<input type="checkbox" name="pripolicy" id="pripolicy" value="Privacy Policy" onclick="enableTermsAndCond();" > I have read and agree to the following 
+														<a target="_blank" data-toggle="modal" data-target="#PrivacyPolicy" rel="nofollow noopener ugc" >Privacy Policy</a>
+													</div>
+  
+													<div class="form-group">
+														<input type="checkbox" name="terms" id="terms" value="Conditions" onclick="enableTermsAndCond();"> I have read and agree to the following 
+														<a target="_blank" data-toggle="modal" data-target="#Termsandconditions" rel="nofollow noopener ugc" >Terms and conditions</a>
+													</div>
+													</div>
 											</div>
 											<div class="row">
 												<div class="col-lg-12">
