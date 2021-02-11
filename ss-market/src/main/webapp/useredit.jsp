@@ -124,14 +124,14 @@ function getSponserName() {
 													<div class="form-group">
 																	<input name="referedby" id="referedby" type="text" onblur="getSponserName();"
 																		class="form-control" placeholder="Sponsor Id"
-																		value="${member.referedby}" readonly>
+																		value="${member.referedby}" readonly required>
 													</div>
 													</c:when>
 													<c:otherwise>
 													<div class="form-group">
 																	<input name="referedby" id="referedby" type="text" onblur="getSponserName();"
 																		class="form-control" placeholder="Sponsor Id"
-																		value="${member.referedby}">
+																		value="${member.referedby}" required>
 													</div>
 													</c:otherwise>
 													</c:choose>

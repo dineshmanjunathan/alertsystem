@@ -557,8 +557,12 @@ public class MemberController {
 		try {
 			Member user = userRepository.findById(userId).get();
 			if(user!=null && user.getReferedby()!=null) {
-				Member referedMember = userRepository.findByReferencecode(user.getReferedby()).get();
-				model.addAttribute("SPONSERNAME", referedMember.getName());
+				try {
+					Member referedMember = userRepository.findByReferencecode(user.getReferedby()).get();
+					model.addAttribute("SPONSERNAME", referedMember.getName());
+				}catch (NoSuchElementException ne) {
+					
+				}
 			}
 			model.addAttribute("member", user);
 		} catch (Exception e) {

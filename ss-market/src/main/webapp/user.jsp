@@ -95,7 +95,7 @@ function enableTermsAndCond(){
 													<div class="form-group">
 																	<input name="referedby" id="referedby" type="text" onblur="getSponserName();"
 																		class="form-control" placeholder="Sponsor Id"
-																		value="${member.referedby}">
+																		value="${member.referedby}" required>
 													</div>
 													</c:otherwise>
 													</c:choose>
@@ -105,7 +105,7 @@ function enableTermsAndCond(){
 												<div class="form-group">
 																	<input name="sponsername" id="sponsername" type="text"
 																		class="form-control" placeholder="Sponsor Name"
-																		value="${SPONSERNAME}" readonly>
+																		value="${SPONSERNAME}" readonly required>
 												</div>
 												</div>
 												</div>

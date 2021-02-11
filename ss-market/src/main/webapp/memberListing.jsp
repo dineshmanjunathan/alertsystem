@@ -55,10 +55,10 @@
 											<th data-field="id" data-editable="false">Member Id</th>
 											<th data-field="name" data-editable="false">Name</th>
 											<th data-field="gender" data-editable="false">Gender</th>
-											<th data-field="email" data-editable="false">Email</th>
 											<th data-field="phonenumber" data-editable="false">Mobile</th>
 											<th data-field="dob" data-editable="false">DOB</th>
-											<th data-field="referedby" data-editable="false">Sponser Id</th>
+											<th data-field="referedby" data-editable="false">Sponsor Id</th>
+											<th data-field="referencecode" data-editable="false">Reference Code</th>
 											<th data-field="role" data-editable="false">Role</th>
 											<th data-field="memberStatus">Status</th>
 											<th data-field="action">Action</th>
@@ -71,9 +71,9 @@
 												<td>${details.id}</td>
 												<td>${details.name}</td>
 												<td>${details.gender}</td> 
-												<td>${details.email}</td>
 												<td>${details.phonenumber}</td>
 												<td>${details.dob}</td>
+												<td>${details.referencecode}</td>
 												<td>${details.referedby}</td>
 												<td>${details.role}</td>
 												<td>${details.memberStatus}</td>
