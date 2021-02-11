@@ -532,6 +532,9 @@ public class MemberController {
 					}
 				}
 			}
+			userEntity.setRepurcahse(0L);
+			userEntity.setWalletBalance(0L);
+			userEntity.setWalletWithdrawn(0L);
 			userRepository.save(userEntity);
 			
 			if(role!=null && role.equals("ADMIN")) {
