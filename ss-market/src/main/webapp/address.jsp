@@ -46,10 +46,20 @@ function useWallet() {
 					</ul>
 					<!-- <form action="/userlisting" method="get"> -->
 					<div class="payment-adress">
+						<c:choose>
+						<c:when test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
 						<a
+							class="rmk btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2"
+							href="/stock/point/menu" type="submit" name="submit"
+							value="adminListing">Back to Main</a>
+							</c:when>
+							<c:otherwise>
+							<a
 							class="rmk btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2"
 							href="/menu" type="submit" name="submit"
 							value="adminListing">Back to Main</a>
+							</c:otherwise>
+							</c:choose>
 					</div>
 					<!-- </form> -->
 
