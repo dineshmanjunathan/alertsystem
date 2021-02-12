@@ -26,6 +26,7 @@ function paytypeFunction(value)
 		document.getElementById("GPAY").style.display = "block";
     }          
 }
+
 </script>
 </head>
 <body>
@@ -59,7 +60,7 @@ function paytypeFunction(value)
 											<form action="/withdrawn" method="post">
 											
 											
-											<input type="hidden" name="id" id="id" value="${member.id}">
+											<input type="hidden" name="memberid" id="memberid" value="${member.id}">
 									
 											<div id="dropzone1" class="pro-ad">
 											
@@ -123,17 +124,17 @@ function paytypeFunction(value)
 														<div class="form-group">
 														<label>Payment Details:</label>
 															<input name="accountNumber" id="accountNumber" type="number" class="form-control"
-																placeholder="Account Number"  required>
+																placeholder="Account Number" >
 														</div>
 														
 														<div class="form-group">
 															<input name="accHolderName" id="accHolderName" type="text" class="form-control"
-																placeholder="Account Holder Name"  required>
+																placeholder="Account Holder Name" >
 														</div>
 														
 														<div class="form-group">
 															<input name="sIFSCCode" id="sIFSCCode" type="text" class="form-control"
-																placeholder="IFSC CODE"  required>
+																placeholder="IFSC CODE"  >
 														</div>
 															
 														</div>
@@ -145,7 +146,7 @@ function paytypeFunction(value)
 														<div class="form-group">
 														<label>Payment Details:</label>
 															<input name="phonenumber" id="phonenumber" type="text" class="form-control"
-																placeholder="Mobile Number"  required>
+																placeholder="Mobile Number" >
 														</div>
 															
 														</div>
