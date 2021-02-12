@@ -22,6 +22,7 @@ import com.ss.app.entity.Product;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.StockPointPurchase;
 import com.ss.app.entity.WithdrawnPoints;
+import com.ss.app.model.AddressRepository;
 import com.ss.app.model.CategoryRepository;
 import com.ss.app.model.ProductRepository;
 import com.ss.app.model.SSConfigRepository;
@@ -48,6 +49,9 @@ public class AdminController {
 
 	@Autowired
 	private SSConfigRepository ssConfigRepo;
+	
+	@Autowired
+	private AddressRepository addressRepository;
 
 	@Autowired
 	private StockPointPurchaseRepository stockPurchaseRepository;
@@ -131,6 +135,8 @@ public class AdminController {
 	@RequestMapping("/admin/user/delete")
 	public String delete(@RequestParam("user_id") String userId, HttpServletRequest request, ModelMap model) {
 		try {
+			
+			addressRepository.deleteByMember_Id(userId);
 			userRepository.deleteById(userId);
 
 			model.addAttribute("deletesuccessmessage", "Member Deleted Successfully.");
