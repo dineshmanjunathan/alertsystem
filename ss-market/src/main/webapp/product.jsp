@@ -89,6 +89,12 @@
 																<input name="price" type="text" class="form-control"
 																	placeholder="Price Per-Item" value="${productCode.price}" required>
 															</div>
+															
+															<div class="form-group">
+																<input name="shippingCharge" type="text" class="form-control"
+																	placeholder="Shipping Charge" value="${productCode.shippingCharge}" required>
+															</div>
+															
 															<c:choose>
 															<c:when test="${not empty productCode.code}">
 															<div class="form-group">

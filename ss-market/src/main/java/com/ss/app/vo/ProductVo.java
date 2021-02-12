@@ -11,6 +11,7 @@ public class ProductVo {
 	private Double price;
 	private Double bvPrice;
 	private String base64Image;
+	private Double shippingCharge;
 
 	public String getCode() {
 		return code;
@@ -66,6 +67,13 @@ public class ProductVo {
 
 	public void setBase64Image(String base64Image) {
 		this.base64Image = base64Image;
+	}
+	public Double getShippingCharge() {
+		return shippingCharge;
+	}
+
+	public void setShippingCharge(Double shippingCharge) {
+		this.shippingCharge = shippingCharge;
 	}
 	
 	
