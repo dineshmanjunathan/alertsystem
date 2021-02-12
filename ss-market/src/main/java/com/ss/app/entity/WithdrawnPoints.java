@@ -21,6 +21,7 @@ public class WithdrawnPoints {
 	private String memberid;
 	private double point;
 	private double amount;
+	private double deduction;
 	private LocalDateTime updatedOb = LocalDateTime.now();
 	private String status = "PENDING";
 	@Column(name = "account_number")
@@ -148,5 +149,13 @@ public class WithdrawnPoints {
 
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public double getDeduction() {
+		return deduction;
+	}
+
+	public void setDeduction(double deduction) {
+		this.deduction = deduction;
 	}
 }

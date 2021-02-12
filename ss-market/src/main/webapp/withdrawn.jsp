@@ -18,12 +18,27 @@ function paytypeFunction(value)
     if(value=="NEFT"){
     	document.getElementById("GPAY").style.display = "none";
     	document.getElementById("NEFT").style.display = "block";
+    	accountNumber.attributes.required = "required";
+    	accHolderName.attributes.required = "required";
+    	sIFSCCode.attributes.required = "required";
+    	document.getElementById("accountNumber").required = true;
+    	document.getElementById("accHolderName").required = true;
+    	document.getElementById("sIFSCCode").required = true;
+    	document.getElementById("phonenumber").required = false;
     }  else if(value=="GPAY"){
     	document.getElementById("NEFT").style.display = "none";
 		document.getElementById("GPAY").style.display = "block";
+		document.getElementById("accountNumber").required = false;
+    	document.getElementById("accHolderName").required = false;
+    	document.getElementById("sIFSCCode").required = false;
+    	document.getElementById("phonenumber").required = true;
     }  else if(value=="PPAY"){
     	document.getElementById("NEFT").style.display = "none";
 		document.getElementById("GPAY").style.display = "block";
+		document.getElementById("accountNumber").required = false;
+    	document.getElementById("accHolderName").required = false;
+    	document.getElementById("sIFSCCode").required = false;
+    	document.getElementById("phonenumber").required = true;
     }          
 }
 
