@@ -493,7 +493,7 @@ body, html {
     }
 
     .hamburger.is-open .hamb-middle {
-        display: none;
+         display: none;
     }
 
     .hamburger.is-open .hamb-bottom {
@@ -570,6 +570,7 @@ body, html {
 </style>
 
  <script type="text/javascript">
+
 		window.history.forward();
 		function noBack() {
 			window.history.forward();
@@ -580,15 +581,23 @@ body, html {
 		        overlay = $('.overlay'),
 		       isClosed = true;
 
+		    if (typeof window.orientation !== 'undefined') { 
+
+					
+			     }else{
+			    	 var element = document.getElementById("wrapper");
+			    	  element.classList.add("toggled");
+			    }
+		    
 		    function buttonSwitch() {
 
 		        if (isClosed === true) {
-		            overlay.hide();
+		           // overlay.hide();
 		            trigger.removeClass('is-open');
 		            trigger.addClass('is-closed');
 		            isClosed = false;
 		        } else {
-		            overlay.show();
+		           // overlay.show();
 		            trigger.removeClass('is-closed');
 		            trigger.addClass('is-open');
 		            isClosed = true;
@@ -636,8 +645,8 @@ body, html {
 <!-- Start Left menu area -->
 <c:if test="${not empty sessionScope.LOGGED_ON}">
 
-<div id="wrapper" class="toggled">
-    <div class="overlay" style="display: none;"></div>
+<div id="wrapper" class="">
+   <!--  <div class="overlay"></div> -->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
         <ul class="nav sidebar-nav">
         <li class="sidebar-brand">
