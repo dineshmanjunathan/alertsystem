@@ -661,7 +661,7 @@ body, html {
             <br><br> <br><br><br>
         	<c:if test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
             <li>
-                <a href="/menu"> <i class="glyphicon glyphicon-home"></i> HOME </a>
+                <a href="/menu"> <i class="glyphicon glyphicon-home"></i> Home </a>
             </li>
             <br><br>
             <li>
@@ -681,7 +681,7 @@ body, html {
             </c:if>
             <c:if test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
             <li>
-                <a href="/stock/point/menu"> <i class="glyphicon glyphicon-home"></i> HOME </a>
+                <a href="/stock/point/menu"> <i class="glyphicon glyphicon-home"></i> Home </a>
             </li>
             <br><br>
             <li>
