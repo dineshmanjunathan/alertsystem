@@ -114,12 +114,12 @@
 												</c:if>
 												<table style="width:100%">
 												<tr>
-												<th><strong>Shipping Charge:&#x20b9;</strong></th>
-												<td id="shippingCharge">${shippingCharge}</td>
-												</tr>
 												<tr>
 												<th><strong>Cart Total:&#x20b9;</strong> </th>
 												<td id="cartProductTotal">${cartTotal}</td>
+												</tr>
+												<th><strong>Shipping Charge:&#x20b9;</strong></th>
+												<td id="shippingCharge">${shippingCharge}</td>
 												</tr>
 												<tr>
 												<th><strong>Purchase Total:&#x20b9;</strong> </th>
