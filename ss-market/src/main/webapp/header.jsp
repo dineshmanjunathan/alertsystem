@@ -670,9 +670,9 @@ body, html {
             <li>
                 <a href="/member/repurchase/wallet"><i class="glyphicon glyphicon-hdd"></i> Re-Purchase Wallet</a>
             </li><br><br>
-            <!-- <li>
+            <li>
                 <a href="/purchase/review/edit"><i class="glyphicon glyphicon-check"></i> Click to Purchase</a>
-            </li><br><br> -->
+            </li><br><br>
             <li>
                 <a href="/contactus"><i class="glyphicon glyphicon-pushpin"></i> Contact Us</a>
             </li>

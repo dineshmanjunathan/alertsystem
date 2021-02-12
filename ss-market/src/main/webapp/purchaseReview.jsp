@@ -112,18 +112,23 @@ function submit() {
 														<c:set var="total" value="${detail.amount * detail.quantity}" />
 														<td>${total}</td>
 														<c:set var="cartTotal" value="${cartTotal + total}" />
+														<c:set var="shippingCharge" value="${detail.shippingCharge}" />
+																											
 													</tr>
 												</c:forEach>
 											</tbody>
 										</table>
-
+																				
 										<div class="row">
 											<a href="#"
 												class="btn btn-waring col-md-offset-9 col-md-3">
+												<!-- <span>Shipping Charge: ${shippingCharge}</span><br>
+												<span>Product Price: ${cartTotal}</span><br>-->
 												<span> <i class="fa fa-shopping-cart"
 													style="font-size: 20px"></i> <span>Purchase Total:
 														&#x20b9; <span id="cartTotal">${cartTotal}</span>
 												</span>
+								
 											</span></a>
 										</div>
 										<div class="row">

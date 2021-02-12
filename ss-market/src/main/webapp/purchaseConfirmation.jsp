@@ -90,6 +90,7 @@
 														<c:set var="total" value="${detail.amount * detail.quantity}" />
 														<td>${total}</td>
 														<c:set var="cartTotal" value="${cartTotal + total}" />
+														<c:set var="shippingCharge" value="${detail.shippingCharge}" />
 											     <td>
 		        								  <a href="<c:url value='/purchase/order/generate/pdf?orderNumber=${orderNumber}' />" > <center><i class="fa fa-download" aria-hidden="true"></i></center></a>
 		        								 </td>	
@@ -110,9 +111,30 @@
 												</span><br>
 												<c:set var="cartTotal" value="${cartTotal - address.redeemedPoints}" />
 												</c:if>
+												<table style="width:100%">
+												<tr>
+												<th><strong>Shipping Charge:&#x20b9;</strong></th>
+												<td id="shippingCharge">${shippingCharge}</td>
+												</tr>
+												<tr>
+												<th><strong>Cart Total:&#x20b9;</strong> </th>
+												<td id="cartProductTotal">${cartTotal}</td>
+												</tr>
+												<tr>
+												<th><strong>Purchase Total:&#x20b9;</strong> </th>
+												<td id="cartTotal">${cartTotal+shippingCharge}</td>
+												</tr>
+												</table>								
+												<!-- 
+												<span>  <span><strong>Shipping Charge:
+														&#x20b9;</strong><span id="shippingCharge">${shippingCharge}</span>
+												</span><br>
+												 <span>  <span><strong>Cart Total:
+														&#x20b9;</strong><span id="cartProductTotal">${cartTotal}</span>
+												</span><br>
 												<span>  <span><strong>Purchase Total:
-														&#x20b9;</strong><span id="cartTotal">${cartTotal}</span>
-												</span>
+														&#x20b9;</strong><span id="cartTotal">${cartTotal+shippingCharge}</span>
+												</span>-->
 											</span></a>
 										</div>
 									</div>

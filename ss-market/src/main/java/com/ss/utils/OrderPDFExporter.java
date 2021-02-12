@@ -69,7 +69,7 @@ public class OrderPDFExporter {
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getAmount())));
         	table.addCell(cell);
         	double totalValue = purchase.getQuantity() * purchase.getAmount();
-        	if(redeemPoints > 0) {
+        	if(redeemPoints !=null && redeemPoints > 0) {
         		totalValue = totalValue - redeemPoints;
         	}
         	cell.setPhrase(new Phrase(String.valueOf(totalValue)));
@@ -106,7 +106,10 @@ public class OrderPDFExporter {
         Paragraph p2 = new Paragraph("Member Id: "+memberId, font1);
         p2.setAlignment(Paragraph.ALIGN_LEFT);
         
-        Paragraph p3 = new Paragraph("Address:" + address.getAddressLineOne() + ",", font1);
+        Paragraph p3 = new Paragraph("Address:" ,font1);
+        Paragraph addressPara = new Paragraph(address.getAddressLineOne() + ",", font1);
+        addressPara.setAlignment(Paragraph.ALIGN_LEFT);
+        
         p3.setAlignment(Paragraph.ALIGN_LEFT);
         
         Paragraph p4=null;
@@ -123,11 +126,15 @@ public class OrderPDFExporter {
         document.add(p1);
         document.add(p2);
         document.add(p3);
+        document.add(addressPara);
         if(address.getAddressLineTwo()!=null && !address.getAddressLineTwo().trim().isEmpty()) {
         	document.add(p4);
         }
         document.add(p5);
         document.add(p6);
+        
+        Paragraph emptyPara = new Paragraph("");
+        document.add(emptyPara);
          
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100f);
@@ -145,7 +152,7 @@ public class OrderPDFExporter {
         p7.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p7);
         
-        if(redeemPoints > 0) {
+        if(redeemPoints!=null && redeemPoints > 0) {
         	 Paragraph p10 = new Paragraph("Points Redeemed: -"+redeemPoints , font1);
              p10.setAlignment(Paragraph.ALIGN_RIGHT);
              document.add(p10);

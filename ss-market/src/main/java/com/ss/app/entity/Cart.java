@@ -22,6 +22,8 @@ public class Cart {
 	private Long quantity;
 	private LocalDateTime purchasedon = LocalDateTime.now();
 	
+	private Double shippingCharge;
+	
 	public Long getId() {
 		return id;
 	}
@@ -66,6 +68,14 @@ public class Cart {
 	public void setPurchasedon(LocalDateTime purchasedon) {
 		this.purchasedon = purchasedon;
 	}
+	public Double getShippingCharge() {
+		return shippingCharge;
+	}
+	public void setShippingCharge(Double shippingCharge) {
+		this.shippingCharge = shippingCharge;
+	}
+	
+	
 	
 	
 	

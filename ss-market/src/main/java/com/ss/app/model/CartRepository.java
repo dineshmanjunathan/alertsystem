@@ -19,6 +19,9 @@ public interface CartRepository extends CrudRepository<Cart, Long> {
 	
 	@Query(value = "select sum(amount * quantity) from t_cart where memberid =:memberId", nativeQuery = true)
 	Double getCartTotal(String memberId);
+	
+	@Query(value = "select sum(amount * quantity + shipping_charge) from t_cart where memberid =:memberId", nativeQuery = true)
+	Double getPurchaseTotal(String memberId);
 
 	@Transactional
 	Long deleteByMemberid(String memberId);

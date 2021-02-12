@@ -19,7 +19,7 @@
 		cartTotal == null ? 0.0 : cartTotal
 	};
 
-	function addToCart(prodCode, price) {
+	function addToCart(prodCode, price, shippingCharge) {
 		let qty = $("#quantity-" + prodCode + " option:selected").val();
 		if (!qty) {
 			alert('Please select quantity.');
@@ -29,7 +29,8 @@
 			url : "/purchase/addToCart",
 			data : {
 				"prodCode" : prodCode,
-				"qty" : qty
+				"qty" : qty,
+				"shippingCharge" : shippingCharge
 			},
 			type : "post",
 			cache : false,
@@ -166,6 +167,7 @@
 													<th data-field="code" data-editable="false">Product</th>
 													<th data-field="price" data-editable="false">Price</th>
 													<th data-field="quantity" data-editable="false">Quantity</th>
+													<!--<th data-field="shippingCharge" data-editable="false">Shipping Charge</th>-->
 													<th data-field="total">Action</th>
 												</tr>
 											</thead>
@@ -191,9 +193,10 @@
 																	</select>
 																</div>
 															</td>
+															<!--<td>${details.shippingCharge}</td>-->
 															<td>
 																<button class="btn btn-primary" type="button"
-																	onclick="return addToCart('${details.code}', '${details.price}');">
+																	onclick="return addToCart('${details.code}', '${details.price}', ${details.shippingCharge});">
 																	<i class="fa fa-shopping-cart"></i> Add to Cart
 																</button>
 																<button class="btn btn-danger" type="button"
