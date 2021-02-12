@@ -10,7 +10,7 @@
 
 <!-- <center class ="btn btn-primary"><b></b><p id="timmer"></p></b></center> -->
 <label 
-    style=' font-weight: bold; color: #337ab7;text-align: center;font-size: 182%;font-style: italic;'> Active days left!</label>
+    style='padding-left:10px; font-weight: bold; color: #337ab7;text-align: center;font-size: 182%;font-style: italic;'> Active days left!</label>
 <center><p id="timmer"></p></center>
 <script>
 // Set the date we're counting down to
