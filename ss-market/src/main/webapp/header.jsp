@@ -640,12 +640,11 @@ body, html {
     <div class="overlay" style="display: none;"></div>
     <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
         <ul class="nav sidebar-nav">
-        	<c:if test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
-       
-            <li class="sidebar-brand">
+        <li class="sidebar-brand">
             <strong><a><img class="main-logo" src="../../img/logo/logo.jpg" alt=""></a></strong>
             </li>
             <br><br> <br><br><br>
+        	<c:if test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
             <li>
                 <a href="/menu"> HOME </a>
             </li>
@@ -666,9 +665,10 @@ body, html {
             <%@ include file="timmer.jsp"%>
             </c:if>
             <c:if test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
-			<li class="sidebar-brand">
+            <li>
                 <a href="/stock/point/menu"> HOME </a>
-            </li><br><br>
+            </li>
+            <br><br>
             <li>
                 <a href="/purchase/review/edit"><i class="glyphicon glyphicon-check"></i> Stock Purchase</a>
             </li><br><br>
