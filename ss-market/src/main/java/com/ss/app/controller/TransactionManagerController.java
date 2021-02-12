@@ -152,9 +152,7 @@ public class TransactionManagerController {
 			}
 
 			// Reward Customer.
-			if (request.getSession() != null && request.getSession().getAttribute("ROLE").equals("MEMBER")) {
-				rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays, true);
-			}
+				rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays);
 
 			// TODO email to member email address
 			model.addAttribute("cartList", cart);
@@ -216,7 +214,7 @@ public class TransactionManagerController {
 			cartRepository.deleteByMemberid(memberId);
 
 			// Reward Customer.
-			rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays, true);
+			rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays);
 
 			model.addAttribute("cartList", cart);
 			model.addAttribute("orderNumber", orderNumber);
@@ -296,12 +294,10 @@ public class TransactionManagerController {
 	}
 
 	private void rewardCustomer(HttpServletRequest request, String memId, String sponserId, Long orderNumber,
-			Long totalQty, Long activeDays, boolean isActiveDay) {
+			Long totalQty, Long activeDays) {
 		RewardTransaction reward = new RewardTransaction();
 		try {
-			if (isActiveDay) {
-				updateActiveDays(request, memId, sponserId, orderNumber, totalQty, activeDays);
-			}
+			updateActiveDays(request, memId, sponserId, orderNumber, totalQty, activeDays);
 
 			Member member = userRepository.findByReferencecodeAndRole(sponserId, "MEMBER").get();
 			if (member != null && member.getId() != null) {
@@ -321,6 +317,7 @@ public class TransactionManagerController {
 					userRepository.save(member);
 				}
 			}
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

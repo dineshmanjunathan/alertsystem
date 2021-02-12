@@ -643,6 +643,10 @@ body, html {
         	<c:if test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
        
             <li class="sidebar-brand">
+            <strong><a><img class="main-logo" src="../../img/logo/logo.jpg" alt=""></a></strong>
+            </li>
+            <br><br> <br><br><br>
+            <li>
                 <a href="/menu"> HOME </a>
             </li>
             <br><br>
@@ -652,9 +656,9 @@ body, html {
             <li>
                 <a href="/member/repurchase/wallet"><i class="glyphicon glyphicon-hdd"></i> Re-Purchase Wallet</a>
             </li><br><br>
-            <li>
+            <!-- <li>
                 <a href="/purchase/review/edit"><i class="glyphicon glyphicon-check"></i> Click to Purchase</a>
-            </li><br><br>
+            </li><br><br> -->
             <li>
                 <a href="/contactus"><i class="glyphicon glyphicon-pushpin"></i> Contact Us</a>
             </li>
