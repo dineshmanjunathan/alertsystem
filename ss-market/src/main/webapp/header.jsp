@@ -582,11 +582,14 @@ body, html {
 		       isClosed = true;
 
 		    if (typeof window.orientation !== 'undefined') { 
-
+		    	 var element = document.getElementById("headerbtn");
+		    	  element.classList.add("is-close");
 					
 			     }else{
 			    	 var element = document.getElementById("wrapper");
 			    	  element.classList.add("toggled");
+			    	 var element = document.getElementById("headerbtn");
+			    	  element.classList.add("is-open");
 			    }
 		    
 		    function buttonSwitch() {
@@ -688,7 +691,7 @@ body, html {
         </ul>
     </nav>
     <div id="page-content-wrapper">
-        <button type="button" class="hamburger animated fadeInLeft is-open" data-toggle="offcanvas">
+        <button type="button" id = "headerbtn" class="hamburger animated fadeInLeft" data-toggle="offcanvas">
             <span class="hamb-top"></span>
             <span class="hamb-middle"></span>
             <span class="hamb-bottom"></span>
