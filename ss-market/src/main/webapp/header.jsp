@@ -275,7 +275,7 @@ body, html {
 
 
 #page-content-wrapper {
-    padding-top: 70px;
+    /* padding-top: 70px; */
     width: 100%;
 }
 
