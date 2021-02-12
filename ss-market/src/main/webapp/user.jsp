@@ -43,6 +43,32 @@ function enableTermsAndCond(){
 		bt.disabled = true;
 	}
 }
+
+function checkPhNumExists() {
+	$.ajax({
+        url: "/member/phNoExists",
+        data: {
+            "phonenumber": document.getElementById("phonenumber").value
+        },
+        type: "get",
+        cache: false,
+        success: function (data) {
+        	if(data.length>0) {
+        		$("#errmsgmobno").text("Mobile Number Already Exists");
+            	$("span").css("color", "red");
+                document.getElementById("errmsgmobno").style.visibility = "visible";
+                document.getElementById("phonenumber").value='';
+            }else{
+            	var s = document.getElementById("phonenumber"); 
+            	s.value = data;
+            	$("#errmsgmobno").text("");
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log('ERROR:' + XMLHttpRequest.status + ', status text: ' + XMLHttpRequest.statusText);
+        }
+    });
+}
 </script>
 </head>
 <body>
@@ -150,10 +176,11 @@ function enableTermsAndCond(){
 														</div>
 
 														<div class="form-group">
-															<input name="phonenumber" type="text"
+															<input name="phonenumber" type="text" id="phonenumber"
 																class="form-control" placeholder="Phone Number"
-																value="${member.phonenumber}" required>
+																value="${member.phonenumber}"  required onblur="checkPhNumExists();">
 														</div>
+														<span id="errmsgmobno"></span>
 
 													</div>
 														</div>

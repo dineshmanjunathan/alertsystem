@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -465,7 +466,8 @@ public class MemberController {
 			recursionTree(memberRewardTree, member.getReferencecode(), member.getId());
 			MemberLevel.prepareMember(memberRewardTree, 0);
 			System.out.println(memberRewardTree.toString());
-			Map<Integer, MemberStat> memberStat = MemberLevel.prepareLevelAndCount(memberRewardTree);
+			Map<Integer, MemberStat> memberStat = new HashMap<Integer, MemberStat>();
+			MemberLevel.prepareLevelAndCount(memberRewardTree, memberStat);
 			memberStat.remove(0);
 			System.out.println(memberStat);
 			model.addAttribute("memberStat", memberStat);
@@ -715,6 +717,20 @@ public class MemberController {
 			return new ResponseEntity<String>(member.getName(), HttpStatus.OK);
 		}catch(NoSuchElementException e) {
 			return new ResponseEntity<String>("", HttpStatus.OK);
+		}
+	}
+	@RequestMapping("/member/phNoExists")
+	public ResponseEntity<String> phNumExists(HttpServletRequest request,ModelMap model,@RequestParam("phonenumber") String phonenumber) {
+		try {
+			Member member = userRepository.findByPhonenumber(Long.valueOf(phonenumber));
+			if(member!=null) {
+				return new ResponseEntity<String>(String.valueOf(member.getPhonenumber()), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+			}
+			
+		}catch(NoSuchElementException e) {
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 	}
 }

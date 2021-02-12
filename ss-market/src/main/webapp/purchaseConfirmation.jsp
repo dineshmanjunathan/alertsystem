@@ -50,7 +50,8 @@
 									<div class="row">
 									<a href="#"
 										class="btn btn-warning col-md-offset-1 col-md-3" style="text-align: left;">
-										<span><strong>Address :</strong> ${address.addressLineOne}, ${address.addressLineTwo} </span><br>
+										<strong>Address :</strong><br>
+										<span>${address.addressLineOne}, ${address.addressLineTwo} </span><br>
 										<span>${address.city}, ${address.state} </span><br>
 										<span>${address.postalCode} </span>
 									</a> 

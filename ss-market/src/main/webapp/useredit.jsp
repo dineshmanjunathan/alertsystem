@@ -34,6 +34,15 @@ function getSponserName() {
         }
     });
 }
+
+function viewpassword() {
+    var $pwd = $(".pwd");
+    if ($pwd.attr('type') === 'password') {
+        $pwd.attr('type', 'text');
+    } else {
+        $pwd.attr('type', 'password');
+    }
+}
 </script>
 <body>
 	<!-- Single pro tab review Start-->
@@ -154,11 +163,13 @@ function getSponserName() {
 																placeholder="Member Name" value="${member.name}"
 																required>
 														</div>
-														<div class="form-group">
-															<input name="password" type="password"
-																class="form-control" placeholder="Password" minlength="8"  maxlength="10"
+														<div class="input-group">
+															<input name="password" type="password" class="form-control pwd" placeholder="Password" minlength="8"  maxlength="10"
 																value="${member.password}" required>
-														</div>
+																 <span class="input-group-btn">
+												            <button class="btn btn-default reveal" type="button" onclick="viewpassword();"><i class="glyphicon glyphicon-eye-open"></i></button>
+												          </span>  
+														</div><br>
 													<c:choose>
 															<c:when test="${fn:contains(sessionScope.ROLE, 'ADMIN')}">
 
