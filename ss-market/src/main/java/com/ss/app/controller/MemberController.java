@@ -717,4 +717,18 @@ public class MemberController {
 			return new ResponseEntity<String>("", HttpStatus.OK);
 		}
 	}
+	@RequestMapping("/member/phNoExists")
+	public ResponseEntity<String> phNumExists(HttpServletRequest request,ModelMap model,@RequestParam("phonenumber") String phonenumber) {
+		try {
+			Member member = userRepository.findByPhonenumber(Long.valueOf(phonenumber));
+			if(member!=null) {
+				return new ResponseEntity<String>(String.valueOf(member.getPhonenumber()), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+			}
+			
+		}catch(NoSuchElementException e) {
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+		}
+	}
 }
