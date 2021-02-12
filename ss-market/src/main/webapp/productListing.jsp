@@ -68,6 +68,7 @@
 													<th data-field="quantity" data-editable="false">Quantity</th>
 													<th data-field="bv" data-editable="false">BV</th>
 													<th data-field="price" data-editable="false">Price</th>
+													<th data-field="shippingCharge" data-editable="false">Shipping Charge</th>
 													<th data-field="action">Action</th>
 												</tr>
 											</thead>
@@ -84,6 +85,7 @@
 														<td>${details.quantity}</td>
 														<td>${details.bvPrice}</td>
 														<td>${details.price}</td>
+														<td>${details.shippingCharge}</td>
 														<td><a
 															href="<c:url value='/admin/product/edit?id=${details.code}' />"><center>
 																	<i class="fa fa-pencil-square-o" aria-hidden="true"></i>

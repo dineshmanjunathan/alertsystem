@@ -35,6 +35,8 @@ public class Product {
 	private Double bvPrice = 0.0;
 	
 	private String status = "ACTIVE";
+	
+	private Double shippingCharge = 0.0;
     
 	public String getBase64Image() {
 		if(this.image != null) {
@@ -110,4 +112,16 @@ public class Product {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public Double getShippingCharge() {
+		return shippingCharge;
+	}
+
+	public void setShippingCharge(Double shippingCharge) {
+		this.shippingCharge = shippingCharge;
+	}
+
+	
+	
+	
 }

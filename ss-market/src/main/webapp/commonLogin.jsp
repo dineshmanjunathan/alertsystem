@@ -47,7 +47,11 @@
                      	 <div class="col-md-3"></div>
                          <div class="col-md-6">
                               <button class="rmk btn btn-success btn-block loginbtn" type="submit" name="submit" value="login">Login</button>
-                              <a class="rmk btn btn-success btn-block loginbtn" href="/index.jsp">Back</a>
+                              <c:choose>
+                              <c:when test="${ROLE != 'ADMIN'}">
+									<a class="rmk btn btn-success btn-block loginbtn" href="/landingPage.jsp">Back</a>
+							</c:when>
+                            </c:choose>
                          </div>
                          <div class="col-md-3"></div>
                      </div>
