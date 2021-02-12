@@ -216,9 +216,9 @@ public class TransactionManagerController {
 			cartRepository.deleteByMemberid(memberId);
 
 			// Reward Customer.
-			if (request.getSession() != null && request.getSession().getAttribute("ROLE").equals("MEMBER")) {
+				System.out.println("memId-->"+member.getId());
+				System.out.println("sponserId-->"+member.getReferedby());
 				rewardCustomer(request,member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays);
-			}
 
 			model.addAttribute("cartList", cart);
 			model.addAttribute("orderNumber", orderNumber);
@@ -271,27 +271,28 @@ public class TransactionManagerController {
 	private void rewardCustomer(HttpServletRequest request,String memId, String sponserId, Long orderNumber, Long totalQty, Long activeDays) {
 		RewardTransaction reward = new RewardTransaction();
 		try {
-			Member actualMember = userRepository.findByIdAndRole(memId,"MEMBER").get();
+			Member actualMember = userRepository.findByIdAndRole(memId, "MEMBER").get();
 			if (actualMember != null && actualMember.getId() != null) {
 				if (actualMember.getActive_days() != null) {
 					actualMember.setActive_days(actualMember.getActive_days().plusDays(totalQty * activeDays));
 				} else {
 					actualMember.setActive_days(LocalDateTime.now().plusDays(totalQty * activeDays));
 				}
-				actualMember =userRepository.save(actualMember);
-				
-				if(actualMember.getActive_days() !=null) {
+				actualMember = userRepository.save(actualMember);
+
+				if (actualMember.getActive_days() != null) {
 					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
-					java.util.Date date = Date.from(actualMember.getActive_days().atZone(ZoneId.systemDefault()).toInstant());
+					java.util.Date date = Date
+							.from(actualMember.getActive_days().atZone(ZoneId.systemDefault()).toInstant());
 					request.getSession().setAttribute("ACTIVE_DAYS", sdf.format(date));
 				} else {
 					LocalDateTime time = LocalDateTime.now();
 					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
 					java.util.Date date = Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
 					request.getSession().setAttribute("ACTIVE_DAYS", sdf.format(date));
-				}			
+				}
 			}
-			
+
 			Member member = userRepository.findByReferencecodeAndRole(sponserId,"MEMBER").get();
 			if (member != null && member.getId() != null) {
 				reward.setMemberid(memId);
