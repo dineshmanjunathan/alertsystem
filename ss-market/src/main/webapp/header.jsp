@@ -619,7 +619,16 @@ body, html {
 		    });
 		});
 		
-		
+		function copyReferelLink() {			
+			  document.getElementById('reference_code').type = 'text';
+			  document.getElementById('reference_code').value = window.location.protocol+window.location.hostname+":"+window.location.port+"/register/withreferencecode?sponsorId=${sessionScope.REFERENCE_CODE}";
+			  var copyText = document.getElementById("reference_code");
+			  copyText.select();
+			  copyText.setSelectionRange(0, 99999)
+			  document.execCommand("copy");
+			  document.getElementById('reference_code').type = 'hidden';
+			  alert("Link copied to clipboard!");
+		}
 	</script> 
 </head>
 
@@ -650,7 +659,7 @@ body, html {
 
 <!-- Start Left menu area -->
 <c:if test="${not empty sessionScope.LOGGED_ON}">
-
+<input type="hidden" name="reference_code" id="reference_code" value="${sessionScope.REFERENCE_CODE}">
 <div id="wrapper" class="">
    <!--  <div class="overlay"></div> -->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
@@ -676,7 +685,13 @@ body, html {
             <li>
                 <a href="/contactus"><i class="glyphicon glyphicon-pushpin"></i> Contact Us</a>
             </li>
-             <br><br><br><br>
+            <br><br>
+			<li>
+                 <a href="javascript:copyReferelLink();"><i class="glyphicon glyphicon glyphicon-link"></i> Reference Link </a>
+                <input type="hidden" value="" id="reference_code">
+            </li>
+            
+             <br><br><br>
             <%@ include file="timmer.jsp"%>
             </c:if>
             <c:if test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
@@ -691,6 +706,13 @@ body, html {
                 <a href="/contactus"><i class="glyphicon glyphicon-pushpin"></i> Contact Us</a>
             </li>
 			</c:if>
+			 <c:if test="${fn:contains(sessionScope.ROLE, 'ADMIN')}">		 
+			<li>
+               <a href="javascript:copyReferelLink();"><i class="glyphicon glyphicon glyphicon-link"></i> Reference Link </a>
+            </li>
+           <input type="hidden" value="" id="reference_code">
+			 </c:if>
+			
         </ul>
     </nav>
     <div id="page-content-wrapper">
@@ -705,11 +727,9 @@ body, html {
 			
 		
 </c:if>
-
-
-
 <!-- <div class="footer" style="background-image: linear-gradient(#0f68b4,#1a1e2c)"><p>© 2021 Copyright: SS Marketing</p>
 </div>
  -->
+ 
 </html>
 

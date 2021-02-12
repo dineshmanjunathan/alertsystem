@@ -97,7 +97,7 @@ public class MemberController {
 		model.addAttribute("CURRENT_USER", ab);
 		return "home";
 	}
-
+	
 	@RequestMapping("/register")
 	public String user(HttpServletRequest request, ModelMap model) {
 		/*
@@ -127,6 +127,23 @@ public class MemberController {
 		}
 		return redirectPath;
 	}
+	
+	@RequestMapping("/register/withreferencecode")
+	public String user(@RequestParam("sponsorId") String sponsorId, HttpServletRequest request, ModelMap model) {
+		if (sponsorId != null && !sponsorId.isEmpty()) {
+			if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+				request.getSession().invalidate();
+			}
+			Member member = userRepository.findByReferencecode(sponsorId).get();
+			if (member != null && member.getId()!=null) {
+				Member mb = new Member();
+				mb.setReferedby(member.getReferencecode());
+				model.addAttribute("member", mb);
+				model.addAttribute("SPONSERNAME", member.getName());
+			}
+		}
+		return "user";
+	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String loginSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
@@ -141,6 +158,7 @@ public class MemberController {
 				request.getSession().setAttribute("MEMBER_ID", user.getId());
 				request.getSession().setAttribute("MEMBER_NAME", member.getName());
 				request.getSession().setAttribute("ROLE", member.getRole());
+				request.getSession().setAttribute("REFERENCE_CODE", member.getReferencecode());
 				if(member.getActive_days() !=null) {
 					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
 					java.util.Date date = Date.from(member.getActive_days().atZone(ZoneId.systemDefault()).toInstant());

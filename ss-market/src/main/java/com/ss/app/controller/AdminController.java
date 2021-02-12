@@ -107,6 +107,7 @@ public class AdminController {
 				request.getSession().setAttribute("MEMBER_ID", user.getId());
 				request.getSession().setAttribute("MEMBER_NAME", member.getName());
 				request.getSession().setAttribute("ROLE", member.getRole());
+				request.getSession().setAttribute("REFERENCE_CODE", member.getReferencecode());
 
 				Iterable<Member> memberList = userRepository.findAll();
 				if (memberList != null) {
