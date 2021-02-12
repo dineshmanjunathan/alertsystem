@@ -12,6 +12,8 @@ public class CartVo {
 	private Long quantity;
 	private LocalDateTime purchasedon;
 	
+	private Double shippingCharge;
+	
 	public Long getId() {
 		return id;
 	}
@@ -54,5 +56,13 @@ public class CartVo {
 	public void setPurchasedon(LocalDateTime purchasedon) {
 		this.purchasedon = purchasedon;
 	}
+	public Double getShippingCharge() {
+		return shippingCharge;
+	}
+	public void setShippingCharge(Double shippingCharge) {
+		this.shippingCharge = shippingCharge;
+	}
+	
+	
 	
 }

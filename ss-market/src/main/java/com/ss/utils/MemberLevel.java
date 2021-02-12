@@ -1,6 +1,5 @@
 package com.ss.utils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -49,9 +48,7 @@ public class MemberLevel {
 		}
 	}
 
-	static Map<Integer, MemberStat> memberStat = new HashMap<Integer, MemberStat>();
-
-	public static Map<Integer, MemberStat> prepareLevelAndCount(MemberRewardTree e) {
+	public static Map<Integer, MemberStat> prepareLevelAndCount(MemberRewardTree e, Map<Integer, MemberStat> memberStat) {
 
 		MemberStat stat = memberStat.get(e.getLevel());
 		if (stat != null) {
@@ -73,7 +70,7 @@ public class MemberLevel {
 		}
 		if (e.getChildren() != null && e.getChildren().size() > 0) {
 			for (MemberRewardTree emp : e.getChildren()) {
-				prepareLevelAndCount(emp);
+				prepareLevelAndCount(emp, memberStat);
 			}
 		} else {
 			return memberStat;

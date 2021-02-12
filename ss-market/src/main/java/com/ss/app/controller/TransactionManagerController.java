@@ -248,6 +248,7 @@ public class TransactionManagerController {
 		}
 		purchase.setProduct(prod);
 		purchase.setQuantity(c.getQuantity());
+		purchase.setShippingCharge(prod.getShippingCharge());
 		purchaseRepository.save(purchase);
 	}
 
@@ -381,6 +382,7 @@ public class TransactionManagerController {
 				if (mem != null && mem.getId() != null) {
 
 					Double cartTotal = cartRepository.getCartTotal(userId);
+					//Double cartTotal = cartRepository.getPurchaseTotal(userId);
 					model.addAttribute("member", mem);
 					model.addAttribute("cartTotal", cartTotal);
 					return "address";
@@ -457,7 +459,7 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/addToCart", method = RequestMethod.POST)
 	public ResponseEntity<String> addTocart(HttpServletRequest request, ModelMap model,
-			@RequestParam("prodCode") String prodCode, @RequestParam("qty") String qty) {
+			@RequestParam("prodCode") String prodCode, @RequestParam("qty") String qty, @RequestParam("shippingCharge") String shippingCharge) {
 		Double cartTotal = 0.0;
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
@@ -473,8 +475,10 @@ public class TransactionManagerController {
 				cart.setMemberid(memberId);
 				cart.setQuantity(Long.parseLong(qty));
 				cart.setAmount(product.getPrice());
+				cart.setShippingCharge(product.getShippingCharge());
 				cartRepository.save(cart);
 			}
+			model.addAttribute("shippingCharge", shippingCharge);
 			cartTotal = cartRepository.getCartTotal(memberId);
 		} catch (Exception e) {
 			e.printStackTrace();
