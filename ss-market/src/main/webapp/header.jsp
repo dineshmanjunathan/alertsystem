@@ -578,7 +578,7 @@ body, html {
 		$(document).ready(function () {
 		    var trigger = $('.hamburger'),
 		        overlay = $('.overlay'),
-		       isClosed = false;
+		       isClosed = true;
 
 		    function buttonSwitch() {
 
@@ -636,7 +636,7 @@ body, html {
 <!-- Start Left menu area -->
 <c:if test="${not empty sessionScope.LOGGED_ON}">
 
-<div id="wrapper" class="">
+<div id="wrapper" class="toggled">
     <div class="overlay" style="display: none;"></div>
     <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
         <ul class="nav sidebar-nav">
@@ -679,7 +679,7 @@ body, html {
         </ul>
     </nav>
     <div id="page-content-wrapper">
-        <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+        <button type="button" class="hamburger animated fadeInLeft is-open" data-toggle="offcanvas">
             <span class="hamb-top"></span>
             <span class="hamb-middle"></span>
             <span class="hamb-bottom"></span>
