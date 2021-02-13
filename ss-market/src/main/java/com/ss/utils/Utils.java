@@ -88,8 +88,8 @@ public class Utils {
 
 	public static Map<String, String> getSSConfigTypeMap() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("1111", "GST INCENTIVE");
-		map.put("1112", "COMPANY INCENTIVE");
+		map.put("1111", "TDS + Charity Charges ");
+		map.put("1112", "Admin Charges");
 		map.put("PR", "PURCHASE REWARD");
 		map.put("L1", "LEVEL 1 REWARD");
 		map.put("L2", "LEVEL 2 REWARD");
