@@ -569,6 +569,8 @@ public class MemberController {
 			userRepository.save(userEntity);
 			
 			Member phMember=userRepository.findByPhonenumber(userEntity.getPhonenumber());
+			phMember.setReferencecode(phMember.getId());
+			userRepository.save(phMember);
 			
 			if(role!=null && role.equals("ADMIN")) {
 				model.addAttribute("successMessage", phMember.getId()+"Member Created Successfully!");

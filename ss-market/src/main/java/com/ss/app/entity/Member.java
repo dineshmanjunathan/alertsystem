@@ -114,9 +114,11 @@ public class Member implements Serializable {
 		return referencecode;
 	}
 	public void setReferencecode(String referencecode) {
-		Random random = new Random();
-		int randomWithNextInt = random.nextInt(999999);
-		this.referencecode = "SS00"+Math.abs(randomWithNextInt);
+		/*
+		 * Random random = new Random(); int randomWithNextInt = random.nextInt(999999);
+		 * this.referencecode = "SS00"+Math.abs(randomWithNextInt);
+		 */
+		this.referencecode = referencecode;
 	}
 	public Date getCreateon() {
 		return createon;
