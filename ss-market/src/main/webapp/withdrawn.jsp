@@ -53,7 +53,7 @@ function paytypeFunction(value)
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="product-payment-inner-st">
 						<center><ul id="myTabedu1" class="tab-review-design">
-							<li class="active"><a href="">WITHDRAWN ENTRY</a></li>
+							<li class="active"><a href="">WITHDRAWAL ENTRY</a></li>
 						</ul></center>
 						<!-- <form action="/userlisting" method="get"> -->
 						<div class="payment-adress">
@@ -112,7 +112,7 @@ function paytypeFunction(value)
 														<label style="font-size: 15px;">Deduction: ${DEBIT} </label>
 														</div>
 														<div class="form-group">
-														<label style="font-size: 15px;">Point to withdrawn: ${WITHDRAWN_POINT}</label>
+														<label style="font-size: 15px;">Point to withdraw: ${WITHDRAWN_POINT}</label>
 														</div>
 														</c:when>
 														<c:otherwise>
@@ -124,8 +124,8 @@ function paytypeFunction(value)
 																<select name="paymentType" id="paymentType" onmousedown="this.value='';" onchange="paytypeFunction(this.value);" class="form-control" required>
 																	<option value="">-Select Payment type-</option>
 																	<option value="NEFT">NEFT/IMPS</option>
-																	<option value="PPAY">PhonePay</option>
-																	<option value="GPAY">GPay</option>
+																	<option value="PPAY">PhonePe</option>
+																	<option value="GPAY">Google Pay</option>
 																</select>
 														</div>
 														</div>

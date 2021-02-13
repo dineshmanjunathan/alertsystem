@@ -201,7 +201,7 @@
 		<a href="/admin/withdrawnPointHistory/list">
 			<div class="panel-body">
 				<div class="stats-title pull-left">
-					<h5>Withdrawn History</h5>
+					<h5>Withdrawal History</h5>
 				</div>
 				<div class="stats-icon pull-right">
 					<i class="educate-icon educate-apps"></i>
@@ -215,7 +215,7 @@
 		<a href="/admin/memberWithdrawnApproval/list">
 			<div class="panel-body">
 				<div class="stats-title pull-left">
-					<h5>Approve Member Withdrawn </h5>
+					<h5>Approve Member Withdrawal </h5>
 				</div>
 				<div class="stats-icon pull-right">
 					<i class="educate-icon educate-apps"></i>
