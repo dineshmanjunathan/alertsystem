@@ -580,7 +580,7 @@ public class MemberController {
 			}else {
 				model.addAttribute("registersuccess", "Member Registered Successfully!");
 				model.addAttribute("successMsgMemberId", "Your Login Member Id is <b>"+ phMember.getId()+"</b>");
-				model.addAttribute("successMsgRefCode", "Referral Code is <b>"+ phMember.getReferencecode()+"</b>");
+				//model.addAttribute("successMsgRefCode", "Referral Code is <b>"+ phMember.getReferencecode()+"</b>");
 				model.addAttribute("successMsgNote", "<b>Note:</b> Please save above details for future reference.");
 			}
 			
