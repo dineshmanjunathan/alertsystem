@@ -568,13 +568,15 @@ public class MemberController {
 			userEntity.setWalletWithdrawn(0L);
 			userRepository.save(userEntity);
 			
+			Member phMember=userRepository.findByPhonenumber(userEntity.getPhonenumber());
+			
 			if(role!=null && role.equals("ADMIN")) {
-				model.addAttribute("successMessage", "Member Created Successfully! ");
+				model.addAttribute("successMessage", phMember.getId()+" - Member Created Successfully! ");
 				Iterable<Member> memberList = userRepository.findAll();
 				model.addAttribute("memberList",memberList);
 				return "memberListing";
 			}else {
-				model.addAttribute("registersuccess", "Member Registered Successfully! ");
+				model.addAttribute("registersuccess", phMember.getId()+" - Member Registered Successfully! ");
 			}
 			
 			//TODO SMS to member mobile number

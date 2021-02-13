@@ -32,7 +32,7 @@ function paytypeFunction(value)
     	document.getElementById("accHolderName").required = false;
     	document.getElementById("sIFSCCode").required = false;
     	document.getElementById("phonenumber").required = true;
-    }  else if(value=="PPAY"){
+    }  else if(value=="PHONEPE"){
     	document.getElementById("NEFT").style.display = "none";
 		document.getElementById("GPAY").style.display = "block";
 		document.getElementById("accountNumber").required = false;
@@ -124,7 +124,7 @@ function paytypeFunction(value)
 																<select name="paymentType" id="paymentType" onmousedown="this.value='';" onchange="paytypeFunction(this.value);" class="form-control" required>
 																	<option value="">-Select Payment type-</option>
 																	<option value="NEFT">NEFT/IMPS</option>
-																	<option value="PPAY">PhonePe</option>
+																	<option value="PHONEPE">PhonePe</option>
 																	<option value="GPAY">Google Pay</option>
 																</select>
 														</div>
