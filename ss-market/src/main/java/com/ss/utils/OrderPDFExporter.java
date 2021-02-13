@@ -64,7 +64,7 @@ public class OrderPDFExporter {
         	table.addCell(cell);
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getQuantity())));
         	table.addCell(cell);
-        	cell.setPhrase(new Phrase(String.valueOf(purchase.getProduct().getBvPrice())));
+        	cell.setPhrase(new Phrase(String.valueOf(purchase.getProduct().getBvPrice()* purchase.getQuantity())));
         	table.addCell(cell);
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getAmount())));
         	table.addCell(cell);
