@@ -49,7 +49,7 @@
                               <button class="rmk btn btn-success btn-block loginbtn" type="submit" name="submit" value="login">Login</button>
                               <c:choose>
                               <c:when test="${ROLE != 'ADMIN'}">
-									<a class="rmk btn btn-success btn-block loginbtn" href="/landingPage.jsp">Back</a>
+									<a class="rmk btn btn-success btn-block loginbtn" href="/index.jsp">Back</a>
 							</c:when>
                             </c:choose>
                          </div>
