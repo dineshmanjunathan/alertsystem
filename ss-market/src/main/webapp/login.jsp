@@ -21,7 +21,6 @@
 			<p style="color: green" align="center">${adminlogout}</p>
 			<p style="color: green" align="center">${registersuccess}</p>
 			<p style="color: green" align="center">${successMsgMemberId}</p>
-			<p style="color: green" align="center">${successMsgRefCode}</p>
 			<p style="color: green" align="center">${successMsgNote}</p>
 			<input type="hidden" name="role" value="MEMBER">
 

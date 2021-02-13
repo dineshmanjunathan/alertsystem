@@ -46,7 +46,6 @@ public class Member implements Serializable {
 	@Column(columnDefinition="bigint default 0")
 	private Long repurcahse= 0L;
 	
-	@Column(updatable=false)
 	private String referencecode;
 	private Date createon = new Date(System.currentTimeMillis());
 	private Date updatedon = new Date(System.currentTimeMillis());
@@ -110,14 +109,11 @@ public class Member implements Serializable {
 	public void setWalletBalance(Long walletBalance) {
 		this.walletBalance = walletBalance;
 	}
+	
 	public String getReferencecode() {
 		return referencecode;
 	}
 	public void setReferencecode(String referencecode) {
-		/*
-		 * Random random = new Random(); int randomWithNextInt = random.nextInt(999999);
-		 * this.referencecode = "SS00"+Math.abs(randomWithNextInt);
-		 */
 		this.referencecode = referencecode;
 	}
 	public Date getCreateon() {

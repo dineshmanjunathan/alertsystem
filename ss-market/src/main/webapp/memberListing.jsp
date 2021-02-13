@@ -58,7 +58,6 @@
 											<th data-field="phonenumber" data-editable="false">Mobile</th>
 											<th data-field="dob" data-editable="false">DOB</th>
 											<th data-field="referedby" data-editable="false">Sponsor Id</th>
-											<th data-field="referencecode" data-editable="false">Reference Code</th>
 											<th data-field="role" data-editable="false">Role</th>
 											<th data-field="memberStatus">Status</th>
 											<th data-field="action">Action</th>
@@ -74,7 +73,6 @@
 												<td>${details.phonenumber}</td>
 												<td>${details.dob}</td>
 												<td>${details.referedby}</td>
-												<td>${details.referencecode}</td>
 												<td>${details.role}</td>
 												<td>${details.memberStatus}</td>
                                                 

@@ -566,11 +566,10 @@ public class MemberController {
 			userEntity.setRepurcahse(0L);
 			userEntity.setWalletBalance(0L);
 			userEntity.setWalletWithdrawn(0L);
-			userRepository.save(userEntity);
+			Member phMember = userRepository.save(userEntity);
 			
-			Member phMember=userRepository.findByPhonenumber(userEntity.getPhonenumber());
 			phMember.setReferencecode(phMember.getId());
-			userRepository.save(phMember);
+			phMember=	userRepository.save(phMember);
 			
 			if(role!=null && role.equals("ADMIN")) {
 				model.addAttribute("successMessage", phMember.getId()+"Member Created Successfully!");
@@ -579,8 +578,7 @@ public class MemberController {
 				return "memberListing";
 			}else {
 				model.addAttribute("registersuccess", "Member Registered Successfully!");
-				model.addAttribute("successMsgMemberId", "Your Login Member Id is <b>"+ phMember.getId()+"</b>");
-				//model.addAttribute("successMsgRefCode", "Referral Code is <b>"+ phMember.getReferencecode()+"</b>");
+				model.addAttribute("successMsgMemberId", "Your Login Member Id and Referral Code is <b>"+ phMember.getId()+"</b>");
 				model.addAttribute("successMsgNote", "<b>Note:</b> Please save above details for future reference.");
 			}
 			
