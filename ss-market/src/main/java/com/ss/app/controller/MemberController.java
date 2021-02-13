@@ -1,7 +1,6 @@
 package com.ss.app.controller;
 
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -150,15 +149,6 @@ public class MemberController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String loginSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
 		try {
-            String ipAddress =  request.getRemoteAddr();
-            System.out.println("IP Address: "+ipAddress);
-            InetAddress ip;
-            String hostname;
-            ip = InetAddress.getLocalHost();
-            hostname = ip.getHostName();
-            System.out.println("Your current IP address : " + ip);
-            System.out.println("Your current Hostname : " + hostname);
-			
 			Member member = userRepository.findByIdAndPasswordAndRole(user.getId(), user.getPassword(), "MEMBER").get();
 			if (member != null && member.getId()!=null) {
 				if (!user.getPassword().equals(member.getPassword())) {
