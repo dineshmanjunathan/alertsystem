@@ -571,12 +571,15 @@ public class MemberController {
 			Member phMember=userRepository.findByPhonenumber(userEntity.getPhonenumber());
 			
 			if(role!=null && role.equals("ADMIN")) {
-				model.addAttribute("successMessage", phMember.getId()+" - Member Created Successfully! ");
+				model.addAttribute("successMessage", phMember.getId()+"Member Created Successfully!");
 				Iterable<Member> memberList = userRepository.findAll();
 				model.addAttribute("memberList",memberList);
 				return "memberListing";
 			}else {
-				model.addAttribute("registersuccess", phMember.getId()+" - Member Registered Successfully! ");
+				model.addAttribute("registersuccess", "Member Registered Successfully!");
+				model.addAttribute("successMsgMemberId", "Your Login Member Id is <b>"+ phMember.getId()+"</b>");
+				model.addAttribute("successMsgRefCode", "Referral Code is <b>"+ phMember.getReferencecode()+"</b>");
+				model.addAttribute("successMsgNote", "<b>Note:</b> Please save above details for future reference.");
 			}
 			
 			//TODO SMS to member mobile number

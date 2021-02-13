@@ -46,14 +46,13 @@
                                       <thead>
 										<tr> 
 											<th data-field="memberid" data-editable="false">Member Id</th>
-											<th data-field="withdrawnPoint" data-editable="false">Withdrawn Point</th>
 											<th data-field="amount" data-editable="false">Amount</th>
-											<th data-field="deduction" data-editable="false">Deduction</th>
 											<th data-field="paymentType" data-editable="false">Payment Type</th>
 											<th data-field="accountNumber" data-editable="false">Account No</th>
 											<th data-field="accHolderName" data-editable="false">Holder Name</th>
-											<th data-field="sIFSCCode" data-editable="false">IFSCCode</th>
+											<th data-field="sIFSCCode" data-editable="false">IFSC Code</th>
 											<th data-field="phonenumber" data-editable="false">Phone No</th>
+											<th data-field="updatedOb" data-editable="false">Request On</th>
 											<th data-field="status" data-editable="false">Status</th>
 											<th data-field="action" data-editable="false">Action</th>
 										</tr>
@@ -62,14 +61,13 @@
                                         <c:forEach var="withdrawnPointHistoryDetails" items="${withdrawnPointsHistoryList}" varStatus="status">
                                             <tr>
 												<td>${withdrawnPointHistoryDetails.memberid}</td>
-												<td>${withdrawnPointHistoryDetails.point}</td>
 												<td>${withdrawnPointHistoryDetails.amount}</td>  
-												<td>${withdrawnPointHistoryDetails.deduction}</td>		
 												<td>${withdrawnPointHistoryDetails.paymentType}</td>
 												<td>${withdrawnPointHistoryDetails.accountNumber}</td>
 												<td>${withdrawnPointHistoryDetails.accHolderName}</td>
 												<td>${withdrawnPointHistoryDetails.sIFSCCode}</td>
 												<td>${withdrawnPointHistoryDetails.phonenumber}</td>
+												<td>${withdrawnPointHistoryDetails.updatedOb}</td>
 												<td>${withdrawnPointHistoryDetails.status}</td>												
 												 <td>
 												  <a href="<c:url value='/admin/withdrawn/approve?id=${withdrawnPointHistoryDetails.id}' />">
