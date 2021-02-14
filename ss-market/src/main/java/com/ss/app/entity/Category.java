@@ -12,8 +12,9 @@ public class Category {
 	@Id
 	private String code;
 	private String description;
-	@Column(columnDefinition="bigint default 0")
+	@Column(columnDefinition = "bigint default 0")
 	private long activedays;
+	private Double rewardPoint;
 
 	public String getCode() {
 		return code;
@@ -38,4 +39,13 @@ public class Category {
 	public void setActivedays(long activedays) {
 		this.activedays = activedays;
 	}
+
+	public Double getRewardPoint() {
+		return rewardPoint;
+	}
+
+	public void setRewardPoint(Double rewardPoint) {
+		this.rewardPoint = rewardPoint;
+	}
+
 }

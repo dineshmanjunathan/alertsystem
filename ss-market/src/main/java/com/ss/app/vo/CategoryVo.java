@@ -5,6 +5,7 @@ public class CategoryVo {
 	private String code;
 	private String description;
 	private long activedays;
+	private Double rewardPoint;
 
 	public String getCode() {
 		return code;
@@ -28,6 +29,14 @@ public class CategoryVo {
 
 	public void setActivedays(long activedays) {
 		this.activedays = activedays;
+	}
+
+	public Double getRewardPoint() {
+		return rewardPoint;
+	}
+
+	public void setRewardPoint(Double rewardPoint) {
+		this.rewardPoint = rewardPoint;
 	}
 
 }

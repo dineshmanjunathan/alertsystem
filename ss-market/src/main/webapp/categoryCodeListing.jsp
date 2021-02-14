@@ -57,6 +57,7 @@
 											<th data-field="name" data-editable="false">Category Code</th>
 											<th data-field="Description" data-editable="false">Description</th>
 											<th data-field="activedays" data-editable="false">Active Days</th>
+											<th data-field="rewardPoints" data-editable="false">Reward Points</th>
 											<th data-field="action">Action</th>
 										</tr>
 									</thead>
@@ -67,6 +68,7 @@
 												<td>${details.code}</td> 
 												<td>${details.description}</td>
 												<td>${details.activedays}</td>
+												<td>${details.rewardPoint}</td>
                                                 <td><a href="<c:url value='/admin/categoryCode/edit?id=${details.code}' />"><center><i class="fa fa-pencil-square-o" aria-hidden="true"></i></center></a>
 		        								 <a class="btn-danger" onclick="return confirm('Are you sure you want to delete?')" 
 		        								 href="<c:url value='/admin/categoryCode/delete?id=${details.code}' />" >

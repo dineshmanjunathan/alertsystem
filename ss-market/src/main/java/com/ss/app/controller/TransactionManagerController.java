@@ -106,6 +106,7 @@ public class TransactionManagerController {
 			Member member = userRepository.findById(memberId).get();
 			Long totalQty = 0L;
 			Long activeDays = 0L;
+			Double totalRewardPoints = 0.0;
 			purchase.setPaymentType(address.getPaymentType());
 
 			if (address.getPaymentType() != null && address.getPaymentType().equals("REPURCHASE")) {
@@ -135,6 +136,7 @@ public class TransactionManagerController {
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
 					categoryCodelist.add(prod.getCategory().getCode());
 					activeDays = activeDays + prod.getCategory().getActivedays();
+					totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
 				}
 			}
 
@@ -152,7 +154,7 @@ public class TransactionManagerController {
 			}
 
 			// Reward Customer.
-				rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays);
+				rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays, totalRewardPoints);
 
 			// TODO email to member email address
 			model.addAttribute("cartList", cart);
@@ -186,6 +188,7 @@ public class TransactionManagerController {
 			Purchase purchase = new Purchase();
 			Long totalQty = 0L;
 			Long activeDays = 0L;
+			Double totalRewardPoints = 0.0;
 			ArrayList<String> categoryCodelist = new ArrayList<String>();
 			for (Cart c : cart) {
 				// Update qty in product
@@ -209,12 +212,13 @@ public class TransactionManagerController {
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
 					categoryCodelist.add(prod.getCategory().getCode());
 					activeDays = activeDays + prod.getCategory().getActivedays();
+					totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
 				}
 			}
 			cartRepository.deleteByMemberid(memberId);
 
 			// Reward Customer.
-			rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays);
+			rewardCustomer(request, member.getId(), member.getReferedby(), orderNumber, totalQty, activeDays, totalRewardPoints);
 
 			model.addAttribute("cartList", cart);
 			model.addAttribute("orderNumber", orderNumber);
@@ -295,7 +299,7 @@ public class TransactionManagerController {
 	}
 
 	private void rewardCustomer(HttpServletRequest request, String memId, String sponserId, Long orderNumber,
-			Long totalQty, Long activeDays) {
+			Long totalQty, Long activeDays, Double totalRewardPoints) {
 		RewardTransaction reward = new RewardTransaction();
 		try {
 			updateActiveDays(request, memId, sponserId, orderNumber, totalQty, activeDays);
@@ -303,8 +307,8 @@ public class TransactionManagerController {
 			Member member = userRepository.findByReferencecodeAndRole(sponserId, "MEMBER").get();
 			if (member != null && member.getId() != null) {
 				reward.setMemberid(memId);
-				SSConfiguration ssConfig = ssConfigRepository.findById("PR").get();
-				reward.setPoint(ssConfig.getValue());
+				//SSConfiguration ssConfig = ssConfigRepository.findById("PR").get();
+				reward.setPoint(totalRewardPoints);
 				reward.setOrderNumber(orderNumber);
 				reward.setSponserId(sponserId);
 				reward.setRewardedMember(member.getId());
@@ -312,8 +316,8 @@ public class TransactionManagerController {
 
 				if (member != null && member.getId() != null && response != null && response.getMemberid() != null) {
 
-					if (ssConfig.getValue() > 0) {
-						member.setWalletBalance(member.getWalletBalance() + ssConfig.getValue().longValue());
+					if (totalRewardPoints > 0) {
+						member.setWalletBalance(member.getWalletBalance() + totalRewardPoints.longValue());
 					}
 					userRepository.save(member);
 				}

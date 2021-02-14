@@ -83,6 +83,10 @@
 																<input name="activedays" type="text" class="form-control"
 																	placeholder="Active Days" value="${categoryCode.activedays}" required>
 															</div>
+															<div class="form-group">
+																<input name="rewardPoint" type="text" class="form-control"
+																	placeholder="Reward Point" value="${categoryCode.rewardPoint}" required>
+															</div>
 															
 													</div>
 													</div>

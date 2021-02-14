@@ -29,7 +29,7 @@ public interface ProductRepository extends CrudRepository<Product, String> {
 	@Transactional
 	@Query(value="select * from t_product p where p.status = 'ACTIVE' order by p.code ", nativeQuery=true)
 	List<Product> getActiveProducts();
-	
+		
 	@Transactional
 	@Modifying
 	@Query(value="update t_product set status = 'INACTIVE' where code=:code ", nativeQuery=true)
