@@ -8,7 +8,7 @@ public class DefaultMemberIDGenerator extends AbstractStringIDGenerator {
 
 	public static final String defaultSsequencePrefix = ENTITY_KEY_CODE.KEY_MEMBER_ID;
 	public static final String defaultSsequenceIncrement = "1";
-	public static final String stringFormat = "%07d";
+	public static final String stringFormat = "%06d";
 
 	
 	public DefaultMemberIDGenerator() {
