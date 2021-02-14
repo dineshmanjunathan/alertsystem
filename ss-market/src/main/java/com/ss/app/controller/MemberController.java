@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,26 +23,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.ss.app.entity.CountryCode;
+import com.ss.app.entity.KYCDetails;
 import com.ss.app.entity.Member;
+import com.ss.app.entity.Product;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.entity.WithdrawnPointsVo;
-import com.ss.app.model.CountryCodeRepository;
+import com.ss.app.model.KYCDetailsRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.UserRepository;
 import com.ss.app.model.WithdrawnPointsRepository;
-import com.ss.app.vo.CountryCodeVo;
+import com.ss.app.vo.KYCDetailsVo;
 import com.ss.app.vo.MemberRewardTree;
 import com.ss.app.vo.MemberStat;
 import com.ss.app.vo.MemberTree;
 import com.ss.app.vo.MemberVo;
+import com.ss.app.vo.ProductVo;
 import com.ss.utils.MemberLevel;
 import com.ss.utils.ReportGenerator;
 
@@ -55,25 +60,25 @@ public class MemberController {
 	private UserRepository userRepository;
 
 	@Autowired
-	private CountryCodeRepository countryCodeRepository;
-	
-	@Autowired
 	private SSConfigRepository ssConfigRepository;
-	
+
 	@Autowired
 	private WithdrawnPointsRepository withdrawnPointsRepository;
 
+	@Autowired
+	private KYCDetailsRepository kycDetailsRepository;
+
 	@RequestMapping("/")
 	public String landingPage(HttpServletRequest request, ModelMap model) {
-		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID") != null) {
 			request.getSession().invalidate();
 		}
 		return "index";
 	}
-	
+
 	@RequestMapping("/landingPage")
 	public String inLandingPage(HttpServletRequest request, ModelMap model) {
-		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID") != null) {
 			request.getSession().invalidate();
 		}
 		return "index";
@@ -81,7 +86,7 @@ public class MemberController {
 
 	@RequestMapping("/login")
 	public String inlogin(HttpServletRequest request, ModelMap model) {
-		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID") != null) {
 			request.getSession().invalidate();
 		}
 		return "login";
@@ -98,14 +103,14 @@ public class MemberController {
 		model.addAttribute("CURRENT_USER", ab);
 		return "home";
 	}
-	
+
 	@RequestMapping("/register")
 	public String user(HttpServletRequest request, ModelMap model) {
 		/*
 		 * Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
 		 * model.addAttribute("countryCodeList", countryCodeList);
 		 */
-		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID") != null) {
 			request.getSession().invalidate();
 		}
 		return "user";
@@ -113,30 +118,32 @@ public class MemberController {
 
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request, ModelMap model) {
-		String redirectPath="login";
+		String redirectPath = "login";
 		if (request.getSession() != null) {
-			if(request.getSession().getAttribute("ROLE")!=null && request.getSession().getAttribute("ROLE").equals("ADMIN")) {
-				model.addAttribute("ROLE","ADMIN");
+			if (request.getSession().getAttribute("ROLE") != null
+					&& request.getSession().getAttribute("ROLE").equals("ADMIN")) {
+				model.addAttribute("ROLE", "ADMIN");
 				redirectPath = "commonLogin";
-			}else if(request.getSession().getAttribute("ROLE")!=null && request.getSession().getAttribute("ROLE").equals("STOCK_POINT")) {
-				model.addAttribute("ROLE","STOCK_POINT");
+			} else if (request.getSession().getAttribute("ROLE") != null
+					&& request.getSession().getAttribute("ROLE").equals("STOCK_POINT")) {
+				model.addAttribute("ROLE", "STOCK_POINT");
 				redirectPath = "commonLogin";
 			}
-			
+
 			request.getSession().invalidate();
 			model.addAttribute("adminlogout", "Successfully logged out");
 		}
 		return redirectPath;
 	}
-	
+
 	@RequestMapping("/register/withreferencecode")
 	public String user(@RequestParam("sponsorId") String sponsorId, HttpServletRequest request, ModelMap model) {
 		if (sponsorId != null && !sponsorId.isEmpty()) {
-			if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID")!=null) {
+			if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID") != null) {
 				request.getSession().invalidate();
 			}
 			Member member = userRepository.findByReferencecode(sponsorId).get();
-			if (member != null && member.getId()!=null) {
+			if (member != null && member.getId() != null) {
 				Member mb = new Member();
 				mb.setReferedby(member.getReferencecode());
 				model.addAttribute("member", mb);
@@ -150,7 +157,7 @@ public class MemberController {
 	public String loginSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
 		try {
 			Member member = userRepository.findByIdAndPasswordAndRole(user.getId(), user.getPassword(), "MEMBER").get();
-			if (member != null && member.getId()!=null) {
+			if (member != null && member.getId() != null) {
 				if (!user.getPassword().equals(member.getPassword())) {
 					model.addAttribute("errormsg", "Password is incorrect!");
 					return "login";
@@ -160,7 +167,7 @@ public class MemberController {
 				request.getSession().setAttribute("MEMBER_NAME", member.getName());
 				request.getSession().setAttribute("ROLE", member.getRole());
 				request.getSession().setAttribute("REFERENCE_CODE", member.getReferencecode());
-				if(member.getActive_days() !=null) {
+				if (member.getActive_days() != null) {
 					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
 					java.util.Date date = Date.from(member.getActive_days().atZone(ZoneId.systemDefault()).toInstant());
 					request.getSession().setAttribute("ACTIVE_DAYS", sdf.format(date));
@@ -199,7 +206,7 @@ public class MemberController {
 		}
 		return "login";
 	}
-	
+
 	@RequestMapping(value = "/member/repurchase/wallet", method = RequestMethod.GET)
 	public String getRePurchaseWallet(HttpServletRequest request, ModelMap model) {
 		try {
@@ -232,7 +239,7 @@ public class MemberController {
 		}
 		return "rePurchase";
 	}
-	
+
 	@RequestMapping(value = "/wallet/withdrawn", method = RequestMethod.POST)
 	public String redirectToWithdrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
 		Member userEntity = new Member();
@@ -245,12 +252,12 @@ public class MemberController {
 		}
 		return "withdrawn";
 	}
-	
+
 	@RequestMapping(value = "/wallet/deduction/compute", method = RequestMethod.GET)
 	public String validateRepurchase(HttpServletRequest request, MemberVo user, ModelMap model) {
-		
-		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) &&
-				user.getRepurcahse() != null && user.getRepurcahse() > 0) {
+
+		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getRepurcahse() != null
+				&& user.getRepurcahse() > 0) {
 
 			SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
 			SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
@@ -277,7 +284,7 @@ public class MemberController {
 				model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
 			}
 
-		}else {
+		} else {
 			model.addAttribute("member", user);
 		}
 		return "rePurchase";
@@ -336,7 +343,7 @@ public class MemberController {
 		}
 		return "rePurchaseWallet";
 	}
-	
+
 	@RequestMapping(value = "/withdrawn", method = RequestMethod.POST)
 	public String updateToWithdrawn(HttpServletRequest request, WithdrawnPointsVo vo, ModelMap model) {
 		try {
@@ -375,15 +382,15 @@ public class MemberController {
 
 				member.setTotalbalance(member.getWalletBalance() + member.getWalletWithdrawn());
 				model.addAttribute("userwallet", member);
-				
+
 				WithdrawnPoints withdrawnPoints = new WithdrawnPoints();
-				Double wd=Double.valueOf(member.getWalletWithdrawn());
+				Double wd = Double.valueOf(member.getWalletWithdrawn());
 				withdrawnPoints.setAmount((rp - totaldeduct));
 				withdrawnPoints.setPoint(rp);
 				withdrawnPoints.setDeduction(totaldeduct);
 				withdrawnPoints.setMemberid(member.getId());
 				withdrawnPoints.setUpdatedOb(LocalDateTime.now());
-				
+
 				withdrawnPoints.setAccountNumber(vo.getAccountNumber());
 				withdrawnPoints.setAccHolderName(vo.getAccHolderName());
 				withdrawnPoints.setsIFSCCode(vo.getsIFSCCode());
@@ -391,7 +398,6 @@ public class MemberController {
 				withdrawnPoints.setStatus("PENDING");
 				withdrawnPoints.setPaymentType(vo.getPaymentType());
 				withdrawnPointsRepository.save(withdrawnPoints);
-				
 
 				model.addAttribute("successMessage", "Successfully Withdrawn Points.");
 			} else {
@@ -405,11 +411,12 @@ public class MemberController {
 		}
 		return "wallet";
 	}
+
 	@RequestMapping(value = "/withdrawn/deduction/compute", method = RequestMethod.GET)
 	public String validateWithDrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
-		
-		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) &&
-				user.getWalletWithdrawn() != null && user.getWalletWithdrawn() > 0) {
+
+		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getWalletWithdrawn() != null
+				&& user.getWalletWithdrawn() > 0) {
 
 			SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
 			SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
@@ -436,7 +443,7 @@ public class MemberController {
 				model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
 			}
 
-		}else {
+		} else {
 			model.addAttribute("member", user);
 		}
 		return "withdrawn";
@@ -458,7 +465,7 @@ public class MemberController {
 		try {
 			List<MemberTree> treeList = new ArrayList<>();
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
-			Member member = userRepository.findByIdAndRole(memberId,"MEMBER").get();
+			Member member = userRepository.findByIdAndRole(memberId, "MEMBER").get();
 			MemberTree tree = new MemberTree();
 			tree.setId(memberId);
 			tree.setParent("#");
@@ -473,12 +480,12 @@ public class MemberController {
 		}
 		return "memberTree";
 	}
-	
+
 	@RequestMapping(value = "/member/stat", method = RequestMethod.GET)
 	public String memberStat(HttpServletRequest request, ModelMap model) {
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
-			Member member = userRepository.findByIdAndRole(memberId,"MEMBER").get();
+			Member member = userRepository.findByIdAndRole(memberId, "MEMBER").get();
 			MemberRewardTree memberRewardTree = new MemberRewardTree();
 			memberRewardTree.setId(member.getId());
 			recursionTree(memberRewardTree, member.getReferencecode(), member.getId());
@@ -494,9 +501,9 @@ public class MemberController {
 		}
 		return "memberStat";
 	}
-	
+
 	private List<String> recursionTree(MemberRewardTree memberRewardTree, String basekeyCode, String memberId) {
-		List<Member> child = userRepository.findByReferedbyAndRole(basekeyCode,"MEMBER");
+		List<Member> child = userRepository.findByReferedbyAndRole(basekeyCode, "MEMBER");
 		List<String> c = new ArrayList<>();
 		List<MemberRewardTree> subTreeList = new ArrayList<MemberRewardTree>();
 		MemberRewardTree subTree = null;
@@ -516,23 +523,22 @@ public class MemberController {
 		return c;
 	}
 
-
 	private void findTree(String basekeyCode, String memberId, List<MemberTree> treeList) {
 		try {
-			List<Member> child = userRepository.findByReferedbyAndRole(basekeyCode,"MEMBER");
+			List<Member> child = userRepository.findByReferedbyAndRole(basekeyCode, "MEMBER");
 			MemberTree subTree = null;
 			for (Member mem : child) {
-				long numOfDays =0;
-				if(mem.getActive_days()!=null && mem.getActive_days().isAfter(LocalDateTime.now())) {
-					numOfDays = ChronoUnit.DAYS.between(LocalDateTime.now(), mem.getActive_days())+1;
-					mem.setMemberStatus(numOfDays+" ACTIVE days left");
-				}else {
+				long numOfDays = 0;
+				if (mem.getActive_days() != null && mem.getActive_days().isAfter(LocalDateTime.now())) {
+					numOfDays = ChronoUnit.DAYS.between(LocalDateTime.now(), mem.getActive_days()) + 1;
+					mem.setMemberStatus(numOfDays + " ACTIVE days left");
+				} else {
 					mem.setMemberStatus("INACTIVE");
 				}
 				subTree = new MemberTree();
 				subTree.setId(mem.getId());
 				subTree.setParent(memberId);
-				subTree.setText(mem.getId() + "    [ " + mem.getName() +" - "+mem.getMemberStatus()+ " ]");
+				subTree.setText(mem.getId() + "    [ " + mem.getName() + " - " + mem.getMemberStatus() + " ]");
 				treeList.add(subTree);
 				findTree(mem.getReferencecode(), mem.getId(), treeList);
 			}
@@ -548,17 +554,17 @@ public class MemberController {
 
 			Member userEntity = new Member();
 			model.addAttribute("member", user);
-			
+
 			BeanUtils.copyProperties(user, userEntity, "createon", "updatedon");
 			if (StringUtils.isNotEmpty(user.getReferedby())) {
 				String referedBy = userRepository.checkSponserExists(user.getReferedby());
 				if (StringUtils.isEmpty(referedBy)) {
-					
+
 					model.addAttribute("errormsg", "Invalid Sponser Id Provided.");
-					if(role!=null && role.equals("ADMIN")) {
+					if (role != null && role.equals("ADMIN")) {
 						model.addAttribute("member", userEntity);
 						return "useredit";
-					}else {
+					} else {
 						return "user";
 					}
 				}
@@ -567,22 +573,23 @@ public class MemberController {
 			userEntity.setWalletBalance(0L);
 			userEntity.setWalletWithdrawn(0L);
 			Member phMember = userRepository.save(userEntity);
-			
+
 			phMember.setReferencecode(phMember.getId());
-			phMember=	userRepository.save(phMember);
-			
-			if(role!=null && role.equals("ADMIN")) {
-				model.addAttribute("successMessage", phMember.getId()+"Member Created Successfully!");
+			phMember = userRepository.save(phMember);
+
+			if (role != null && role.equals("ADMIN")) {
+				model.addAttribute("successMessage", phMember.getId() + "Member Created Successfully!");
 				Iterable<Member> memberList = userRepository.findAll();
-				model.addAttribute("memberList",memberList);
+				model.addAttribute("memberList", memberList);
 				return "memberListing";
-			}else {
+			} else {
 				model.addAttribute("registersuccess", "Member Registered Successfully!");
-				model.addAttribute("successMsgMemberId", "Your Login Member Id and Referral Code is <b>"+ phMember.getId()+"</b>");
+				model.addAttribute("successMsgMemberId",
+						"Your Login Member Id and Referral Code is <b>" + phMember.getId() + "</b>");
 				model.addAttribute("successMsgNote", "<b>Note:</b> Please save above details for future reference.");
 			}
-			
-			//TODO SMS to member mobile number
+
+			// TODO SMS to member mobile number
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errormsg", "Member Registered Failed! ");
@@ -592,15 +599,15 @@ public class MemberController {
 	}
 
 	@RequestMapping(value = "/user/edit", method = RequestMethod.GET)
-	public String edit(@RequestParam("user_id") String userId,HttpServletRequest request, ModelMap model) {
+	public String edit(@RequestParam("user_id") String userId, HttpServletRequest request, ModelMap model) {
 		try {
 			Member user = userRepository.findById(userId).get();
-			if(user!=null && user.getReferedby()!=null) {
+			if (user != null && user.getReferedby() != null) {
 				try {
 					Member referedMember = userRepository.findByReferencecode(user.getReferedby()).get();
 					model.addAttribute("SPONSERNAME", referedMember.getName());
-				}catch (NoSuchElementException ne) {
-					
+				} catch (NoSuchElementException ne) {
+
 				}
 			}
 			model.addAttribute("member", user);
@@ -614,9 +621,9 @@ public class MemberController {
 	public String editSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
 		Member userEntity = new Member();
 		try {
-			Member actualmember = userRepository.findById(user.getId()).get();			
+			Member actualmember = userRepository.findById(user.getId()).get();
 			BeanUtils.copyProperties(user, userEntity);
-			if(actualmember!=null && actualmember.getId()!=null) {
+			if (actualmember != null && actualmember.getId() != null) {
 				userEntity.setActive_days(actualmember.getActive_days());
 			}
 			userEntity.setUpdatedon(new Date(System.currentTimeMillis()));
@@ -629,72 +636,6 @@ public class MemberController {
 			e.printStackTrace();
 		}
 		return "useredit";
-	}
-
-	@RequestMapping("/countryCodeListing")
-	public String countryCodeListing(HttpServletRequest request, ModelMap model) {
-		try {
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
-	}
-
-	@RequestMapping(value = "/countryCode/delete", method = RequestMethod.GET)
-	public String countryCodeDelete(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
-		try {
-			countryCodeRepository.deleteById(Long.parseLong(id));
-			model.addAttribute("deletesuccessmessage", "Deleted Successfully");
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
-	}
-
-	@RequestMapping(value = "/countryCode/edit", method = RequestMethod.GET)
-	public String countryCodeEdit(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
-		try {
-			CountryCode countryCode = countryCodeRepository.findById(Long.parseLong(id)).get();
-			CountryCodeVo countryCodeVo = new CountryCodeVo();
-			BeanUtils.copyProperties(countryCodeVo, countryCode);
-			model.addAttribute("countryCode", countryCodeVo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCode";
-	}
-
-	@RequestMapping(value = "/countryCode/edit", method = RequestMethod.POST)
-	public String countryCodeEditSubmit(HttpServletRequest request, CountryCodeVo countryCodeVo, ModelMap model) {
-		CountryCode countryCode = new CountryCode();
-		try {
-			BeanUtils.copyProperties(countryCode, countryCodeVo);
-			countryCodeRepository.save(countryCode);
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-			model.addAttribute("successMessage", "Successfully Edited Admin Record");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
-	}
-
-	@RequestMapping(value = "/countryCode/save", method = RequestMethod.POST)
-	public String countryCodeSubmit(HttpServletRequest request, CountryCodeVo countryCodeVo, ModelMap model) {
-		try {
-			CountryCode countryCode = new CountryCode();
-			BeanUtils.copyProperties(countryCode, countryCodeVo);
-			countryCodeRepository.save(countryCode);
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
 	}
 
 	@RequestMapping(value = "/user/generate/pdf", method = RequestMethod.GET)
@@ -722,38 +663,80 @@ public class MemberController {
 		model.addAttribute("totalEarned", member.getWalletBalance() + member.getWalletWithdrawn());
 		return new ResponseEntity<Member>(member, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping("/contactus")
 	public String contactus(HttpServletRequest request, ModelMap model) {
 		return "contactus";
 	}
-	
+
 	@RequestMapping("/get/member")
-	public ResponseEntity<String> findMember(@RequestParam("memberId") String memberId, HttpServletRequest request,ModelMap model) {
+	public ResponseEntity<String> findMember(@RequestParam("memberId") String memberId, HttpServletRequest request,
+			ModelMap model) {
 		Member member = userRepository.findById(memberId).get();
 		return new ResponseEntity<String>(member.getName(), HttpStatus.OK);
 	}
+
 	@RequestMapping("/get/sponser")
-	public ResponseEntity<String> findSponser(HttpServletRequest request,ModelMap model,@RequestParam("sponserId") String sponserId) {
+	public ResponseEntity<String> findSponser(HttpServletRequest request, ModelMap model,
+			@RequestParam("sponserId") String sponserId) {
 		try {
 			Member member = userRepository.findByReferencecode(sponserId).get();
 			return new ResponseEntity<String>(member.getName(), HttpStatus.OK);
-		}catch(NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			return new ResponseEntity<String>("", HttpStatus.OK);
 		}
 	}
+
 	@RequestMapping("/member/phNoExists")
-	public ResponseEntity<String> phNumExists(HttpServletRequest request,ModelMap model,@RequestParam("phonenumber") String phonenumber) {
+	public ResponseEntity<String> phNumExists(HttpServletRequest request, ModelMap model,
+			@RequestParam("phonenumber") String phonenumber) {
 		try {
 			Member member = userRepository.findByPhonenumber(Long.valueOf(phonenumber));
-			if(member!=null) {
+			if (member != null) {
 				return new ResponseEntity<String>(String.valueOf(member.getPhonenumber()), HttpStatus.OK);
-			}else {
+			} else {
 				return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 			}
-			
-		}catch(NoSuchElementException e) {
+
+		} catch (NoSuchElementException e) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@GetMapping("/member/kycdetails")
+	public String kycDetails(HttpServletRequest request, ModelMap model) {
+		try {
+			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
+			KYCDetails details = kycDetailsRepository.findByMemberId(memberId);
+			if (details != null) {
+				model.addAttribute("details", details);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "kycDetails";
+	}
+
+	@RequestMapping(value = "/member/kycdetails/save", method = RequestMethod.POST)
+	public String productEditSubmit(HttpServletRequest request, KYCDetailsVo kycDetailsVo, ModelMap model,
+			@RequestParam(required = false) MultipartFile image) {
+		KYCDetails details = new KYCDetails();
+		try {
+			BeanUtils.copyProperties(kycDetailsVo, details);
+			if (!image.isEmpty()) {
+				byte[] imageByte = image.getBytes();
+				details.setImage(imageByte);
+			} else if (kycDetailsVo.getBase64Image() != null) {
+				details.setImage(Base64.getDecoder().decode(kycDetailsVo.getBase64Image()));
+			}
+			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
+			details.setMemberId(memberId);
+			kycDetailsRepository.save(details);
+			model.addAttribute("successMessage", "Updated Successfully.");
+			model.addAttribute("details", details);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "kycDetails";
 	}
 }

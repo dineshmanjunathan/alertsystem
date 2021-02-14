@@ -3,7 +3,6 @@ package com.ss.app.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,14 +50,12 @@ public class Member implements Serializable {
 	private Date updatedon = new Date(System.currentTimeMillis());
 	@Column(updatable=false)
 	private String referedby;
-	
 	private LocalDateTime active_days;
 	private String role;
-	
 	@Transient
 	private Long totalbalance= 0L;
-
 	private String memberStatus;
+	private String pancardNumber;
 		
 	public String getId() {
 		return id;
@@ -171,5 +168,13 @@ public class Member implements Serializable {
 	public void setMemberStatus(String memberStatus) {
 		this.memberStatus = memberStatus;
 	}
+	public String getPancardNumber() {
+		return pancardNumber;
+	}
+	public void setPancardNumber(String pancardNumber) {
+		this.pancardNumber = pancardNumber;
+	}
+	
+	
 	
 }
