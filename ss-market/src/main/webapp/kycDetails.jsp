@@ -50,7 +50,7 @@
 
 												<div class="form-group">
 													<input name="pancardNumber" type="text"
-														class="form-control" placeholder="Shipping Charge"
+														class="form-control" placeholder="Pan Number"
 														value="${details.pancardNumber}" required>
 												</div>
 
@@ -75,12 +75,10 @@
 									<div class="row">
 										<div class="col-lg-12">
 											<div class="payment-adress">
-
+												<br>
+												<br>
 												<button class="rmk btn btn-primary waves-effect waves-light"
-													type="submit" name="submit" value="register">Create</button>
-												<button class="rmk btn btn-primary waves-effect waves-light"
-													type="reset" name="reset" value="reset">Clear</button>
-
+													type="submit" name="submit" value="register">Save</button>
 											</div>
 										</div>
 									</div>

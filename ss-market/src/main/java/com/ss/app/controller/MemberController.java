@@ -720,18 +720,31 @@ public class MemberController {
 	@RequestMapping(value = "/member/kycdetails/save", method = RequestMethod.POST)
 	public String productEditSubmit(HttpServletRequest request, KYCDetailsVo kycDetailsVo, ModelMap model,
 			@RequestParam(required = false) MultipartFile image) {
-		KYCDetails details = new KYCDetails();
+		
 		try {
-			BeanUtils.copyProperties(kycDetailsVo, details);
-			if (!image.isEmpty()) {
-				byte[] imageByte = image.getBytes();
-				details.setImage(imageByte);
-			} else if (kycDetailsVo.getBase64Image() != null) {
-				details.setImage(Base64.getDecoder().decode(kycDetailsVo.getBase64Image()));
-			}
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
-			details.setMemberId(memberId);
-			kycDetailsRepository.save(details);
+			KYCDetails details = kycDetailsRepository.findByMemberId(memberId);
+			if(details == null) {
+				details = new KYCDetails();
+				BeanUtils.copyProperties(kycDetailsVo, details);
+				if (!image.isEmpty()) {
+					byte[] imageByte = image.getBytes();
+					details.setImage(imageByte);
+				} else if (kycDetailsVo.getBase64Image() != null) {
+					details.setImage(Base64.getDecoder().decode(kycDetailsVo.getBase64Image()));
+				}
+				details.setMemberId(memberId);
+				kycDetailsRepository.save(details);
+			} else {
+				if (!image.isEmpty()) {
+					byte[] imageByte = image.getBytes();
+					details.setImage(imageByte);
+				} else if (kycDetailsVo.getBase64Image() != null) {
+					details.setImage(Base64.getDecoder().decode(kycDetailsVo.getBase64Image()));
+				}
+				kycDetailsRepository.save(details);
+			}
+			
 			model.addAttribute("successMessage", "Updated Successfully.");
 			model.addAttribute("details", details);
 		} catch (Exception e) {
