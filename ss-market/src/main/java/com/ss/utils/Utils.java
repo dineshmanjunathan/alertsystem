@@ -90,7 +90,7 @@ public class Utils {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("1111", "TDS + Charity Charges ");
 		map.put("1112", "Admin Charges");
-		map.put("PR", "PURCHASE REWARD");
+		map.put("1113", "No Pan Card Charges");
 		map.put("L1", "LEVEL 1 REWARD");
 		map.put("L2", "LEVEL 2 REWARD");
 		map.put("L3", "LEVEL 3 REWARD");
