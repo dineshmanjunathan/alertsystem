@@ -52,7 +52,6 @@
                                         data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                                      <thead>
 										<tr> 
-											<th data-field="code" data-editable="false">Code</th>
 											<th data-field="description" data-editable="false">Description</th>
 											<th data-field="value" data-editable="false">Value</th>
 											<th data-field="comment" data-editable="false">Comment</th>
@@ -62,7 +61,6 @@
                                         <tbody> 
                                         <c:forEach var="details" items="${ssConfigList}" varStatus="status">
                                             <tr>
-												<td>${details.code}</td>
 												<td>${details.description}</td>
 												<td>${details.value}</td>
 												<td>${details.comment}</td>
