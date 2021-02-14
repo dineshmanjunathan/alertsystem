@@ -34,6 +34,7 @@
 			}
 			
 		});
+		$('#memberTree').off("contextmenu.jstree", ".jstree-anchor");
 	}
 	
 	$(document).ready(function () {
