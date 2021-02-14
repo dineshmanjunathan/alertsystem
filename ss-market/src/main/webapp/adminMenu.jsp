@@ -113,7 +113,7 @@
 		</a>
 	</div>
 	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-		<a href="<c:url value='/admin/ssconfig/listing' />">
+		<a href="<c:url value='/admin/kyc/list' />">
 			<div class="panel-body">
 				<div class="stats-title pull-left">
 					<h5>Approve Member KYC</h5>

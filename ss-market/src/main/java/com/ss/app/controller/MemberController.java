@@ -362,15 +362,24 @@ public class MemberController {
 					&& vo.getWalletWithdrawn() > 0) {
 
 				// INCENTIVE DEDUCTION STARTS
-				SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
-				SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
 				Long rp = vo.getWalletWithdrawn();
 				Long remaningPoint = vo.getWalletBalance();
-				Double config1 = configurations1.getValue();
-				Double config2 = configurations2.getValue();
-				Double deductAmt1 = (rp.doubleValue() / 100) * config1;
-				Double deductAmt2 = (rp.doubleValue() / 100) * config2;
-				Long totaldeduct = (long) (deductAmt1 + deductAmt2);
+				Long totaldeduct = 0L;
+				if(member.getPancardNumber()!=null && !member.getPancardNumber().isEmpty()) {
+					SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
+					SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
+					Double config1 = configurations1.getValue();
+					Double config2 = configurations2.getValue();
+					Double deductAmt1 = (rp.doubleValue() / 100) * config1;
+					Double deductAmt2 = (rp.doubleValue() / 100) * config2;
+					totaldeduct = (long) (deductAmt1 + deductAmt2);
+				}else {
+					SSConfiguration configurations3 = ssConfigRepository.findById("1113").get();
+					Double deductAmt3 = (rp.doubleValue() / 100) * configurations3.getValue();
+					totaldeduct = deductAmt3.longValue();
+				}
+
+
 				remaningPoint = remaningPoint - rp;
 				// INCENTIVE DEDUCTION ENDS
 
@@ -414,37 +423,42 @@ public class MemberController {
 
 	@RequestMapping(value = "/withdrawn/deduction/compute", method = RequestMethod.GET)
 	public String validateWithDrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
+		try {
+			if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getWalletWithdrawn() != null
+					&& user.getWalletWithdrawn() > 0) {
+				String userId = (String) request.getSession().getAttribute("MEMBER_ID");
+				Member member = userRepository.findById(userId).get();
 
-		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getWalletWithdrawn() != null
-				&& user.getWalletWithdrawn() > 0) {
-
-			SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
-			SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
-
-			try {
 				Long rp = user.getWalletWithdrawn();
 				Long remaningPoint = user.getWalletBalance();
-
-				if (rp > 0) {
+				Long totaldeduct = 0L;
+				
+				if (member.getPancardNumber() != null && !member.getPancardNumber().isEmpty()) {
+					SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
+					SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
 					Double config1 = configurations1.getValue();
 					Double config2 = configurations2.getValue();
 					Double deductAmt1 = (rp.doubleValue() / 100) * config1;
 					Double deductAmt2 = (rp.doubleValue() / 100) * config2;
-					Long totaldeduct = (long) (deductAmt1 + deductAmt2);
-					remaningPoint = remaningPoint - rp;
-					model.addAttribute("DEBIT", totaldeduct);
-					model.addAttribute("WITHDRAWN_POINT", (rp - totaldeduct));
+					totaldeduct = (long) (deductAmt1 + deductAmt2);
+				} else {
+					SSConfiguration configurations3 = ssConfigRepository.findById("1113").get();
+					Double deductAmt3 = (rp.doubleValue() / 100) * configurations3.getValue();
+					totaldeduct = deductAmt3.longValue();
 				}
 
+				remaningPoint = remaningPoint - rp;
+
+				model.addAttribute("DEBIT", totaldeduct);
+				model.addAttribute("WITHDRAWN_POINT", (rp - totaldeduct));
+
 				model.addAttribute("member", user);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
+			}else {
+				model.addAttribute("member", user);
 			}
-
-		} else {
-			model.addAttribute("member", user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
 		}
 		return "withdrawn";
 	}
