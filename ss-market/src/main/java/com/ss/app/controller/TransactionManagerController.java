@@ -461,9 +461,20 @@ public class TransactionManagerController {
 		return "manualPurchase";
 	}
 
-	@RequestMapping(value = "/purchase/addToCart", method = RequestMethod.POST)
+	@RequestMapping(value = "/purchase/addToCart/member", method = RequestMethod.POST)
 	public ResponseEntity<String> addTocart(HttpServletRequest request, ModelMap model,
 			@RequestParam("prodCode") String prodCode, @RequestParam("qty") String qty, @RequestParam("shippingCharge") String shippingCharge) {
+		return addTocartMain(request, model, prodCode, qty,shippingCharge);
+	}
+	
+	@RequestMapping(value = "/purchase/addToCart/stock", method = RequestMethod.POST)
+	public ResponseEntity<String> addTocart(HttpServletRequest request, ModelMap model,
+			@RequestParam("prodCode") String prodCode, @RequestParam("qty") String qty) {
+		
+		return addTocartMain(request, model, prodCode, qty, null);
+		
+	}
+	public ResponseEntity<String> addTocartMain(HttpServletRequest request, ModelMap model, String prodCode,String qty,String shippingCharge) {
 		Double cartTotal = 0.0;
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
@@ -482,7 +493,9 @@ public class TransactionManagerController {
 				cart.setShippingCharge(product.getShippingCharge());
 				cartRepository.save(cart);
 			}
-			model.addAttribute("shippingCharge", shippingCharge);
+			if(shippingCharge!=null && !shippingCharge.isEmpty()) {
+				model.addAttribute("shippingCharge", shippingCharge);
+			}
 			cartTotal = cartRepository.getCartTotal(memberId);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -26,7 +26,7 @@
 			return;
 		}
 		$.ajax({
-			url : "/purchase/addToCart",
+			url : "/purchase/addToCart/member",
 			data : {
 				"prodCode" : prodCode,
 				"qty" : qty,

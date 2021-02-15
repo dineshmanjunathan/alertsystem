@@ -25,7 +25,7 @@ function addToCart(prodCode, price) {
 		return;
 	}
 	$.ajax({
-	    url: "/purchase/addToCart",
+	    url: "/purchase/addToCart/stock",
 	    data: {
 	        "prodCode": prodCode,
 	        "qty" :qty
