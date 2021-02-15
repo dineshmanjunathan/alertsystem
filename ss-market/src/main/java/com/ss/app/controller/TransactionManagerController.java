@@ -3,9 +3,11 @@ package com.ss.app.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -620,9 +622,13 @@ public class TransactionManagerController {
 			List<Purchase> purchaseList = purchaseRepository.findByOrderNumber(Long.parseLong(orderNumber));
 			Purchase purchase = purchaseList.get(0);
 			Address address = addressRepository.findByOrderNumber(Long.parseLong(orderNumber));
-
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime localTxnDate = purchase.getPurchasedOn();
+			String txnDate=localTxnDate.format(formatter);
+			
 			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
-			exporter.export(response, purchase.getMemberid(), orderNumber);
+			exporter.export(response, purchase.getMemberid(), orderNumber, txnDate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
