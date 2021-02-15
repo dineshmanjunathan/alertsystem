@@ -160,11 +160,28 @@ function useWallet() {
 											</c:when>
 											</c:choose>
 											<div class="row">
+											<c:set var="cartTotal" value="${cart.amount*cart.quantity}" />
+											<c:set var="shippingCharge" value="${cart.quantity*cart.shippingCharge}" />
 											<a href="#"
 												class="btn btn-waring col-md-offset-9 col-md-3">
-												<span> <i class="fa fa-shopping-cart"
+												<table style="width:100%">
+												<tr>
+												<tr>
+												<th><strong>Cart Total:&#x20b9;</strong> </th>
+												<td id="cartProductTotal">${cartTotal}</td>
+												</tr>
+												<th><strong>Shipping Charge:&#x20b9;</strong></th>
+												<td id="shippingCharge">${shippingCharge}</td>
+												</tr>
+												<tr>
+												<th><strong>Purchase Total:&#x20b9;</strong> </th>
+												<td id="cartTotal">${cartTotal+shippingCharge}</td>
+												</tr>
+												</table>
+												
+												<%-- <span> <i class="fa fa-shopping-cart"
 													style="font-size: 20px"></i> <span><strong>Purchase Total:&#x20b9;</strong> <span id="cartTotal">${cartTotal}</span>
-												</span>
+												</span> --%>
 											</span></a>
 											</div>
 											</div>	

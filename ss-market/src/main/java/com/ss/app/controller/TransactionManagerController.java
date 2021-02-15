@@ -136,7 +136,13 @@ public class TransactionManagerController {
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
 					categoryCodelist.add(prod.getCategory().getCode());
 					activeDays = activeDays + prod.getCategory().getActivedays();
-					totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
+					if( prod.getCategory() !=null) {
+						if( prod.getCategory().getRewardPoint() !=null) {
+							totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
+						}
+		
+					}
+					
 				}
 			}
 
@@ -385,10 +391,22 @@ public class TransactionManagerController {
 				Member mem = userRepository.findById(userId).get();
 				if (mem != null && mem.getId() != null) {
 
-					Double cartTotal = cartRepository.getCartTotal(userId);
-					//Double cartTotal = cartRepository.getPurchaseTotal(userId);
+					//Double cartTotal = cartRepository.getCartTotal(userId);
+					List<Cart> cartList = cartRepository.findByMemberid(userId);
+					Cart cart=null;
+					if(cartList !=null && cartList.size()>0) {
+						for(int i=0;i<cartList.size();i++) {
+							cart=cartList.get(i);
+						}	
+					}
+					
 					model.addAttribute("member", mem);
-					model.addAttribute("cartTotal", cartTotal);
+					model.addAttribute("cart", cart);
+					/*
+					 * model.addAttribute("amount", cart.getAmount());
+					 * model.addAttribute("quantity", cart.getQuantity());
+					 * model.addAttribute("shippingCharge", cart.getShippingCharge());
+					 */
 					return "address";
 				}
 			} else {

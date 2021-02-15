@@ -35,7 +35,7 @@ public class OrderPDFExporter {
     private void writeTableHeader(PdfPTable table) {
         PdfPCell cell = new PdfPCell();
         cell.setBackgroundColor(Color.BLUE);
-        cell.setPadding(5);
+        cell.setPadding(6);
          
         Font font = FontFactory.getFont(FontFactory.HELVETICA);
         font.setColor(Color.WHITE);
@@ -51,6 +51,9 @@ public class OrderPDFExporter {
          
         cell.setPhrase(new Phrase("Price Per Item", font));
         table.addCell(cell);
+        
+        cell.setPhrase(new Phrase("Shipping Charge", font));
+        table.addCell(cell);
          
         cell.setPhrase(new Phrase("Total", font));
         table.addCell(cell);
@@ -59,6 +62,7 @@ public class OrderPDFExporter {
      
     private void writeTableData(PdfPTable table) {
         for (Purchase purchase : purchaseList) {
+        	int shippingCharge = (int) (purchase.getShippingCharge()*purchase.getQuantity());
         	PdfPCell cell = new PdfPCell();
         	cell.setPhrase(new Phrase(purchase.getProduct().getProdDesc()));
         	table.addCell(cell);
@@ -68,7 +72,9 @@ public class OrderPDFExporter {
         	table.addCell(cell);
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getAmount())));
         	table.addCell(cell);
-        	double totalValue = purchase.getQuantity() * purchase.getAmount();
+        	cell.setPhrase(new Phrase(String.valueOf(purchase.getShippingCharge()*purchase.getQuantity())));
+        	table.addCell(cell);
+        	double totalValue = purchase.getQuantity() * purchase.getAmount()+shippingCharge;
         	if(redeemPoints !=null && redeemPoints > 0) {
         		totalValue = totalValue - redeemPoints;
         	}
@@ -136,9 +142,9 @@ public class OrderPDFExporter {
         Paragraph emptyPara = new Paragraph("");
         document.add(emptyPara);
          
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] {4.5f, 1.5f, 1.5f, 1.5f, 1.5f});
+        table.setWidths(new float[] {4.5f, 1.5f, 1.5f, 1.5f, 1.5f,1.5f});
         table.setSpacingBefore(10);
          
         writeTableHeader(table);
