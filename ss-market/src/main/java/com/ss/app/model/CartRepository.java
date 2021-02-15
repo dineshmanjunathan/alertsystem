@@ -1,6 +1,7 @@
 package com.ss.app.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -20,8 +21,10 @@ public interface CartRepository extends CrudRepository<Cart, Long> {
 	@Query(value = "select sum(amount * quantity) from t_cart where memberid =:memberId", nativeQuery = true)
 	Double getCartTotal(String memberId);
 	
-	@Query(value = "select sum(amount * quantity + shipping_charge) from t_cart where memberid =:memberId", nativeQuery = true)
-	Double getPurchaseTotal(String memberId);
+	@Query(value = "select amount, quantity, shipping_charge from t_cart where memberid =:memberId", nativeQuery = true)
+	Cart getPurchaseTotal(String memberId);
+	
+	Optional<Cart> findById(String memberid);
 
 	@Transactional
 	Long deleteByMemberid(String memberId);

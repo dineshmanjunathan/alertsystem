@@ -3,9 +3,11 @@ package com.ss.app.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +138,13 @@ public class TransactionManagerController {
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
 					categoryCodelist.add(prod.getCategory().getCode());
 					activeDays = activeDays + prod.getCategory().getActivedays();
-					totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
+					if( prod.getCategory() !=null) {
+						if( prod.getCategory().getRewardPoint() !=null) {
+							totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
+						}
+		
+					}
+					
 				}
 			}
 
@@ -385,10 +393,22 @@ public class TransactionManagerController {
 				Member mem = userRepository.findById(userId).get();
 				if (mem != null && mem.getId() != null) {
 
-					Double cartTotal = cartRepository.getCartTotal(userId);
-					//Double cartTotal = cartRepository.getPurchaseTotal(userId);
+					//Double cartTotal = cartRepository.getCartTotal(userId);
+					List<Cart> cartList = cartRepository.findByMemberid(userId);
+					Cart cart=null;
+					if(cartList !=null && cartList.size()>0) {
+						for(int i=0;i<cartList.size();i++) {
+							cart=cartList.get(i);
+						}	
+					}
+					
 					model.addAttribute("member", mem);
-					model.addAttribute("cartTotal", cartTotal);
+					model.addAttribute("cart", cart);
+					/*
+					 * model.addAttribute("amount", cart.getAmount());
+					 * model.addAttribute("quantity", cart.getQuantity());
+					 * model.addAttribute("shippingCharge", cart.getShippingCharge());
+					 */
 					return "address";
 				}
 			} else {
@@ -615,9 +635,13 @@ public class TransactionManagerController {
 			List<Purchase> purchaseList = purchaseRepository.findByOrderNumber(Long.parseLong(orderNumber));
 			Purchase purchase = purchaseList.get(0);
 			Address address = addressRepository.findByOrderNumber(Long.parseLong(orderNumber));
-
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime localTxnDate = purchase.getPurchasedOn();
+			String txnDate=localTxnDate.format(formatter);
+			
 			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
-			exporter.export(response, purchase.getMemberid(), orderNumber);
+			exporter.export(response, purchase.getMemberid(), orderNumber, txnDate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

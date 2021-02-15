@@ -91,7 +91,8 @@
 														<c:set var="total" value="${detail.amount * detail.quantity}" />
 														<td>${total}</td>
 														<c:set var="cartTotal" value="${cartTotal + total}" />
-														<c:set var="shippingCharge" value="${detail.shippingCharge}" />
+														<c:set var="shippingCharge" value="${detail.shippingCharge*detail.quantity}" />
+														<c:set var="prodQuantity" value="${detail.quantity}" />
 											     <td>
 		        								  <a href="<c:url value='/purchase/order/generate/pdf?orderNumber=${orderNumber}' />" > <center><i class="fa fa-download" aria-hidden="true"></i></center></a>
 		        								 </td>	
