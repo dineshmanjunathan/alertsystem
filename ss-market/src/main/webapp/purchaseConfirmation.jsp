@@ -115,10 +115,12 @@
 												class="btn btn-waring m-btn m-btn--custom m-btn--icon col-md-offset-9 col-md-3">
 												<table style="width: 100%">
 													<tr>
-													<tr>
 														<th><strong>Cart Total:&#x20b9;</strong></th>
 														<td id="cartProductTotal">${cartTotal}</td>
 													</tr>
+													<c:choose>
+													<c:when test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
+													<tr>
 													<th><strong>Shipping Charge:&#x20b9;</strong></th>
 													<td id="shippingCharge">${shippingCharge}</td>
 													</tr>
@@ -126,6 +128,15 @@
 														<th><strong>Purchase Total:&#x20b9;</strong></th>
 														<td id="cartTotal">${cartTotal+shippingCharge}</td>
 													</tr>
+													</c:when>
+													<c:otherwise>
+													<tr>
+														<th><strong>Purchase Total:&#x20b9;</strong></th>
+														<td id="cartTotal">${cartTotal}</td>
+													</tr>
+													</c:otherwise>
+													</c:choose>
+													
 													<c:if test="${address.redeemedPoints gt 0}">
 													<tr>
 													<th><strong>Re-purchase Used:&#x20b9;</strong></th>

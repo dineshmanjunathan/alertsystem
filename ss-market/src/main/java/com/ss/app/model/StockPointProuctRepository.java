@@ -19,6 +19,6 @@ public interface StockPointProuctRepository extends CrudRepository<StockPointPro
 	@Transactional
 	List<StockPointProduct> findByMemberId(String memberId);
 	
-	StockPointProduct findByOrderNumber(Long orderNumber);
+	List<StockPointProduct> findByOrderNumber(Long orderNumber);
 	
 }

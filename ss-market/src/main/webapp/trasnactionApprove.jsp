@@ -73,7 +73,7 @@
 												<c:choose>
 													<c:when test="${details.orderStatus == 'PENDING'}">
 														 <td>
-												  <a href="<c:url value='/purchase/approve?id=${details.id}' />">
+												  <a href="<c:url value='/purchase/approve?id=${details.orderNumber}' />">
 												<button class="rmk btn btn-primary" type="button">
 													<i class="fa fa-shopping-cart"> </i> Delivered
 												</button>

@@ -381,6 +381,7 @@ public class TransactionManagerController {
 	public String purchaseAddress(HttpServletRequest request, ModelMap model) {
 		try {
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
+			String role = (String) request.getSession().getAttribute("ROLE");
 			if (userId != null && !userId.isEmpty()) {
 				Member mem = userRepository.findById(userId).get();
 				if (mem != null && mem.getId() != null) {
@@ -400,7 +401,11 @@ public class TransactionManagerController {
 						model.addAttribute("cartMap", map);
 						model.addAttribute("cartTotal", total);
 						model.addAttribute("shippingCharge", shippingCharge);
-						model.addAttribute("total", total + shippingCharge );
+						if(role!=null && role.equals("MEMBER")) {
+							model.addAttribute("total", total + shippingCharge );
+						}else {
+							model.addAttribute("total", total);
+						}
 					}
 					return "address";
 				}
@@ -571,21 +576,29 @@ public class TransactionManagerController {
 	@RequestMapping(value = "/purchase/approve", method = RequestMethod.GET)
 	public String approvePurchase(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
 		try {
-			Purchase purchase = purchaseRepository.findById(Long.parseLong(id)).get();
+			List<Purchase> purchase = purchaseRepository.findByOrderNumber(Long.parseLong(id));
+			List<Purchase> savePurchList = new ArrayList<Purchase>();
+			if (purchase != null && purchase.size() > 0) {
+				for (Purchase purch : purchase) {
+					purch.setOrderStatus("DELIVERED");
+					savePurchList.add(purch);
+					model.addAttribute("successMessage",
+							"Order " + purch.getOrderNumber() + " Delivered Successfully.");
+				}
+				purchaseRepository.saveAll(savePurchList);
 
-			if (purchase != null && purchase.getId() != null) {
-				purchase.setOrderStatus("DELIVERED");
-				model.addAttribute("successMessage", "Order " + purchase.getOrderNumber() + " Delivered Successfully.");
-				purchase = purchaseRepository.save(purchase);
+				List<StockPointProduct> stockPointProduct = stockPointProuctRepository.findByOrderNumber(Long.parseLong(id));
+				List<StockPointProduct> saveSppList = new ArrayList<StockPointProduct>();
+				if (stockPointProduct != null && stockPointProduct.size() > 0) {
+					for (StockPointProduct spp : stockPointProduct) {
+						spp.setStatus("DELIVERED");
+						saveSppList.add(spp);
+					}
+					stockPointProuctRepository.saveAll(saveSppList);
 
-				StockPointProduct stockPointProduct = stockPointProuctRepository
-						.findByOrderNumber(purchase.getOrderNumber());
-				stockPointProduct.setStatus("DELIVERED");
-				stockPointProuctRepository.save(stockPointProduct);
-
-				Iterable<Purchase> purchaseList = purchaseRepository.findByOrderStatus("PENDING");
-				model.addAttribute("purchaseList", purchaseList);
-
+					Iterable<Purchase> purchaseList = purchaseRepository.findByOrderStatus("PENDING");
+					model.addAttribute("purchaseList", purchaseList);
+				}
 			} else {
 				model.addAttribute("errorMessage", "Try Again Later!");
 			}
@@ -616,7 +629,7 @@ public class TransactionManagerController {
 	}
 
 	@GetMapping("/purchase/order/generate/pdf")
-	public void exportToPDF(@RequestParam("orderNumber") String orderNumber, HttpServletResponse response)
+	public void exportToPDF(@RequestParam("orderNumber") String orderNumber, HttpServletResponse response,HttpServletRequest request)
 			throws DocumentException, IOException {
 		try {
 			response.setContentType("application/pdf");
@@ -632,6 +645,7 @@ public class TransactionManagerController {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			LocalDateTime localTxnDate = purchase.getPurchasedOn();
 			String txnDate=localTxnDate.format(formatter);
+			//Member member = userRepository.findById(purchase.getMemberid()).get();
 			
 			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
 			exporter.export(response, purchase.getMemberid(), orderNumber, txnDate);

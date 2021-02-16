@@ -47,19 +47,19 @@ function useWallet() {
 					<!-- <form action="/userlisting" method="get"> -->
 					<div class="payment-adress">
 						<c:choose>
-						<c:when test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
-						<a
-							class="rmk btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2"
-							href="/stock/point/menu" type="submit" name="submit"
-							value="adminListing">Back to Main</a>
+							<c:when test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
+								<a
+									class="rmk btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2"
+									href="/stock/point/menu" type="submit" name="submit"
+									value="adminListing">Back to Main</a>
 							</c:when>
 							<c:otherwise>
-							<a
-							class="rmk btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2"
-							href="/menu" type="submit" name="submit"
-							value="adminListing">Back to Main</a>
+								<a
+									class="rmk btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2"
+									href="/menu" type="submit" name="submit" value="adminListing">Back
+									to Main</a>
 							</c:otherwise>
-							</c:choose>
+						</c:choose>
 					</div>
 					<!-- </form> -->
 
@@ -75,122 +75,133 @@ function useWallet() {
 
 											<input type="hidden" name="id" id="id" value="${member.id}">
 											<input type="hidden" name="role" id="role" value="MEMBER">
-											<input type="hidden" name="redeemedPoints" id="redeemedPoints" value="${member.repurcahse}">
-											<input type="hidden" name="cartTotal" id="cartTotal" value='${cartTotal}'>
-											<input type="hidden" name="shippingCharges" id="shippingCharges" value='${shippingCharge}'>
+											<input type="hidden" name="redeemedPoints"
+												id="redeemedPoints" value="${member.repurcahse}"> <input
+												type="hidden" name="cartTotal" id="cartTotal"
+												value='${cartTotal}'> <input type="hidden"
+												name="shippingCharges" id="shippingCharges"
+												value='${shippingCharge}'>
 
 											<div id="dropzone1" class="pro-ad">
 
 												<p style="color: green" align="center">${successMessage}</p>
 												<p style="color: red" align="center">${deletesuccessmessage}</p>
 
-												<li class="active"><a >Address Details:</a></li>
+												<li class="active"><a>Address Details:</a></li>
 												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group"></div>
-														
+
 														<div class="form-group">
-															<input name="addressLineOne" id ="addressLineOne" type="text"
-																class="form-control" placeholder="Address Line One"
+															<input name="addressLineOne" id="addressLineOne"
+																type="text" class="form-control"
+																placeholder="Address Line One"
 																value="${address.addressLineOne}" required>
 														</div>
-														
+
 														<div class="form-group">
-															<input name="addressLineTwo" id ="addressLineTwo" type="text"
-																class="form-control" placeholder="Address Line Two"
+															<input name="addressLineTwo" id="addressLineTwo"
+																type="text" class="form-control"
+																placeholder="Address Line Two"
 																value="${address.addressLineTwo}" required>
 														</div>
 														<div class="form-group">
-															<input name="postalCode" id ="postalCode" type="text"
+															<input name="postalCode" id="postalCode" type="text"
 																class="form-control" placeholder="Postal Code"
 																value="${address.postalCode}" required>
 														</div>
 
 													</div>
-													
+
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group"></div>
-														
+
 														<div class="form-group">
-															<input name="city" id ="city" type="text"
+															<input name="city" id="city" type="text"
 																class="form-control" placeholder="City"
 																value="${address.city}" required>
 														</div>
 														<div class="form-group">
-															<input name="state" id ="state" type="text"
+															<input name="state" id="state" type="text"
 																class="form-control" placeholder="State"
 																value="${address.state}" required>
 														</div>
-														
+
 
 													</div>
-													
-													
+
+
 												</div>
-												
+
 												<li class="active"><a>Payment Details:</a></li>
 												<div class="well row">
 													<div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
 														<div class="form-check">
-														<label class="radio-inline">
-													      <input type="radio" name="paymentType" value="CASH" checked><h4 >Cash</h4>
-													    </label>
-													    <label class="radio-inline">
-													      <input type="radio" name="paymentType" value="EPAY"> <h4>e-Payment</h4>
-													    </label>
-													    <c:choose>
-														<c:when test="${member.repurcahse>=cartTotal}">
-													    <label class="radio-inline">
-													      <input type="radio" name="paymentType" value="REPURCHASE"> <h4>Use Re-Purchase wallet</h4>
-													    </label>
-													    </c:when>
+															<label class="radio-inline"> <input type="radio"
+																name="paymentType" value="CASH" checked>
+															<h4>Cash</h4>
+															</label> <label class="radio-inline"> <input type="radio"
+																name="paymentType" value="EPAY">
+																<h4>e-Payment</h4>
+															</label>
+															<c:choose>
+																<c:when test="${member.repurcahse>=cartTotal}">
+																	<label class="radio-inline"> <input
+																		type="radio" name="paymentType" value="REPURCHASE">
+																		<h4>Use Re-Purchase wallet</h4>
+																	</label>
+																</c:when>
+															</c:choose>
+														</div>
+													</div>
+
+													<c:choose>
+														<c:when test="${member.repurcahse>=total}">
+															<div class="row">
+																<a href="#"
+																	class="btn btn-waring col-md-offset-9 col-md-3"> <span>
+																		<i class="fa fa-cc-mastercard" style="font-size: 20px"></i>
+																		<span><strong>Re-Purchase wallet:</strong> <span
+																			id="repurcahsewallet">${member.repurcahse}</span> </span>
+																</span></a>
+															</div>
+														</c:when>
 													</c:choose>
+													<div class="row">
+														<a href="#"
+															class="btn btn-waring col-md-offset-9 col-md-3">
+															<table style="width: 100%">
+
+																<tr>
+																	<th><strong>Cart Total:&#x20b9;</strong></th>
+																	<td id="cartProductTotal">${cartTotal}</td>
+																</tr>
+																<c:if test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
+																	<tr>
+																		<th><strong>Shipping Charge:&#x20b9;</strong></th>
+																		<td>${shippingCharge}</td>
+																	</tr>
+																</c:if>
+																<tr>
+																	<th><strong>Purchase Total:&#x20b9;</strong></th>
+																	<td>${total}</td>
+																</tr>
+															</table> <%-- <span> <i class="fa fa-shopping-cart"
+													style="font-size: 20px"></i> <span><strong>Purchase Total:&#x20b9;</strong> <span id="cartTotal">${cartTotal}</span>
+												</span> --%> </span>
+														</a>
 													</div>
 												</div>
-																						
-											<c:choose>
-											<c:when test="${member.repurcahse>=total}">
-											<div class="row">
-											<a href="#"
-												class="btn btn-waring col-md-offset-9 col-md-3">
-												<span> <i class="fa fa-cc-mastercard"
-													style="font-size: 20px"></i> <span><strong>Re-Purchase wallet:</strong> <span id="repurcahsewallet">${member.repurcahse}</span>
-												</span>
-											</span></a>
 											</div>
-											</c:when>
-											</c:choose>
-											<div class="row">
-											<a href="#"
-												class="btn btn-waring col-md-offset-9 col-md-3">
-												<table style="width:100%">
-												<tr>
-												<tr>
-												<th><strong>Cart Total:&#x20b9;</strong> </th>
-												<td id="cartProductTotal">${cartTotal}</td>
-												</tr>
-												<th><strong>Shipping Charge:&#x20b9;</strong></th>
-												<td >${shippingCharge}</td>
-												</tr>
-												<tr>
-												<th><strong>Purchase Total:&#x20b9;</strong> </th>
-												<td >${total}</td>
-												</tr>
-												</table>
-												
-												<%-- <span> <i class="fa fa-shopping-cart"
-													style="font-size: 20px"></i> <span><strong>Purchase Total:&#x20b9;</strong> <span id="cartTotal">${cartTotal}</span>
-												</span> --%>
-											</span></a>
-											</div>
-											</div>	
-									  </div>
 											<div class="row">
 												<div class="col-lg-12">
 													<div class="payment-adress">
-														<button class="rmk btn btn-primary waves-effect waves-light"
-															type="submit" name="submit" value="register">Proceed to Pay</button>
-														<button class="rmk btn btn-primary waves-effect waves-light"
+														<button
+															class="rmk btn btn-primary waves-effect waves-light"
+															type="submit" name="submit" value="register">Proceed
+															to Pay</button>
+														<button
+															class="rmk btn btn-primary waves-effect waves-light"
 															type="reset" name="reset" value="reset">Clear</button>
 
 													</div>
