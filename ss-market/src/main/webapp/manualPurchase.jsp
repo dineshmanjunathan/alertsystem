@@ -161,6 +161,7 @@ function review() {
 											<thead>
 												<tr>
 													<th data-field="image" data-editable="false">Image</th>
+													<th data-field="orderno" data-editable="false">Order No</th>
 													<th data-field="category" data-editable="false">Category</th>
 													<th data-field="code" data-editable="false">Product</th>
 													<th data-field="price" data-editable="false">Price</th>
@@ -173,6 +174,7 @@ function review() {
 													varStatus="status">
 													<tr>
 														<td><img alt="img" src="data:image/jpeg;base64,${details.base64Image}" style="width: 100px;height: 100px;"/></td>
+														<td>${details.orderNumber}</td>
 														<td>${details.category.description}</td>
 														<td>${details.prodDesc}</td>
 														<td>${details.price}</td>
