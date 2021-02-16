@@ -470,7 +470,7 @@ public class TransactionManagerController {
 				model.addAttribute("cartMap", map);
 				model.addAttribute("cartTotal", total);
 			}
-			Iterable<StockPointProduct> productList = stockPointProuctRepository.findByMemberIdAndStatus(memberId,
+			Iterable<StockPointProduct> productList = stockPointProuctRepository.findByMemberIdAndStatusOrderById(memberId,
 					"DELIVERED");
 			model.addAttribute("productList", productList);
 		} catch (Exception e) {
@@ -645,9 +645,9 @@ public class TransactionManagerController {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			LocalDateTime localTxnDate = purchase.getPurchasedOn();
 			String txnDate=localTxnDate.format(formatter);
-			//Member member = userRepository.findById(purchase.getMemberid()).get();
+			Member member = userRepository.findById(purchase.getMemberid()).get();
 			
-			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
+			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address, member.getRole());
 			exporter.export(response, purchase.getMemberid(), orderNumber, txnDate);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -45,7 +45,8 @@
                                      <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
                                         data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                                      <thead>
-										<tr> 
+										<tr>
+											<th data-field="orderno" data-editable="false">Order Number</th> 
 											<th data-field="category" data-editable="false">Category</th>
 											<th data-field="prodCode" data-editable="false">Product</th>
 											<th data-field="quantity" data-editable="false">Quantity</th>
@@ -57,6 +58,7 @@
                                         <c:forEach var="details" items="${stockPointInventory}" varStatus="status">
                                             <tr>
 												<%-- <td>${details.id}</td> --%>
+												<td>${details.orderNumber}</td>
 												<td>${details.category.description} [${details.category.code}]</td> 
 												<td>${details.prodDesc} [${details.code}]</td> 
 												<td>${details.quantity}</td>

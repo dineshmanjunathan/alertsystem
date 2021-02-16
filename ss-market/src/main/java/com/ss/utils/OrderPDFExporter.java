@@ -23,14 +23,16 @@ public class OrderPDFExporter {
     private Double total = 0.0;
     private Long redeemPoints = 0L;
     private String paymentType;
+    private String role;
     
     private Double cartTotal = 0.0;
     private Double shippingChargeTotal = 0.0;
    // private LocalDateTime transactionDateandTime =LocalDateTime.now();
      
-    public OrderPDFExporter(List<Purchase> purchaseList, Address address) {
+    public OrderPDFExporter(List<Purchase> purchaseList, Address address, String role) {
         this.purchaseList = purchaseList;
         this.address = address;
+        this.role = role;
         if(!CollectionUtils.isEmpty(purchaseList)) {
         	redeemPoints = purchaseList.get(0).getRedeemedPoints();
         	paymentType = purchaseList.get(0).getPaymentType();
@@ -56,9 +58,6 @@ public class OrderPDFExporter {
          
         cell.setPhrase(new Phrase("Price Per Item", font));
         table.addCell(cell);
-        
-        cell.setPhrase(new Phrase("Shipping Charge", font));
-        table.addCell(cell);
          
         cell.setPhrase(new Phrase("Total", font));
         table.addCell(cell);
@@ -77,9 +76,12 @@ public class OrderPDFExporter {
         	table.addCell(cell);
         	cell.setPhrase(new Phrase(String.valueOf(purchase.getAmount())));
         	table.addCell(cell);
-        	cell.setPhrase(new Phrase(String.valueOf(purchase.getShippingCharge()*purchase.getQuantity())));
-        	table.addCell(cell);
-        	double totalValue = purchase.getQuantity() * purchase.getAmount()+shippingCharge;
+        	double totalValue = 0.0; 
+        	if ("MEMBER".equals(role)) {
+        		totalValue= purchase.getQuantity() * purchase.getAmount()+shippingCharge;
+        	}else {
+        		totalValue= purchase.getQuantity() * purchase.getAmount();
+        	}
         	if(redeemPoints !=null && redeemPoints > 0) {
         		totalValue = totalValue - redeemPoints;
         	}
@@ -153,10 +155,10 @@ public class OrderPDFExporter {
         
         Paragraph emptyPara = new Paragraph("");
         document.add(emptyPara);
-         
-        PdfPTable table = new PdfPTable(6);
+        
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] {4.5f, 1.5f, 1.5f, 1.5f, 1.5f,1.5f});
+        table.setWidths(new float[] {4.5f, 1.5f, 1.5f, 1.5f, 1.5f});
         table.setSpacingBefore(10);
          
         writeTableHeader(table);
@@ -174,9 +176,11 @@ public class OrderPDFExporter {
         cartTotalPar.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(cartTotalPar);
         
-        Paragraph shippingCharge = new Paragraph("Shipping Charge: "+ shippingChargeTotal, font1);
-        shippingCharge.setAlignment(Paragraph.ALIGN_RIGHT);
-        document.add(shippingCharge);
+		if ("MEMBER".equals(role)) {
+			Paragraph shippingCharge = new Paragraph("Shipping Charge: " + shippingChargeTotal, font1);
+			shippingCharge.setAlignment(Paragraph.ALIGN_RIGHT);
+			document.add(shippingCharge);
+		}
         
         Paragraph purchaseTotal = new Paragraph("Purchase Total: "+ total, font1);
         purchaseTotal.setAlignment(Paragraph.ALIGN_RIGHT);

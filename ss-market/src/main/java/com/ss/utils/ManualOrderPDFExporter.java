@@ -114,9 +114,9 @@ public class ManualOrderPDFExporter {
         Paragraph emptyPara = new Paragraph("");
         document.add(emptyPara);
          
-        PdfPTable table = new PdfPTable(6);
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] {4.5f, 1.5f, 1.5f, 1.5f, 1.5f,1.5f});
+        table.setWidths(new float[] {4.5f, 1.5f, 1.5f, 1.5f, 1.5f});
         table.setSpacingBefore(10);
          
         writeTableHeader(table);
