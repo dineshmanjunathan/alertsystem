@@ -50,6 +50,7 @@ import com.ss.app.model.StockPointProuctRepository;
 import com.ss.app.model.StockPointPurchaseRepository;
 import com.ss.app.model.UserRepository;
 import com.ss.app.vo.AddressVo;
+import com.ss.utils.ManualOrderPDFExporter;
 import com.ss.utils.OrderPDFExporter;
 import com.ss.utils.ReportGenerator;
 import com.ss.utils.Utils;
@@ -658,7 +659,7 @@ public class TransactionManagerController {
 			LocalDateTime localTxnDate = stockPointPurchase.getPurchasedOn();
 			String txnDate=localTxnDate.format(formatter);
 			
-			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
+			ManualOrderPDFExporter exporter = new ManualOrderPDFExporter(purchaseList, address);
 			exporter.export(response, stockPointPurchase.getMemberId(), orderNumber, txnDate);
 		} catch (Exception e) {
 			e.printStackTrace();

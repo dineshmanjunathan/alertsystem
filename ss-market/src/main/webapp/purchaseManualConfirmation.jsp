@@ -90,7 +90,7 @@
 														<td>${total}</td>
 														<c:set var="cartTotal" value="${cartTotal + total}" />
 													 <td>
-		        								  <a href="<c:url value='/purchase/order/generate/pdf?orderNumber=${orderNumber}' />" > <center><i class="fa fa-download" aria-hidden="true"></i></center></a>
+		        								  <a href="<c:url value='/purchase/manual/order/pdf?orderNumber=${orderNumber}' />" > <center><i class="fa fa-download" aria-hidden="true"></i></center></a>
 		        								 </td>	
 													</tr>
 												</c:forEach>
