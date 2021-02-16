@@ -34,6 +34,8 @@ public class SessionFilter implements Filter {
         		!uri.equals("/login") ||
         		!uri.equals("/admin/login") ||
         		!uri.equals("/stock/point/login") ||
+        		!uri.equals("/index.jsp") ||
+        		!uri.equals("login.jsp") ||
         		!uri.equals("/logout")) {
         	if(ses !=null) {
             	String isLoggedIn = (String) ses.getAttribute("LOGGED_ON");
@@ -44,6 +46,7 @@ public class SessionFilter implements Filter {
             			System.out.println(uriArray[1]);
                 		if(!skipList.contains(uriArray[1])) {
                 			res.sendRedirect("/");
+                			return;
                 		}
             		}
             	}

@@ -14,7 +14,7 @@ public class Category {
 	private String description;
 	@Column(columnDefinition = "bigint default 0")
 	private long activedays;
-	private Double rewardPoint;
+	private Double rewardPoint = 0.0;
 
 	public String getCode() {
 		return code;

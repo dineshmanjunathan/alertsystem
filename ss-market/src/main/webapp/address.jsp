@@ -77,6 +77,7 @@ function useWallet() {
 											<input type="hidden" name="role" id="role" value="MEMBER">
 											<input type="hidden" name="redeemedPoints" id="redeemedPoints" value="${member.repurcahse}">
 											<input type="hidden" name="cartTotal" id="cartTotal" value='${cartTotal}'>
+											<input type="hidden" name="shippingCharges" id="shippingCharges" value='${shippingCharge}'>
 
 											<div id="dropzone1" class="pro-ad">
 
@@ -148,7 +149,7 @@ function useWallet() {
 												</div>
 																						
 											<c:choose>
-											<c:when test="${member.repurcahse>=cartTotal}">
+											<c:when test="${member.repurcahse>=total}">
 											<div class="row">
 											<a href="#"
 												class="btn btn-waring col-md-offset-9 col-md-3">
@@ -160,8 +161,6 @@ function useWallet() {
 											</c:when>
 											</c:choose>
 											<div class="row">
-											<c:set var="cartTotal" value="${cart.amount*cart.quantity}" />
-											<c:set var="shippingCharge" value="${cart.quantity*cart.shippingCharge}" />
 											<a href="#"
 												class="btn btn-waring col-md-offset-9 col-md-3">
 												<table style="width:100%">
@@ -171,11 +170,11 @@ function useWallet() {
 												<td id="cartProductTotal">${cartTotal}</td>
 												</tr>
 												<th><strong>Shipping Charge:&#x20b9;</strong></th>
-												<td id="shippingCharge">${shippingCharge}</td>
+												<td >${shippingCharge}</td>
 												</tr>
 												<tr>
 												<th><strong>Purchase Total:&#x20b9;</strong> </th>
-												<td id="cartTotal">${cartTotal+shippingCharge}</td>
+												<td >${total}</td>
 												</tr>
 												</table>
 												

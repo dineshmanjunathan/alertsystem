@@ -3,7 +3,6 @@ package com.ss.app.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -38,7 +37,6 @@ import com.ss.app.entity.Member;
 import com.ss.app.entity.Product;
 import com.ss.app.entity.Purchase;
 import com.ss.app.entity.RewardTransaction;
-import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.StockPointProduct;
 import com.ss.app.entity.StockPointPurchase;
 import com.ss.app.model.AddressRepository;
@@ -96,31 +94,31 @@ public class TransactionManagerController {
 	@RequestMapping(value = "/purchase/confirm", method = RequestMethod.POST)
 	public String savePurchase(HttpServletRequest request, AddressVo address, ModelMap model) {
 		try {
-			// update active days date in member table
+			
+			Double redeemTotal = 0.0;
 			if ("EPAY".equals(address.getPaymentType())) {
 				// redirect to payment page
+			} else if("REPURCHASE".equals(address.getPaymentType())) {
+				redeemTotal = Double.parseDouble(address.getCartTotal()) * Double.parseDouble(address.getShippingCharges());
+				address.setRedeemedPoints(redeemTotal.longValue());
+			} else {
+				address.setRedeemedPoints(0L);
 			}
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			List<Cart> cart = cartRepository.findByMemberid(memberId);
 			// Get order number
 			Long orderNumber = Utils.getOrderNumber();
-			Purchase purchase = new Purchase();
 			Member member = userRepository.findById(memberId).get();
 			Long totalQty = 0L;
 			Long activeDays = 0L;
 			Double totalRewardPoints = 0.0;
-			purchase.setPaymentType(address.getPaymentType());
 
-			if (address.getPaymentType() != null && address.getPaymentType().equals("REPURCHASE")) {
-				Double carttotal = Double.parseDouble(address.getCartTotal());
-				purchase.setRedeemedPoints(carttotal.longValue());
-				address.setRedeemedPoints(carttotal.longValue());
-			} else {
-				address.setRedeemedPoints(0L);
-			}
 			ArrayList<String> categoryCodelist = new ArrayList<String>();
 
 			for (Cart c : cart) {
+				Purchase purchase = new Purchase();
+				purchase.setPaymentType(address.getPaymentType());
+				purchase.setRedeemedPoints(redeemTotal.longValue());
 				// Update qty in product
 				Product prod = productRepository.findByCode(c.getCode());
 				if (prod.getQuantity() <= 0) {
@@ -389,20 +387,21 @@ public class TransactionManagerController {
 
 					//Double cartTotal = cartRepository.getCartTotal(userId);
 					List<Cart> cartList = cartRepository.findByMemberid(userId);
-					Cart cart=null;
-					if(cartList !=null && cartList.size()>0) {
-						for(int i=0;i<cartList.size();i++) {
-							cart=cartList.get(i);
-						}	
+					Double total = 0.0;
+					Double shippingCharge = 0.0;
+					if (cartList != null) {
+						Map<String, Long> map = new HashMap<>();
+						for (Cart c : cartList) {
+							total = total + (c.getQuantity() * c.getAmount());
+							shippingCharge = shippingCharge + (c.getQuantity() * c.getShippingCharge());
+							map.put(c.getCode(), c.getQuantity());
+						}
+
+						model.addAttribute("cartMap", map);
+						model.addAttribute("cartTotal", total);
+						model.addAttribute("shippingCharge", shippingCharge);
+						model.addAttribute("total", total + shippingCharge );
 					}
-					
-					model.addAttribute("member", mem);
-					model.addAttribute("cart", cart);
-					/*
-					 * model.addAttribute("amount", cart.getAmount());
-					 * model.addAttribute("quantity", cart.getQuantity());
-					 * model.addAttribute("shippingCharge", cart.getShippingCharge());
-					 */
 					return "address";
 				}
 			} else {

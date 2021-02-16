@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import com.ss.app.entity.HibernateSequence;
 import com.ss.app.model.HibernateSequenceRepository;
+import com.ss.config.AuthenticationFilter;
+import com.ss.config.SessionFilter;
 import com.ss.scheduler.DailyRewardScheduler;
 
 @SpringBootApplication
@@ -30,17 +33,17 @@ public class Application extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-	
+
 	@Bean
-    public DailyRewardScheduler bean() {
-        return new DailyRewardScheduler();
-    }
+	public DailyRewardScheduler bean() {
+		return new DailyRewardScheduler();
+	}
 
 	/*
-	 * @Bean public FilterRegistrationBean<SessionFilter> loggingFilter(){
-	 * FilterRegistrationBean<SessionFilter> registrationBean = new
-	 * FilterRegistrationBean<>(); registrationBean.setFilter(new SessionFilter());
-	 * return registrationBean; }
+	 * @Bean public FilterRegistrationBean<AuthenticationFilter> loggingFilter() {
+	 * FilterRegistrationBean<AuthenticationFilter> registrationBean = new
+	 * FilterRegistrationBean<>(); registrationBean.setFilter(new
+	 * AuthenticationFilter()); return registrationBean; }
 	 */
 
 }

@@ -10,6 +10,7 @@ public class AddressVo {
 	private String paymentType;
 	private Long redeemedPoints = 0L;
 	private String cartTotal;
+	private String shippingCharges;
 
 	public String getAddressLineOne() {
 		return addressLineOne;
@@ -74,4 +75,14 @@ public class AddressVo {
 	public void setCartTotal(String cartTotal) {
 		this.cartTotal = cartTotal;
 	}
+
+	public String getShippingCharges() {
+		return shippingCharges;
+	}
+
+	public void setShippingCharges(String shippingCharges) {
+		this.shippingCharges = shippingCharges;
+	}
+	
+	
 }
