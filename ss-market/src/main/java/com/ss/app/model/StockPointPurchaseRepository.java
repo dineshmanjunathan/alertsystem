@@ -11,7 +11,10 @@ import com.ss.app.entity.StockPointPurchase;
 
 @Service
 public interface StockPointPurchaseRepository extends CrudRepository<StockPointPurchase, String> {
+	
 	@Transactional
 	List<StockPointPurchase> findByStockPointId(String memberId);
+	
+	List<StockPointPurchase> findByOrderNumber(Long orderNumber);
 
 }

@@ -185,7 +185,6 @@ public class TransactionManagerController {
 			List<Cart> cart = cartRepository.findByMemberid(memberId);
 			// Get order number
 			Long orderNumber = Utils.getOrderNumber();
-			Purchase purchase = new Purchase();
 			Long totalQty = 0L;
 			Long activeDays = 0L;
 			Double totalRewardPoints = 0.0;
@@ -206,7 +205,7 @@ public class TransactionManagerController {
 				product = new Product();
 				product.setCode(prod.getCode());
 				product.setProdDesc(prod.getProdDesc());
-				prepareManualPurchase(session, member, orderNumber, purchase, c, product);
+				prepareManualPurchase(session, member, orderNumber, c, product);
 				totalQty = totalQty + c.getQuantity();
 
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
@@ -256,16 +255,16 @@ public class TransactionManagerController {
 		purchaseRepository.save(purchase);
 	}
 
-	private void prepareManualPurchase(HttpSession session, Member member, Long orderNumber, Purchase purchase, Cart c,
+	private void prepareManualPurchase(HttpSession session, Member member, Long orderNumber, Cart c,
 			Product prod) {
 		String memberId = (String) session.getAttribute("MEMBER_ID");
-		purchase.setOrderStatus("PENDING");
 		StockPointPurchase sp = new StockPointPurchase();
 		sp.setStockPointId(memberId);
 		sp.setPrice(c.getAmount());
 		sp.setMemberId(member.getId());
 		sp.setProductCode(prod);
 		sp.setQty(c.getQuantity());
+		sp.setOrderNumber(orderNumber);
 		stockPointPurchaseRepository.save(sp);
 	}
 
@@ -635,6 +634,32 @@ public class TransactionManagerController {
 			
 			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
 			exporter.export(response, purchase.getMemberid(), orderNumber, txnDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	@GetMapping("/purchase/manual/order/pdf")
+	public void exportManualPurchaseToPDF(@RequestParam("orderNumber") String orderNumber, HttpServletResponse response)
+			throws DocumentException, IOException {
+		try {
+			response.setContentType("application/pdf");
+
+			String headerKey = "Content-Disposition";
+			String headerValue = "attachment; filename=order_report_" + orderNumber + ".pdf";
+			response.setHeader(headerKey, headerValue);
+
+			List<StockPointPurchase> purchaseList = stockPointPurchaseRepository.findByOrderNumber(Long.parseLong(orderNumber));
+			StockPointPurchase stockPointPurchase = purchaseList.get(0);
+			Address address = addressRepository.findByOrderNumber(Long.parseLong(orderNumber));
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime localTxnDate = stockPointPurchase.getPurchasedOn();
+			String txnDate=localTxnDate.format(formatter);
+			
+			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address);
+			exporter.export(response, stockPointPurchase.getMemberId(), orderNumber, txnDate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,6 +1,7 @@
 package com.ss.app.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,8 @@ public class StockPointPurchase implements Serializable {
 	private Product productCode;
 	private Long qty = 0L;
 	private Double price;
+	private LocalDateTime purchasedOn = LocalDateTime.now();
+	private Long orderNumber;
 
 	public Long getId() {
 		return id;
@@ -79,5 +82,25 @@ public class StockPointPurchase implements Serializable {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+
+	public LocalDateTime getPurchasedOn() {
+		return purchasedOn;
+	}
+
+	public void setPurchasedOn(LocalDateTime purchasedOn) {
+		this.purchasedOn = purchasedOn;
+	}
+
+	public Long getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(Long orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+	
+	
+	
+	
 
 }
