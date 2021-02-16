@@ -5,8 +5,6 @@ import java.util.Base64;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -19,8 +17,6 @@ import javax.persistence.Transient;
 public class StockPointProduct {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
 	private String code;
 	private String memberId;
 	@OneToOne()

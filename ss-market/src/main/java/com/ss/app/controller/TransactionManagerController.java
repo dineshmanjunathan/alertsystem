@@ -236,7 +236,7 @@ public class TransactionManagerController {
 		purchase.setAmount(c.getAmount());
 		purchase.setMemberid(member.getId());
 		if ("STOCK_POINT".equals(member.getRole())) {
-			StockPointProduct spp = new StockPointProduct();
+			/*StockPointProduct spp = new StockPointProduct();
 			spp.setCategory(prod.getCategory());
 			spp.setCode(prod.getCode());
 			spp.setMemberId(member.getId());
@@ -246,7 +246,7 @@ public class TransactionManagerController {
 			spp.setImage(prod.getImage());
 			spp.setStatus("PENDING");
 			spp.setOrderNumber(orderNumber);
-			stockPointProuctRepository.save(spp);
+			stockPointProuctRepository.save(spp);*/
 		} else {
 			purchase.setOrderStatus("DELIVERED");
 		}
@@ -470,8 +470,7 @@ public class TransactionManagerController {
 				model.addAttribute("cartMap", map);
 				model.addAttribute("cartTotal", total);
 			}
-			Iterable<StockPointProduct> productList = stockPointProuctRepository.findByMemberIdAndStatusOrderById(memberId,
-					"DELIVERED");
+			Iterable<StockPointProduct> productList = stockPointProuctRepository.findByMemberIdOrderByCode(memberId);
 			model.addAttribute("productList", productList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -584,10 +583,17 @@ public class TransactionManagerController {
 					savePurchList.add(purch);
 					model.addAttribute("successMessage",
 							"Order " + purch.getOrderNumber() + " Delivered Successfully.");
+					StockPointProduct stockPointProduct = stockPointProuctRepository.findByCode(purch.getProduct().getCode());
+					if(stockPointProduct==null) {
+						prepareStockPointProduct(purch);
+					}else {
+						stockPointProduct.setQuantity(stockPointProduct.getQuantity()+purch.getQuantity());
+						stockPointProuctRepository.save(stockPointProduct);
+					}
 				}
 				purchaseRepository.saveAll(savePurchList);
 
-				List<StockPointProduct> stockPointProduct = stockPointProuctRepository.findByOrderNumber(Long.parseLong(id));
+				/*List<StockPointProduct> stockPointProduct = stockPointProuctRepository.findByOrderNumber(Long.parseLong(id));
 				List<StockPointProduct> saveSppList = new ArrayList<StockPointProduct>();
 				if (stockPointProduct != null && stockPointProduct.size() > 0) {
 					for (StockPointProduct spp : stockPointProduct) {
@@ -598,7 +604,10 @@ public class TransactionManagerController {
 
 					Iterable<Purchase> purchaseList = purchaseRepository.findByOrderStatus("PENDING");
 					model.addAttribute("purchaseList", purchaseList);
-				}
+				}*/
+				
+				Iterable<Purchase> purchaseList = purchaseRepository.findByOrderStatus("PENDING");
+				model.addAttribute("purchaseList", purchaseList);
 			} else {
 				model.addAttribute("errorMessage", "Try Again Later!");
 			}
@@ -606,6 +615,20 @@ public class TransactionManagerController {
 			e.printStackTrace();
 		}
 		return "trasnactionApprove";
+	}
+
+	private void prepareStockPointProduct(Purchase purch) {
+		Product prod = purch.getProduct();
+		StockPointProduct spp = new StockPointProduct();
+		spp.setCategory(prod.getCategory());
+		spp.setCode(prod.getCode());
+		spp.setMemberId(purch.getMemberid());
+		spp.setPrice(prod.getPrice());
+		spp.setProdDesc(prod.getProdDesc());
+		spp.setQuantity(purch.getQuantity());
+		spp.setImage(prod.getImage());
+		//spp.setOrderNumber(orderNumber);
+		stockPointProuctRepository.save(spp);
 	}
 
 	// @RequestMapping(value = "/purchase/order/generate/pdf", method =

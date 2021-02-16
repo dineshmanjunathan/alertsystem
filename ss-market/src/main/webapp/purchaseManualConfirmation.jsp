@@ -44,12 +44,12 @@
 								<br>
 								<div class="row">
 									<a href="#"
-										class="btn btn-warning col-md-offset-5 col-md-2">
+										class="btn btn-warning col-md-offset-4 col-md-3">
 										<span>Order number : ${orderNumber} </span>
 										<%-- <span>Address : ${orderAddress} </span> --%>
 									</a>
 									<a href="#"
-										class="btn btn-warning col-md-offset-5 col-md-2">
+										class="btn btn-warning col-md-offset-4 col-md-3">
 										<span>Ordered Placed to : ${memberId} </span>
 										<%-- <span>Address : ${orderAddress} </span> --%>
 									</a>
