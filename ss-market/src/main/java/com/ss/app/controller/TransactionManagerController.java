@@ -137,7 +137,10 @@ public class TransactionManagerController {
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
 					categoryCodelist.add(prod.getCategory().getCode());
 					activeDays = activeDays + prod.getCategory().getActivedays();
-					totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
+					if( prod.getCategory().getRewardPoint()!=null) {
+						totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
+					}
+					
 				}
 			}
 

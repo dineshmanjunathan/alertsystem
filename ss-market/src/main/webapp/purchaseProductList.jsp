@@ -19,17 +19,23 @@
 		cartTotal == null ? 0.0 : cartTotal
 	};
 
-	function addToCart(prodCode, price, shippingCharge) {
-		let qty = $("#quantity-" + prodCode + " option:selected").val();
-		if (!qty) {
-			alert('Please select quantity.');
+	function addToCart(prodCode, price, quantity, shippingCharge) {
+		let cartQuantity = $("#cartQuantity_"+prodCode).val();
+		if(cartQuantity<=0){
+			alert('Please Enter quantity.');
 			return;
 		}
+		
+		/* if(parseInt(cartQuantity) > quantity){
+			alert('Quantity Exceeded more than the Available Quantity');
+			return;
+		}  */
+		
 		$.ajax({
 			url : "/purchase/addToCart/member",
 			data : {
 				"prodCode" : prodCode,
-				"qty" : qty,
+				"qty" : cartQuantity,
 				"shippingCharge" : shippingCharge
 			},
 			type : "post",
@@ -46,10 +52,10 @@
 
 	}
 
-	function removeFromCart(prodCode, price) {
-		let qty = $("#quantity-" + prodCode + " option:selected").val();
-		if (!qty) {
-			alert('Please select quantity.');
+	function removeFromCart(prodCode, price,quantity) {
+		//let qty = $("#quantity-" + prodCode + " option:selected").val();
+		if (quantity<=0) {
+			alert('Please Enter Quantity.');
 			return;
 		}
 		if (confirm("Do you want to remove from cart?")) {
@@ -182,7 +188,7 @@
 															<td>${details.price}</td>
 															<td>
 																<div class="form-group">
-																	<select name="quantity" id="quantity-${details.code}"
+																	<!--<select name="quantity" id="quantity-${details.code}"
 																		class="form-control">
 																		<option value="">-Select Quantity-</option>
 																		<c:forEach begin="1" end="${details.quantity}"
@@ -190,20 +196,23 @@
 																			<option value="${loop.index}"
 																				${loop.index == cartMap[details.code] ? 'selected' : ''}>${loop.index}</option>
 																		</c:forEach>
-																	</select>
+																	</select>-->
+																	<input name="quantity" id="cartQuantity_${details.code}" type="text" class="form-control"
+																	placeholder="Available Qty:${details.quantity}" required>
+																	
 																</div>
 															</td>
-															<!--<td>${details.shippingCharge}</td>-->
 															<td>
 																<button class="btn btn-primary" type="button"
-																	onclick="return addToCart('${details.code}', '${details.price}', ${details.shippingCharge});">
+																	onclick="return addToCart('${details.code}', '${details.price}','${details.quantity}', ${details.shippingCharge});">
 																	<i class="fa fa-shopping-cart"></i> Add to Cart
 																</button>
 																<button class="btn btn-danger" type="button"
-																	onclick="return removeFromCart('${details.code}', '${details.price}');">
+																	onclick="return removeFromCart('${details.code}', '${details.price}', '${details.quantity}');">
 																	<i class="fa fa-remove"></i>Remove
 																</button>
 															</td>
+															
 														</tr>
 													</c:if>
 												</c:forEach>
