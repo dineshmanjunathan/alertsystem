@@ -11,6 +11,7 @@ public class AddressVo {
 	private Long redeemedPoints = 0L;
 	private String cartTotal;
 	private String shippingCharges;
+	private Double discount = 0.0;
 
 	public String getAddressLineOne() {
 		return addressLineOne;
@@ -82,6 +83,14 @@ public class AddressVo {
 
 	public void setShippingCharges(String shippingCharges) {
 		this.shippingCharges = shippingCharges;
+	}
+	
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
 	}
 	
 	

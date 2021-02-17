@@ -74,7 +74,7 @@ function useWallet() {
 											<p style="color: red" align="center">${errormsg}</p>
 
 											<input type="hidden" name="id" id="id" value="${member.id}">
-											<input type="hidden" name="role" id="role" value="MEMBER">
+											<input type="hidden" name="discount" id="discount" value="${discount}">
 											<input type="hidden" name="redeemedPoints"
 												id="redeemedPoints" value="${member.repurcahse}"> <input
 												type="hidden" name="cartTotal" id="cartTotal"
@@ -139,7 +139,7 @@ function useWallet() {
 														<div class="form-check">
 															<label class="radio-inline"> <input type="radio"
 																name="paymentType" value="CASH" checked>
-															<h4>Cash</h4>
+																<h4>Cash</h4>
 															</label> <label class="radio-inline"> <input type="radio"
 																name="paymentType" value="EPAY">
 																<h4>e-Payment</h4>
@@ -173,18 +173,25 @@ function useWallet() {
 															<table style="width: 100%">
 
 																<tr>
-																	<th><strong>Cart Total:&#x20b9;</strong></th>
-																	<td id="cartProductTotal">${cartTotal}</td>
+																	<th><strong>Cart Total:</strong></th>
+																	<td id="cartProductTotal">&#x20b9;${cartTotal}</td>
 																</tr>
 																<c:if test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
 																	<tr>
-																		<th><strong>Shipping Charge:&#x20b9;</strong></th>
-																		<td>${shippingCharge}</td>
+																		<th><strong>Shipping Charge:</strong></th>
+																		<td>&#x20b9;${shippingCharge}</td>
+																	</tr>
+																</c:if>
+																<c:if
+																	test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
+																	<tr>
+																		<th><strong>Discount:</strong></th>
+																		<td>&#x20b9;${discount}</td>
 																	</tr>
 																</c:if>
 																<tr>
-																	<th><strong>Purchase Total:&#x20b9;</strong></th>
-																	<td>${total}</td>
+																	<th><strong>Purchase Total:</strong></th>
+																	<td>&#x20b9;${total}</td>
 																</tr>
 															</table> <%-- <span> <i class="fa fa-shopping-cart"
 													style="font-size: 20px"></i> <span><strong>Purchase Total:&#x20b9;</strong> <span id="cartTotal">${cartTotal}</span>

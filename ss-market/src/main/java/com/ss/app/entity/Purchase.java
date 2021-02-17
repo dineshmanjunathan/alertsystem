@@ -30,7 +30,7 @@ public class Purchase {
 	private String orderStatus = "PENDING";
 	private String paymentType;
 	private Long redeemedPoints = 0L;
-	
+	private Double discount = 0.0;
 	private Double shippingCharge = 0.0;
 
 	public Long getId() {
@@ -120,7 +120,13 @@ public class Purchase {
 	public void setShippingCharge(Double shippingCharge) {
 		this.shippingCharge = shippingCharge;
 	}
-	
-	
 
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+	
 }

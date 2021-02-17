@@ -52,9 +52,9 @@
 
 	}
 
-	function removeFromCart(prodCode, price,quantity) {
-		//let qty = $("#quantity-" + prodCode + " option:selected").val();
-		if (quantity<=0) {
+	function removeFromCart(prodCode, price) {
+		let qty = $("#cartQuantity_"+prodCode).val();
+		if (qty<=0) {
 			alert('Please Enter Quantity.');
 			return;
 		}
@@ -72,12 +72,10 @@
 					} else {
 						$('#cartTotal').text(0.0);
 					}
-					$("#quantity-" + prodCode + " option:selected").removeAttr(
-							"selected");
+					$("#cartQuantity_" + prodCode).val("");
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
-					$("#quantity-" + prodCode + " option:selected").removeAttr(
-							"selected");
+					$("#cartQuantity_" + prodCode).val("");
 				}
 			});
 		}
@@ -180,7 +178,7 @@
 											<tbody>
 												<c:forEach var="details" items="${productList}"
 													varStatus="status">
-													<c:if test="${details.quantity > 0}">
+													<%-- <c:if test="${details.quantity > 0}"> --%>
 														<tr>
 															<td><img alt="img" src="data:image/jpeg;base64,${details.base64Image}" style="width: 100px;height: 100px;"/></td>
 															<td>${details.category.description}</td>
@@ -198,7 +196,7 @@
 																		</c:forEach>
 																	</select>-->
 																	<input name="quantity" id="cartQuantity_${details.code}" type="text" class="form-control"
-																	placeholder="Available Qty:${details.quantity}" required>
+																	placeholder="Enter Quantity" value="${cartMap[details.code]}" required>
 																	
 																</div>
 															</td>
@@ -208,13 +206,13 @@
 																	<i class="fa fa-shopping-cart"></i> Add to Cart
 																</button>
 																<button class="btn btn-danger" type="button"
-																	onclick="return removeFromCart('${details.code}', '${details.price}', '${details.quantity}');">
+																	onclick="return removeFromCart('${details.code}', '${details.price}');">
 																	<i class="fa fa-remove"></i>Remove
 																</button>
 															</td>
 															
 														</tr>
-													</c:if>
+													<%-- </c:if> --%>
 												</c:forEach>
 											</tbody>
 										</table>

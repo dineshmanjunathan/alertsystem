@@ -115,32 +115,36 @@
 												class="btn btn-waring m-btn m-btn--custom m-btn--icon col-md-offset-9 col-md-3">
 												<table style="width: 100%">
 													<tr>
-														<th><strong>Cart Total:&#x20b9;</strong></th>
-														<td id="cartProductTotal">${cartTotal}</td>
+														<th><strong>Cart Total:</strong></th>
+														<td id="cartProductTotal">&#x20b9;${cartTotal}</td>
 													</tr>
 													<c:choose>
 													<c:when test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
 													<tr>
-													<th><strong>Shipping Charge:&#x20b9;</strong></th>
-													<td id="shippingCharge">${shippingCharge}</td>
+													<th><strong>Shipping Charge:</strong></th>
+													<td id="shippingCharge">&#x20b9;${shippingCharge}</td>
 													</tr>
 													<tr>
-														<th><strong>Purchase Total:&#x20b9;</strong></th>
-														<td id="cartTotal">${cartTotal+shippingCharge}</td>
+														<th><strong>Purchase Total:</strong></th>
+														<td id="cartTotal">&#x20b9;${cartTotal+shippingCharge}</td>
 													</tr>
 													</c:when>
 													<c:otherwise>
 													<tr>
-														<th><strong>Purchase Total:&#x20b9;</strong></th>
-														<td id="cartTotal">${cartTotal}</td>
+														<th><strong>Discount:</strong></th>
+														<td id="cartTotal">&#x20b9;${discount}</td>
+													</tr>
+													<tr>
+														<th><strong>Purchase Total:</strong></th>
+														<td id="cartTotal">&#x20b9;${cartTotal - discount}</td>
 													</tr>
 													</c:otherwise>
 													</c:choose>
 													
 													<c:if test="${address.redeemedPoints gt 0}">
 													<tr>
-													<th><strong>Re-purchase Used:&#x20b9;</strong></th>
-													 <td id="cartTotal"> ${address.redeemedPoints}</td>
+													<th><strong>Re-purchase Used:</strong></th>
+													 <td id="cartTotal"> &#x20b9;${address.redeemedPoints}</td>
 													<tr>
 												</c:if>
 												</table> 

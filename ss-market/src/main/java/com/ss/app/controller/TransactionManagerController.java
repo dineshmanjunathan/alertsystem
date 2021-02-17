@@ -37,6 +37,7 @@ import com.ss.app.entity.Member;
 import com.ss.app.entity.Product;
 import com.ss.app.entity.Purchase;
 import com.ss.app.entity.RewardTransaction;
+import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.StockPointProduct;
 import com.ss.app.entity.StockPointPurchase;
 import com.ss.app.model.AddressRepository;
@@ -122,16 +123,22 @@ public class TransactionManagerController {
 				purchase.setRedeemedPoints(redeemTotal.longValue());
 				// Update qty in product
 				Product prod = productRepository.findByCode(c.getCode());
-				if (prod.getQuantity() <= 0) {
-					cartRepository.deleteByCodeAndMemberid(prod.getCode(), memberId);
-					model.addAttribute("errormsg", "Item out of stock !");
-					return purchaseReview(request, model);
+				/*
+				 * if (prod.getQuantity() <= 0) {
+				 * cartRepository.deleteByCodeAndMemberid(prod.getCode(), memberId);
+				 * model.addAttribute("errormsg", "Item out of stock !"); return
+				 * purchaseReview(request, model); }
+				 */
+				long qty = prod.getQuantity() - c.getQuantity();
+				if(qty <= 0) {
+					prod.setQuantity(0l);
+				} else {
+					prod.setQuantity(qty);
 				}
-				prod.setQuantity(prod.getQuantity() - c.getQuantity());
 				productRepository.save(prod);
 
 				// Prepare purchase
-				preparePurchase(request.getSession(), member, orderNumber, purchase, c, prod);
+				preparePurchase(request.getSession(), member, orderNumber, purchase, c, prod, address.getDiscount());
 
 				totalQty = totalQty + c.getQuantity();
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
@@ -143,7 +150,6 @@ public class TransactionManagerController {
 					
 				}
 			}
-
 			// Save address
 			Address add = new Address();
 			BeanUtils.copyProperties(address, add);
@@ -162,6 +168,7 @@ public class TransactionManagerController {
 
 			// TODO email to member email address
 			model.addAttribute("cartList", cart);
+			model.addAttribute("discount", address.getDiscount());
 			model.addAttribute("address", address);
 			model.addAttribute("orderNumber", orderNumber);
 			model.addAttribute("successMessage", "Item Purchased Successfully");
@@ -199,7 +206,7 @@ public class TransactionManagerController {
 				StockPointProduct prod = stockPointProuctRepository.findByCode(c.getCode());
 				if (prod.getQuantity() <= 0) {
 					cartRepository.deleteByCodeAndMemberid(prod.getCode(), memberId);
-					model.addAttribute("errormsg", "Item out of stock !");
+					model.addAttribute("errormsg", "Item out of stock ! You have only ["+prod.getQuantity()+"] quantity.");
 					return purchasemanualReview(request, model);
 				}
 				prod.setQuantity(prod.getQuantity() - c.getQuantity());
@@ -233,23 +240,12 @@ public class TransactionManagerController {
 		return "purchaseManualConfirmation";
 	}
 
-	private void preparePurchase(HttpSession session, Member member, Long orderNumber, Purchase purchase, Cart c,
-			Product prod) {
+	private void preparePurchase(HttpSession session, Member member, Long orderNumber, Purchase purchase, Cart c, Product prod, Double discount) {
 		purchase.setOrderNumber(orderNumber);
 		purchase.setAmount(c.getAmount());
 		purchase.setMemberid(member.getId());
 		if ("STOCK_POINT".equals(member.getRole())) {
-			/*StockPointProduct spp = new StockPointProduct();
-			spp.setCategory(prod.getCategory());
-			spp.setCode(prod.getCode());
-			spp.setMemberId(member.getId());
-			spp.setPrice(prod.getPrice());
-			spp.setProdDesc(prod.getProdDesc());
-			spp.setQuantity(c.getQuantity());
-			spp.setImage(prod.getImage());
-			spp.setStatus("PENDING");
-			spp.setOrderNumber(orderNumber);
-			stockPointProuctRepository.save(spp);*/
+			purchase.setDiscount(discount);
 		} else {
 			purchase.setOrderStatus("DELIVERED");
 		}
@@ -393,6 +389,7 @@ public class TransactionManagerController {
 					List<Cart> cartList = cartRepository.findByMemberid(userId);
 					Double total = 0.0;
 					Double shippingCharge = 0.0;
+					Double discount = 0.0;
 					if (cartList != null) {
 						Map<String, Long> map = new HashMap<>();
 						for (Cart c : cartList) {
@@ -407,7 +404,17 @@ public class TransactionManagerController {
 						if(role!=null && role.equals("MEMBER")) {
 							model.addAttribute("total", total + shippingCharge );
 						}else {
-							model.addAttribute("total", total);
+							try {
+								SSConfiguration ssConfig = ssConfigRepository.findById("1114").get();
+								
+								if(ssConfig != null) {
+									discount = (total.doubleValue() / 100) * ssConfig.getValue();
+									model.addAttribute("discount", discount);
+								}
+							} catch (Exception e) {
+								//
+							}
+							model.addAttribute("total", (total - discount));
 						}
 					}
 					return "address";
@@ -674,7 +681,7 @@ public class TransactionManagerController {
 			Member member = userRepository.findById(purchase.getMemberid()).get();
 			
 			OrderPDFExporter exporter = new OrderPDFExporter(purchaseList, address, member.getRole());
-			exporter.export(response, purchase.getMemberid(), orderNumber, txnDate);
+			exporter.export(response, purchase.getMemberid(), orderNumber, txnDate, purchase.getDiscount());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

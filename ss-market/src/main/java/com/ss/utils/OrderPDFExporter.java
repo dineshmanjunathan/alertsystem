@@ -2,16 +2,25 @@ package com.ss.utils;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
- 
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.io.ClassPathResource;
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.ss.app.entity.Address;
 import com.ss.app.entity.Purchase;
  
@@ -94,7 +103,7 @@ public class OrderPDFExporter {
         }
     }
      
-    public void export(HttpServletResponse response, String memberId, String orderNumber,String txnDate) throws DocumentException, IOException {
+    public void export(HttpServletResponse response, String memberId, String orderNumber,String txnDate, Double discount) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
          
@@ -180,6 +189,13 @@ public class OrderPDFExporter {
 			Paragraph shippingCharge = new Paragraph("Shipping Charge: " + shippingChargeTotal, font1);
 			shippingCharge.setAlignment(Paragraph.ALIGN_RIGHT);
 			document.add(shippingCharge);
+		} else {
+			 Paragraph discountTotal = new Paragraph("Total Discount: "+ discount, font1);
+			 discountTotal.setAlignment(Paragraph.ALIGN_RIGHT);
+		     document.add(discountTotal);
+		     if(discount !=null && discount > 0) {
+		    	 total = total - discount;
+		     }
 		}
         
         Paragraph purchaseTotal = new Paragraph("Purchase Total: "+ total, font1);

@@ -2,16 +2,15 @@ package com.ss.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Random;
 
 import com.google.common.collect.Lists;
 import com.ss.app.entity.Member;
@@ -87,10 +86,11 @@ public class Utils {
 	}
 
 	public static Map<String, String> getSSConfigTypeMap() {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("1111", "TDS + Charity Charges ");
-		map.put("1112", "Admin Charges");
-		map.put("1113", "No Pan Card Charges");
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		map.put("1111", "TDS + Charity Charges %");
+		map.put("1112", "Admin Charges %");
+		map.put("1113", "No Pan Card Charges %");
+		map.put("1114", "Stock Point Discount %");
 		map.put("L1", "LEVEL 1 REWARD");
 		map.put("L2", "LEVEL 2 REWARD");
 		map.put("L3", "LEVEL 3 REWARD");

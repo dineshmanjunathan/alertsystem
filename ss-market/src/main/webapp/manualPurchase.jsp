@@ -18,17 +18,22 @@ $(document).ready(function(){
 let cartTotal =  ${cartTotal == null ? 0.0:cartTotal};
 let cartMap = new Map();
 
-function addToCart(prodCode, price) {
-	let qty = $( "#quantity-"+prodCode+" option:selected" ).val();
-	if(!qty){
-		alert('Please select quantity.');
+function addToCart(prodCode, price, quantity) {
+	let cartQuantity = $("#cartQuantity_"+prodCode).val();
+	if(cartQuantity<=0){
+		alert('Please Enter quantity.');
+		return;
+	}
+	if(cartQuantity > quantity){
+		alert('Invalid quantity.');
+		$("#cartQuantity_" + prodCode).val("");
 		return;
 	}
 	$.ajax({
 	    url: "/purchase/addToCart/stock",
 	    data: {
 	        "prodCode": prodCode,
-	        "qty" :qty
+	        "qty" :cartQuantity
 	    },
 	    type: "post",
 	    cache: false,
@@ -45,9 +50,9 @@ function addToCart(prodCode, price) {
 }
 
 function removeFromCart(prodCode, price) {
-	let qty = $( "#quantity-"+prodCode+" option:selected" ).val();
-	if(!qty){
-		alert('Please select quantity.');
+	let cartQuantity = $("#cartQuantity_"+prodCode).val();
+	if (cartQuantity<=0) {
+		alert('Please Enter Quantity.');
 		return;
 	}
 	if(confirm("Do you want to remove from cart?")) {
@@ -64,11 +69,10 @@ function removeFromCart(prodCode, price) {
 		    	} else {
 		    		$('#cartTotal').text(0.0);
 		    	}
-				$("#quantity-"+prodCode+" option:selected").removeAttr("selected");
+		    	$("#cartQuantity_" + prodCode).val("");
 		    },
 		    error: function (XMLHttpRequest, textStatus, errorThrown) {
-		    	$("#quantity-"+prodCode+" option:selected").removeAttr("selected");
-		        console.log('ERROR:' + XMLHttpRequest.status + ', status text: ' + XMLHttpRequest.statusText);
+		    	$("#cartQuantity_" + prodCode).val("");
 		    }
 		});
 	}
@@ -129,18 +133,6 @@ function review() {
 										<i class="fa fa-plus"></i> Purchase
 									</button>
 								</div>
-								<!-- 								<br> -->
-								<!-- 								<div class="row"> -->
-								<!-- 									<div class="form-group col-md-4 col-md-offset-4"> -->
-								<!-- 										<select name="category" id="category" class="form-control"> -->
-								<!-- 											<option value="">-Select category-</option> -->
-								<%-- 											<c:forEach var="options" items="${categoryCodeList}" --%>
-								<%-- 												varStatus="status"> --%>
-								<%-- 												<option value="${options.code}">${options.description}</option> --%>
-								<%-- 											</c:forEach> --%>
-								<!-- 										</select> -->
-								<!-- 									</div> -->
-								<!-- 								</div> -->
 								<br>
 								<div class="sparkline13-graph">
 									<div class="datatable-dashv1-list custom-datatable-overright">
@@ -171,6 +163,7 @@ function review() {
 											<tbody>
 												<c:forEach var="details" items="${productList}"
 													varStatus="status">
+													<c:if test="${details.quantity > 0}">
 													<tr>
 														<td><img alt="img" src="data:image/jpeg;base64,${details.base64Image}" style="width: 100px;height: 100px;"/></td>
 														<td>${details.category.description}</td>
@@ -178,20 +171,13 @@ function review() {
 														<td>${details.price}</td>
 														<td>
 															<div class="form-group">
-																<select name="quantity" id="quantity-${details.code}"
-																	class="form-control">
-																	<option value="">-Select Quantity-</option>
-																	<c:forEach begin="1" end="${details.quantity}"
-																		varStatus="loop">
-																		<option value="${loop.index}"
-																			${loop.index == cartMap[details.code] ? 'selected' : ''}>${loop.index}</option>
-																	</c:forEach>
-																</select>
+																<input name="quantity" id="cartQuantity_${details.code}" type="text" class="form-control"
+																	placeholder="Available Qty:${details.quantity}" value="${cartMap[details.code]}" required>
 															</div>
 														</td>
 														<td>
 															<button class="btn btn-primary" type="button"
-																onclick="return addToCart('${details.code}', '${details.price}');">
+																onclick="return addToCart('${details.code}', '${details.price}','${details.quantity}');">
 																<i class="fa fa-shopping-cart"></i> Add to Cart
 															</button>
 															<button class="btn btn-danger" type="button"
@@ -200,6 +186,7 @@ function review() {
 															</button>
 														</td>
 													</tr>
+													</c:if>
 												</c:forEach>
 											</tbody>
 										</table>
