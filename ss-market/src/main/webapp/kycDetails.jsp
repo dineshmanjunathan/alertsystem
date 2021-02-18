@@ -33,25 +33,18 @@
 								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 									style="padding-right: 21%; padding-left: 21%;">
 									<div class="review-content-section">
-										<c:choose>
-											<c:when test="${not empty productCode}">
-												<c:url var="action" value="/admin/product/edit" />
-											</c:when>
-											<c:otherwise>
-												<c:url var="action" value="/admin/product/save" />
-											</c:otherwise>
-										</c:choose>
 										<form action="/member/kycdetails/save" method="post" enctype="multipart/form-data">
 											<div id="dropzone1" class="pro-ad">
 
 												<p style="color: green" align="center">${successMessage}</p>
 												<p style="color: red" align="center">${errorMessage}</p>
-
-
+												<c:choose>
+													<c:when test="${not empty details}">
+												
 												<div class="form-group">
 													<input name="pancardNumber" type="text"
 														class="form-control" placeholder="Pan Number"
-														value="${details.pancardNumber}" required>
+														value="${details.pancardNumber}" required readonly>
 												</div>
 
 												<c:choose>
@@ -65,13 +58,26 @@
 														</div>
 													</c:when>
 												</c:choose>
+												
+												</c:when>
+												<c:otherwise>
 												<div class="form-group">
-													<input class="btn btn-primary" type="file" name="image" required/>
+													<input name="pancardNumber" type="text"
+														class="form-control" placeholder="Pan Number"
+														value="${details.pancardNumber}" required>
 												</div>
-
+												<div class="form-group">
+													<input class="btn btn-primary" type="file" name="image" required>
+												</div>
+												</c:otherwise>
+												</c:choose>
 
 											</div>
-									</div>
+									
+									<c:choose>
+									<c:when test="${not empty details}">
+									</c:when>
+									<c:otherwise>
 									<div class="row">
 										<div class="col-lg-12">
 											<div class="payment-adress">
@@ -82,8 +88,11 @@
 											</div>
 										</div>
 									</div>
+									</c:otherwise>
+									</c:choose>
 
 									</form>
+								</div>
 								</div>
 							</div>
 						</div>

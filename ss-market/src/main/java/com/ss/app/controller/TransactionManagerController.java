@@ -281,13 +281,13 @@ public class TransactionManagerController {
 				actualMember = userRepository.save(actualMember);
 
 				if (actualMember.getActive_days() != null) {
-					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
+					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
 					java.util.Date date = Date
 							.from(actualMember.getActive_days().atZone(ZoneId.systemDefault()).toInstant());
 					request.getSession().setAttribute("ACTIVE_DAYS", sdf.format(date));
 				} else {
 					LocalDateTime time = LocalDateTime.now();
-					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
+					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
 					java.util.Date date = Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
 					request.getSession().setAttribute("ACTIVE_DAYS", sdf.format(date));
 				}

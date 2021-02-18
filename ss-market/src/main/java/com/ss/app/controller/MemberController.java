@@ -168,12 +168,12 @@ public class MemberController {
 				request.getSession().setAttribute("ROLE", member.getRole());
 				request.getSession().setAttribute("REFERENCE_CODE", member.getReferencecode());
 				if (member.getActive_days() != null) {
-					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
+					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
 					java.util.Date date = Date.from(member.getActive_days().atZone(ZoneId.systemDefault()).toInstant());
 					request.getSession().setAttribute("ACTIVE_DAYS", sdf.format(date));
 				} else {
 					LocalDateTime time = LocalDateTime.now();
-					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss");
+					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
 					java.util.Date date = Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
 					request.getSession().setAttribute("ACTIVE_DAYS", sdf.format(date));
 				}
