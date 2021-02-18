@@ -61,12 +61,12 @@
 												
 												<td>
 												  <a href="<c:url value='/admin/kyc/approve?id=${details.id}' />">
-												<button class="rmk btn btn-primary" type="button">
+												<button onclick="return confirm('Are you sure you want to Approve?')" class="rmk btn btn-primary" type="button">
 													<i class="fa fa-shopping-cart"> </i> Approve
 												</button>
 												  </a>		
 												  <a href="<c:url value='/admin/kyc/reject?id=${details.id}' />">
-												<button class="btn btn-danger" type="button">
+												<button onclick="return confirm('Are you sure you want to Reject?')"class="btn btn-danger" type="button">
 													<i class="fa fa-shopping-cart"> </i> Reject
 												</button>
 												  </a>		</td>	   

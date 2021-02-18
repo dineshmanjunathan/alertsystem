@@ -71,7 +71,7 @@
 												<td>${withdrawnPointHistoryDetails.status}</td>												
 												 <td>
 												  <a href="<c:url value='/admin/withdrawn/approve?id=${withdrawnPointHistoryDetails.id}' />">
-												<button class="rmk btn btn-primary" type="button">
+												<button onclick="return confirm('Are you sure you want to Approve?')" class="rmk btn btn-primary" type="button">
 													<i class="fa fa-shopping-cart"> </i> Approve
 												</button>
 												  </a>		</td>	   

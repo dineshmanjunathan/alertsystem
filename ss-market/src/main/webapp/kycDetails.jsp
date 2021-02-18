@@ -83,7 +83,7 @@
 											<div class="payment-adress">
 												<br>
 												<br>
-												<button class="rmk btn btn-primary waves-effect waves-light"
+												<button onclick="return confirm('Are you sure you want to Save?')" class="rmk btn btn-primary waves-effect waves-light"
 													type="submit" name="submit" value="register">Save</button>
 											</div>
 										</div>
