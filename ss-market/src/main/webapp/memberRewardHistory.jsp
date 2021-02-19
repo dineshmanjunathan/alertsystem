@@ -50,7 +50,7 @@
 										<tr> 
 											<th data-field="memberid" data-editable="false">Reward from</th>
 											<th data-field="point" data-editable="false">Point</th>
-											<th data-field="rewardedOn" data-editable="false">Transaction Date</th>
+											<th data-field="rewardedOn" data-editable="false">Transaction On</th>
 										</tr>
 									</thead>
                                         <tbody> 
