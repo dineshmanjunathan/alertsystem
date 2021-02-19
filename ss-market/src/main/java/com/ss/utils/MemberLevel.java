@@ -2,7 +2,6 @@ package com.ss.utils;
 
 import java.util.Map;
 
-import com.google.gson.Gson;
 import com.ss.app.entity.RewardTransaction;
 import com.ss.app.model.RewardTransactionRepository;
 import com.ss.app.vo.MemberRewardTree;
@@ -16,7 +15,6 @@ public class MemberLevel {
 
 	public static Double process(MemberRewardTree e, Map<String, Double> configMap,
 			RewardTransactionRepository rewardTransactionRepository, int activeDirectCnt) {
-		Gson g = new Gson();
 		awdVal = 0.0;
 		try {
 			awardMember = e.getId();

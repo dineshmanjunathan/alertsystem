@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.model.RewardTransactionRepository;
@@ -31,8 +30,8 @@ public class DailyRewardScheduler {
 	RewardTransactionRepository rewardTransactionRepository;
 
 	// @Scheduled(fixedRate=5000)
-	// @Scheduled(cron = "0 0/1 * * * ?")
-	@Scheduled(cron = "0 0 0/1 * * ?")
+	@Scheduled(cron = "0 0/2 * * * ?")
+	// @Scheduled(cron = "0 0 0/1 * * ?")
 	private void dailyAward() {
 		System.out.println("Start Daily Reward!");
 		List<SSConfiguration> levels = ssConfigRepository.getRewardLevels();
@@ -44,10 +43,11 @@ public class DailyRewardScheduler {
 		List<Member> memberList = userRepository.getActiveMembersOnly();
 
 		for (Member member : memberList) {
-			MemberRewardTree memberRewardTree = new MemberRewardTree();		
+			MemberRewardTree memberRewardTree = new MemberRewardTree();
 			memberRewardTree.setId(member.getId());
 			recursionTree(memberRewardTree, member.getReferencecode(), member.getId());
-			Double awdVal = MemberLevel.process(memberRewardTree, map, rewardTransactionRepository,getActiveDirectCount(member));
+			Double awdVal = MemberLevel.process(memberRewardTree, map, rewardTransactionRepository,
+					getActiveDirectCount(member));
 			if (awdVal > 0) {
 				member.setWalletBalance(member.getWalletBalance() + awdVal.longValue());
 				userRepository.save(member);
@@ -58,7 +58,7 @@ public class DailyRewardScheduler {
 	}
 
 	private int getActiveDirectCount(Member member) {
-		int activeDirectCnt=0;
+		int activeDirectCnt = 0;
 		List<Member> child = userRepository.findByReferedby(member.getReferencecode());
 		for (Member chMember : child) {
 			if (chMember.getActive_days() != null && chMember.getActive_days().isAfter(LocalDateTime.now())) {
@@ -74,16 +74,18 @@ public class DailyRewardScheduler {
 		List<MemberRewardTree> subTreeList = new ArrayList<MemberRewardTree>();
 		MemberRewardTree subTree = null;
 		for (Member mem : child) {
-			subTree = new MemberRewardTree();
-			subTree.setId(mem.getId());
-			subTree.setSponserId(mem.getReferedby());
 			if (mem.getActive_days() != null && mem.getActive_days().isAfter(LocalDateTime.now())) {
-				subTree.setStatus("ACTIVE");
-			} else {
-				subTree.setStatus("INACTIVE");
+				subTree = new MemberRewardTree();
+				subTree.setId(mem.getId());
+				subTree.setSponserId(mem.getReferedby());
+				if (mem.getActive_days() != null && mem.getActive_days().isAfter(LocalDateTime.now())) {
+					subTree.setStatus("ACTIVE");
+				} else {
+					subTree.setStatus("INACTIVE");
+				}
+				recursionTree(subTree, mem.getReferencecode(), mem.getId());
+				subTreeList.add(subTree);
 			}
-			recursionTree(subTree, mem.getReferencecode(), mem.getId());
-			subTreeList.add(subTree);
 		}
 		memberRewardTree.setChildren(subTreeList);
 		return c;
