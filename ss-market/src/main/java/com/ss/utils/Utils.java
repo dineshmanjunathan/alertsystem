@@ -91,12 +91,12 @@ public class Utils {
 		map.put("1112", "Admin Charges %");
 		map.put("1113", "No Pan Card Charges %");
 		map.put("1114", "Stock Point Discount %");
-		map.put("L1", "LEVEL 1 REWARD");
-		map.put("L2", "LEVEL 2 REWARD");
-		map.put("L3", "LEVEL 3 REWARD");
-		map.put("L4", "LEVEL 4 REWARD");
-		map.put("L5", "LEVEL 5 REWARD");
-		map.put("L6", "LEVEL 6 REWARD");
+		map.put("L1", "LEVEL 2 REWARD");
+		map.put("L2", "LEVEL 3 REWARD");
+		map.put("L3", "LEVEL 4 REWARD");
+		map.put("L4", "LEVEL 5 REWARD");
+		map.put("L5", "LEVEL 6 REWARD");
+		map.put("L6", "LEVEL 7 REWARD");
 
 		return map;
 	}
