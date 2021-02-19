@@ -30,8 +30,8 @@ public class DailyRewardScheduler {
 	RewardTransactionRepository rewardTransactionRepository;
 
 	// @Scheduled(fixedRate=5000)
-	@Scheduled(cron = "0 0/2 * * * ?")
-	// @Scheduled(cron = "0 0 0/1 * * ?")
+	//@Scheduled(cron = "0 0/2 * * * ?")
+	@Scheduled(cron = "0 0 0/1 * * ?")
 	private void dailyAward() {
 		System.out.println("Start Daily Reward!");
 		List<SSConfiguration> levels = ssConfigRepository.getRewardLevels();
