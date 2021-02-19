@@ -305,6 +305,8 @@ public class TransactionManagerController {
 
 			Member member = userRepository.findByReferencecodeAndRole(sponserId, "MEMBER").get();
 			if (member != null && member.getId() != null) {
+				totalRewardPoints = totalRewardPoints*totalQty;
+				
 				reward.setMemberid(memId);
 				//SSConfiguration ssConfig = ssConfigRepository.findById("PR").get();
 				reward.setPoint(totalRewardPoints);
