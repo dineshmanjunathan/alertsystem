@@ -30,7 +30,7 @@ public class DailyRewardScheduler {
 	RewardTransactionRepository rewardTransactionRepository;
 
 	// @Scheduled(fixedRate=5000)
-	//@Scheduled(cron = "0 0/15 * * * ?")
+	// @Scheduled(cron = "0 0/15 * * * ?")
 	@Scheduled(cron = "0 0 0/1 * * ?")
 	private void dailyAward() {
 		System.out.println("Start Daily Reward!");
@@ -74,18 +74,18 @@ public class DailyRewardScheduler {
 		List<MemberRewardTree> subTreeList = new ArrayList<MemberRewardTree>();
 		MemberRewardTree subTree = null;
 		for (Member mem : child) {
+			// if (mem.getActive_days() != null && mem.getActive_days().isAfter(LocalDateTime.now())) {
+			subTree = new MemberRewardTree();
+			subTree.setId(mem.getId());
+			subTree.setSponserId(mem.getReferedby());
 			if (mem.getActive_days() != null && mem.getActive_days().isAfter(LocalDateTime.now())) {
-				subTree = new MemberRewardTree();
-				subTree.setId(mem.getId());
-				subTree.setSponserId(mem.getReferedby());
-				if (mem.getActive_days() != null && mem.getActive_days().isAfter(LocalDateTime.now())) {
-					subTree.setStatus("ACTIVE");
-				} else {
-					subTree.setStatus("INACTIVE");
-				}
-				recursionTree(subTree, mem.getReferencecode(), mem.getId());
-				subTreeList.add(subTree);
+				subTree.setStatus("ACTIVE");
+			} else {
+				subTree.setStatus("INACTIVE");
 			}
+			recursionTree(subTree, mem.getReferencecode(), mem.getId());
+			subTreeList.add(subTree);
+			// }
 		}
 		memberRewardTree.setChildren(subTreeList);
 		return c;

@@ -80,13 +80,15 @@ public class MemberLevel {
 			RewardTransactionRepository rewardTransactionRepository) {
 		try {
 			System.out.println(e);
-			Double rewardVal = 0.0;
-			int level = e.getLevel();
-			rewardVal = getRewardValue(configMap, rewardVal, level);
-			if (rewardVal != null && rewardVal > 0) {
-				RewardTransaction reward = prepareRewarTransaction(e, rewardVal);
-				awdVal = awdVal + rewardVal;
-				rewardTransactionRepository.save(reward);
+			if("ACTIVE".equals(e.getStatus())) {
+				Double rewardVal = 0.0;
+				int level = e.getLevel();
+				rewardVal = getRewardValue(configMap, rewardVal, level);
+				if (rewardVal != null && rewardVal > 0) {
+					RewardTransaction reward = prepareRewarTransaction(e, rewardVal);
+					awdVal = awdVal + rewardVal;
+					rewardTransactionRepository.save(reward);
+				}
 			}
 			if (e.getChildren() != null && e.getChildren().size() > 0) {
 				for (MemberRewardTree emp : e.getChildren()) {
