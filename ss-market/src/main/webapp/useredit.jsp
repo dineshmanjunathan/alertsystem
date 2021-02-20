@@ -43,6 +43,17 @@ function viewpassword() {
         $pwd.attr('type', 'password');
     }
 }
+
+function adjustrequired(value)
+{
+    if(value=="MEMBER"){
+    	document.getElementById("referedby").required = true;
+    }else{
+    	document.getElementById("referedby").required = false;
+    	$("#errmsg").text("");
+    }       
+}
+
 </script>
 <body>
 	<!-- Single pro tab review Start-->
@@ -125,7 +136,9 @@ function viewpassword() {
 													}
 												</script>
 												<li class="active"><a >Sponsor Details:</a></li>
-												
+												<c:if test="${fn:contains(sessionScope.ROLE, 'ADMIN')}">
+												<span style="color:red;">Note: Sponsor id is not required to create ADMIN and STOCK POINT.</span>
+												</c:if>
 												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 													<c:choose>
@@ -153,6 +166,7 @@ function viewpassword() {
 																		value="${SPONSERNAME}" readonly>
 												</div>
 												</div>
+												
 												</div>
 												<li class="active"><a >User Details:</a></li>
 													<div class="well row">
@@ -174,7 +188,7 @@ function viewpassword() {
 															<c:when test="${fn:contains(sessionScope.ROLE, 'ADMIN')}">
 
 																<div class="form-group">
-																	<select name="role" id="role" class="form-control">
+																	<select name="role" id="role" class="form-control" onchange="adjustrequired(this.value);">
 																		<option value="">-Select Role-</option>
 																		<option value="ADMIN"
 																			${member.role == 'ADMIN' ? 'selected' : ''}>ADMIN</option>

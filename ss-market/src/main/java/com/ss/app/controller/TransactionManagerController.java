@@ -140,14 +140,13 @@ public class TransactionManagerController {
 				// Prepare purchase
 				preparePurchase(request.getSession(), member, orderNumber, purchase, c, prod, address.getDiscount());
 
+				Double rewardPoint=prod.getCategory().getRewardPoint()*c.getQuantity();	
+				totalRewardPoints = totalRewardPoints + rewardPoint;
+				
 				totalQty = totalQty + c.getQuantity();
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
 					categoryCodelist.add(prod.getCategory().getCode());
-					activeDays = activeDays + prod.getCategory().getActivedays();
-					if( prod.getCategory().getRewardPoint()!=null) {
-						totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
-					}
-					
+					activeDays = activeDays + prod.getCategory().getActivedays();					
 				}
 			}
 			// Save address
@@ -219,10 +218,12 @@ public class TransactionManagerController {
 				prepareManualPurchase(session, member, orderNumber, c, product);
 				totalQty = totalQty + c.getQuantity();
 
+				Double rewardPoint=prod.getCategory().getRewardPoint()*c.getQuantity();	
+				totalRewardPoints = totalRewardPoints + rewardPoint;
+				
 				if (!categoryCodelist.contains(prod.getCategory().getCode())) {
 					categoryCodelist.add(prod.getCategory().getCode());
-					activeDays = activeDays + prod.getCategory().getActivedays();
-					totalRewardPoints = totalRewardPoints + prod.getCategory().getRewardPoint();
+					activeDays = activeDays + prod.getCategory().getActivedays();												
 				}
 			}
 			cartRepository.deleteByMemberid(memberId);
@@ -304,9 +305,8 @@ public class TransactionManagerController {
 			updateActiveDays(request, memId, sponserId, orderNumber, totalQty, activeDays);
 
 			Member member = userRepository.findByReferencecodeAndRole(sponserId, "MEMBER").get();
-			if (member != null && member.getId() != null) {
-				totalRewardPoints = totalRewardPoints*totalQty;
-				
+			
+			if (member != null && member.getId() != null) {				
 				reward.setMemberid(memId);
 				//SSConfiguration ssConfig = ssConfigRepository.findById("PR").get();
 				reward.setPoint(totalRewardPoints);

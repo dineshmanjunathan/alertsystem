@@ -565,7 +565,13 @@ public class MemberController {
 	public String registerSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
 		try {
 			String role = (String) request.getSession().getAttribute("ROLE");
-
+			if("STOCK_POINT".equals(user.getRole())||"ADMIN".equals(user.getRole())) {
+				user.setReferedby(null);
+			}
+			
+			if(user.getRole()==null || user.getRole().isEmpty()) {
+				user.setRole("MEMBER");
+			}
 			Member userEntity = new Member();
 			model.addAttribute("member", user);
 
@@ -587,7 +593,7 @@ public class MemberController {
 			userEntity.setWalletBalance(0L);
 			userEntity.setWalletWithdrawn(0L);
 			Member phMember = userRepository.save(userEntity);
-
+			
 			phMember.setReferencecode(phMember.getId());
 			phMember = userRepository.save(phMember);
 

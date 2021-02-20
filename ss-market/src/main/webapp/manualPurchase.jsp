@@ -22,13 +22,14 @@ function addToCart(prodCode, price, quantity) {
 	let cartQuantity = $("#cartQuantity_"+prodCode).val();
 	if(cartQuantity<=0){
 		alert('Please Enter quantity.');
-		return;
+		return false;
 	}
-	if(cartQuantity > quantity){
-		alert('Invalid quantity.');
+	if( quantity < cartQuantity){
+		alert("Invalid quantity.");
 		$("#cartQuantity_" + prodCode).val("");
-		return;
+		return false;
 	}
+	
 	$.ajax({
 	    url: "/purchase/addToCart/stock",
 	    data: {
@@ -177,7 +178,7 @@ function review() {
 														</td>
 														<td>
 															<button class="btn btn-primary" type="button"
-																onclick="return addToCart('${details.code}', '${details.price}','${details.quantity}');">
+																onclick="return addToCart('${details.code}', '${details.price}',${details.quantity});">
 																<i class="fa fa-shopping-cart"></i> Add to Cart
 															</button>
 															<button class="btn btn-danger" type="button"
