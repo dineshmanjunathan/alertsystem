@@ -597,11 +597,9 @@ public class TransactionManagerController {
 							"Order " + purch.getOrderNumber() + " Delivered Successfully.");
 					StockPointProduct stockPointProduct = stockPointProuctRepository.findByCodeAndMemberId(purch.getProduct().getCode(),purch.getMemberid());
 					if(stockPointProduct!=null && stockPointProduct.getCode()!=null && !stockPointProduct.getCode().isEmpty()) {	
-						System.out.println("if part");
 						stockPointProduct.setQuantity(stockPointProduct.getQuantity()+purch.getQuantity());
 						stockPointProuctRepository.save(stockPointProduct);
 					}else {
-						System.out.println("else part");
 						prepareStockPointProduct(purch);
 					}
 				}
@@ -641,7 +639,6 @@ public class TransactionManagerController {
 		spp.setProdDesc(prod.getProdDesc());
 		spp.setQuantity(purch.getQuantity());
 		spp.setImage(prod.getImage());
-		//spp.setOrderNumber(orderNumber);
 		stockPointProuctRepository.save(spp);
 	}
 
