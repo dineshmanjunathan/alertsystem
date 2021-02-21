@@ -202,7 +202,7 @@ public class TransactionManagerController {
 			for (Cart c : cart) {
 				// Update qty in product
 				Product product = null;
-				StockPointProduct prod = stockPointProuctRepository.findByCode(c.getCode());
+				StockPointProduct prod = stockPointProuctRepository.findByCodeAndMemberId(c.getCode(), memberId);
 				if (prod.getQuantity() <= 0) {
 					cartRepository.deleteByCodeAndMemberid(prod.getCode(), memberId);
 					model.addAttribute("errormsg", "Item out of stock ! You have only ["+prod.getQuantity()+"] quantity.");
