@@ -175,7 +175,7 @@ function adjustrequired(value)
 														<div class="form-group">
 															<input name="name" type="text" class="form-control"
 																placeholder="Member Name" value="${member.name}"
-																required>
+																${not empty member.name? 'readonly':''} required>
 														</div>
 														<div class="input-group">
 															<input name="password" type="password" class="form-control pwd" placeholder="Password" minlength="8"  maxlength="10"
@@ -231,7 +231,7 @@ function adjustrequired(value)
 														<div class="form-group">
 															<input name="phonenumber" type="text"
 																class="form-control" placeholder="Phone Number"
-																value="${member.phonenumber}" required>
+																value="${member.phonenumber}" ${not empty member.phonenumber ? 'readonly':''} required>
 														</div>
 													</div>
 

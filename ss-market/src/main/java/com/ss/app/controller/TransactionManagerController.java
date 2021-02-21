@@ -593,8 +593,7 @@ public class TransactionManagerController {
 				for (Purchase purch : purchase) {
 					purch.setOrderStatus("DELIVERED");
 					savePurchList.add(purch);
-					model.addAttribute("successMessage",
-							"Order " + purch.getOrderNumber() + " Delivered Successfully.");
+					model.addAttribute("successMessage","Order " + purch.getOrderNumber() + " Delivered Successfully.");
 					StockPointProduct stockPointProduct = stockPointProuctRepository.findByCodeAndMemberId(purch.getProduct().getCode(),purch.getMemberid());
 					if(stockPointProduct!=null && stockPointProduct.getCode()!=null && !stockPointProduct.getCode().isEmpty()) {	
 						stockPointProduct.setQuantity(stockPointProduct.getQuantity()+purch.getQuantity());
@@ -605,19 +604,6 @@ public class TransactionManagerController {
 				}
 				purchaseRepository.saveAll(savePurchList);
 
-				/*List<StockPointProduct> stockPointProduct = stockPointProuctRepository.findByOrderNumber(Long.parseLong(id));
-				List<StockPointProduct> saveSppList = new ArrayList<StockPointProduct>();
-				if (stockPointProduct != null && stockPointProduct.size() > 0) {
-					for (StockPointProduct spp : stockPointProduct) {
-						spp.setStatus("DELIVERED");
-						saveSppList.add(spp);
-					}
-					stockPointProuctRepository.saveAll(saveSppList);
-
-					Iterable<Purchase> purchaseList = purchaseRepository.findByOrderStatus("PENDING");
-					model.addAttribute("purchaseList", purchaseList);
-				}*/
-				
 				Iterable<Purchase> purchaseList = purchaseRepository.findByOrderStatus("PENDING");
 				model.addAttribute("purchaseList", purchaseList);
 			} else {

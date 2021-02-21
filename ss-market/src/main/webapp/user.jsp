@@ -177,7 +177,7 @@ function checkPhNumExists() {
 
 														<div class="form-group">
 															<input name="phonenumber" type="text" id="phonenumber"
-																class="form-control" placeholder="Phone Number"
+																class="form-control" placeholder="Phone Number" minlength="10"
 																value="${member.phonenumber}"  required onblur="checkPhNumExists();">
 														</div>
 														<span id="errmsgmobno"></span>
@@ -186,12 +186,12 @@ function checkPhNumExists() {
 														</div>
 														<div class="form-group">
 														<input type="checkbox" name="pripolicy" id="pripolicy" value="Privacy Policy" onclick="enableTermsAndCond();" > I have read and agree to the following 
-														<a target="_blank" data-toggle="modal" data-target="#PrivacyPolicy" rel="nofollow noopener ugc" >Privacy Policy</a>
+														<a target="_blank" data-toggle="modal" data-target="#PrivacyPolicy" rel="nofollow noopener ugc" >Company terms and condition.</a>
 													</div>
   
 													<div class="form-group">
 														<input type="checkbox" name="terms" id="terms" value="Conditions" onclick="enableTermsAndCond();"> I have read and agree to the following 
-														<a target="_blank" data-toggle="modal" data-target="#Termsandconditions" rel="nofollow noopener ugc" >Terms and conditions</a>
+														<a target="_blank" data-toggle="modal" data-target="#Termsandconditions" rel="nofollow noopener ugc" >Marketing terms and condition.</a>
 													</div>
 											</div>
 											<div class="row">

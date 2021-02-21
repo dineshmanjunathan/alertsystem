@@ -46,7 +46,7 @@
 														class="form-control" placeholder="Pan Number"
 														value="${details.pancardNumber}" required readonly>
 												</div>
-
+												
 												<c:choose>
 													<c:when test="${not empty details.base64Image}">
 														<div class="form-group">
@@ -68,7 +68,8 @@
 												</div>
 												<div class="form-group">
 													<input class="btn btn-primary" type="file" name="image" required>
-												</div>
+												</div><br>
+												<p style="color: red" align="center">NOTE: Size should not exceed 2MB</p>
 												</c:otherwise>
 												</c:choose>
 
