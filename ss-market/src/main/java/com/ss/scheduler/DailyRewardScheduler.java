@@ -58,7 +58,7 @@ public class DailyRewardScheduler {
 	}
 
 	private int getActiveDirectCount(Member member) {
-		int activeDirectCnt = 0;
+		int activeDirectCnt = -1;
 		List<Member> child = userRepository.findByReferedby(member.getReferencecode());
 		for (Member chMember : child) {
 			if (chMember.getActive_days() != null && chMember.getActive_days().isAfter(LocalDateTime.now())) {

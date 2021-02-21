@@ -103,13 +103,13 @@ public class MemberLevel {
 	}
 
 	private static Double getRewardValue(Map<String, Double> configMap, Double rewardVal, int level) {
-		if (level > 0) {
-			if (activeCnt >= level && level <= 7) {
+		if (level > 0 && activeCnt>0) {
+			if (activeCnt >= level && level <= 6) {
 				rewardVal = configMap.get("L" + level);
 			} else {
-				if (activeCnt == 4 && level == 5) {
+				if (activeCnt == 3 && level == 4) {
 					rewardVal = configMap.get("L" + level);
-				} else if (activeCnt == 5 && (level == 6 || level == 7)) {
+				} else if (activeCnt == 4 && (level == 5 || level == 6)) {
 					rewardVal = configMap.get("L" + level);
 				} else {
 					rewardVal = 0.0;
