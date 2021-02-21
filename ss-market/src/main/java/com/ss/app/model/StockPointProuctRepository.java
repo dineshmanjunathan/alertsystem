@@ -15,6 +15,8 @@ public interface StockPointProuctRepository extends CrudRepository<StockPointPro
 	
 	StockPointProduct findByCode(String Code);
 	
+	StockPointProduct findByCodeAndMemberId(String code,String memberId);
+	
 	List<StockPointProduct> findByMemberIdOrderByCode(String memberId);
 	
 	/*

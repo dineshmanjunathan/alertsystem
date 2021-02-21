@@ -595,8 +595,9 @@ public class TransactionManagerController {
 					savePurchList.add(purch);
 					model.addAttribute("successMessage",
 							"Order " + purch.getOrderNumber() + " Delivered Successfully.");
-					StockPointProduct stockPointProduct = stockPointProuctRepository.findByCode(purch.getProduct().getCode());
-					if(stockPointProduct!=null && stockPointProduct.getCode()!=null && !stockPointProduct.getCode().isEmpty()) {					
+					StockPointProduct stockPointProduct = stockPointProuctRepository.findByCodeAndMemberId(purch.getProduct().getCode(),purch.getMemberid());
+					if(stockPointProduct!=null && stockPointProduct.getCode()!=null && !stockPointProduct.getCode().isEmpty()) {	
+						System.out.println("if part");
 						stockPointProduct.setQuantity(stockPointProduct.getQuantity()+purch.getQuantity());
 						stockPointProuctRepository.save(stockPointProduct);
 					}else {
