@@ -33,10 +33,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.ss.app.entity.KYCDetails;
 import com.ss.app.entity.Member;
+import com.ss.app.entity.Notification;
+import com.ss.app.entity.Product;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.entity.WithdrawnPointsVo;
 import com.ss.app.model.KYCDetailsRepository;
+import com.ss.app.model.NotificationRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.UserRepository;
 import com.ss.app.model.WithdrawnPointsRepository;
@@ -45,6 +48,7 @@ import com.ss.app.vo.MemberRewardTree;
 import com.ss.app.vo.MemberStat;
 import com.ss.app.vo.MemberTree;
 import com.ss.app.vo.MemberVo;
+import com.ss.app.vo.ProductVo;
 import com.ss.utils.MemberLevel;
 import com.ss.utils.ReportGenerator;
 
@@ -57,6 +61,9 @@ public class MemberController {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private NotificationRepository notificationRepository;
+	
 	@Autowired
 	private SSConfigRepository ssConfigRepository;
 
@@ -256,25 +263,32 @@ public class MemberController {
 
 		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getRepurcahse() != null
 				&& user.getRepurcahse() > 0) {
-
-			SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
-			SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
+			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
+			Member member = userRepository.findById(userId).get();
 
 			try {
 				Long rp = user.getRepurcahse();
 				Long remaningPoint = user.getWalletBalance();
-
-				if (rp > 0) {
+				Long totaldeduct = 0L;
+				if(member.getPancardNumber()!=null && !member.getPancardNumber().isEmpty()) {
+					
+					SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
+					SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
 					Double config1 = configurations1.getValue();
 					Double config2 = configurations2.getValue();
 					Double deductAmt1 = (rp.doubleValue() / 100) * config1;
 					Double deductAmt2 = (rp.doubleValue() / 100) * config2;
-					Long totaldeduct = (long) (deductAmt1 + deductAmt2);
+					totaldeduct = (long) (deductAmt1 + deductAmt2);
 					remaningPoint = remaningPoint - rp;
-					model.addAttribute("DEBIT", totaldeduct);
-					model.addAttribute("REPURCHASE_POINT", (rp - totaldeduct));
+				}else {
+					SSConfiguration configurations3 = ssConfigRepository.findById("1113").get();
+					Double deductAmt3 = (rp.doubleValue() / 100) * configurations3.getValue();
+					totaldeduct = deductAmt3.longValue();
+					remaningPoint = remaningPoint - rp;
+					model.addAttribute("PAN_OFFER", "Note: Update PAN details to get less deduction");
 				}
-
+				model.addAttribute("DEBIT", totaldeduct);
+				model.addAttribute("REPURCHASE_POINT", (rp - totaldeduct));
 				model.addAttribute("member", user);
 
 			} catch (Exception e) {
@@ -306,16 +320,26 @@ public class MemberController {
 					&& user.getRepurcahse() > 0) {
 
 				// INCENTIVE DEDUCTION STARTS
-				SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
-				SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
 				Long rp = user.getRepurcahse();
 				Long remaningPoint = user.getWalletBalance();
-				Double config1 = configurations1.getValue();
-				Double config2 = configurations2.getValue();
-				Double deductAmt1 = (rp.doubleValue() / 100) * config1;
-				Double deductAmt2 = (rp.doubleValue() / 100) * config2;
-				Long totaldeduct = (long) (deductAmt1 + deductAmt2);
-				remaningPoint = remaningPoint - rp;
+				Long totaldeduct = 0L;
+				if(member.getPancardNumber()!=null && !member.getPancardNumber().isEmpty()) {
+					
+					SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
+					SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
+					Double config1 = configurations1.getValue();
+					Double config2 = configurations2.getValue();
+					Double deductAmt1 = (rp.doubleValue() / 100) * config1;
+					Double deductAmt2 = (rp.doubleValue() / 100) * config2;
+					totaldeduct = (long) (deductAmt1 + deductAmt2);
+					remaningPoint = remaningPoint - rp;
+				}else {
+					SSConfiguration configurations3 = ssConfigRepository.findById("1113").get();
+					Double deductAmt3 = (rp.doubleValue() / 100) * configurations3.getValue();
+					totaldeduct = deductAmt3.longValue();
+					remaningPoint = remaningPoint - rp;
+				}
+				
 				model.addAttribute("DEBIT", totaldeduct);
 				model.addAttribute("REPURCHASE_POINT", (rp - totaldeduct));
 				// INCENTIVE DEDUCTION ENDS
@@ -443,6 +467,7 @@ public class MemberController {
 					SSConfiguration configurations3 = ssConfigRepository.findById("1113").get();
 					Double deductAmt3 = (rp.doubleValue() / 100) * configurations3.getValue();
 					totaldeduct = deductAmt3.longValue();
+					model.addAttribute("PAN_OFFER", "Note:Update PAN details to get less deduction");
 				}
 
 				remaningPoint = remaningPoint - rp;
@@ -607,6 +632,11 @@ public class MemberController {
 				model.addAttribute("successMsgNote", "<b>Note:</b> Please save above details for future reference.");
 			}
 
+			//ADD NOTIFY
+			String msg = "Member Successfully Registered with SSMARKET. Your Login Member Id and Referral Code is "+ phMember.getId() + " and Password " + phMember.getPassword();
+			Notification notification = setNotificationSMS(msg, phMember);
+			notificationRepository.save(notification);
+			
 			// TODO SMS to member mobile number
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -774,5 +804,14 @@ public class MemberController {
 			e.printStackTrace();
 		}
 		return "kycDetails";
+	}
+	private Notification setNotificationSMS(String msg, Member member) {
+		Notification notification = new Notification();
+		if (msg != null && !msg.isEmpty() && member!=null) {
+			notification.setType("SMS");
+			notification.setMessage(msg);
+			notification.setMember(member);
+		}
+		return notification;
 	}
 }

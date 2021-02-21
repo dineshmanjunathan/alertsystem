@@ -83,6 +83,7 @@ function review() {
 														<br><br><br>
 														<c:choose>
 														<c:when test="${not empty DEBIT}">
+														<p style="color: red">${PAN_OFFER}</p>
 														<div class="form-group">
 														<label style="font-size: 25px;">Deduction: ${DEBIT} </label>
 														</div>
@@ -100,7 +101,7 @@ function review() {
 														<div class="col-lg-12">
 															<div class="payment-adress">
 																<button class="rmk btn btn-primary waves-effect waves-light"
-																	type="submit" name="submit" value="register">Submit</button>
+																	onclick="return confirm('Are you sure you want to submit?')" type="submit" name="submit" value="register">Submit</button>
 
 															</div>
 														</div>

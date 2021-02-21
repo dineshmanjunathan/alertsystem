@@ -108,6 +108,7 @@ function paytypeFunction(value)
 														
 														<c:choose>
 														<c:when test="${not empty DEBIT}">
+														<p style="color: red">${PAN_OFFER}</p>
 														<div class="form-group">
 														<label style="font-size: 15px;">Deduction: ${DEBIT} </label>
 														</div>

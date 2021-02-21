@@ -17,7 +17,7 @@ import com.ss.app.entity.HibernateSequence;
 import com.ss.app.model.HibernateSequenceRepository;
 import com.ss.config.AuthenticationFilter;
 import com.ss.config.SessionFilter;
-import com.ss.scheduler.DailyRewardScheduler;
+import com.ss.scheduler.SchedulerTasks;
 
 @SpringBootApplication
 @ComponentScan("com.ss.app")
@@ -35,8 +35,8 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public DailyRewardScheduler bean() {
-		return new DailyRewardScheduler();
+	public SchedulerTasks bean() {
+		return new SchedulerTasks();
 	}
 
 	/*

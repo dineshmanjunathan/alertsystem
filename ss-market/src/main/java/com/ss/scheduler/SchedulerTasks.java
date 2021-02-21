@@ -2,16 +2,27 @@ package com.ss.scheduler;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.ss.app.entity.Member;
+import com.ss.app.entity.Notification;
 import com.ss.app.entity.SSConfiguration;
+import com.ss.app.model.NotificationRepository;
 import com.ss.app.model.RewardTransactionRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.UserRepository;
@@ -19,19 +30,58 @@ import com.ss.app.vo.MemberRewardTree;
 import com.ss.utils.MemberLevel;
 
 @Component
-public class DailyRewardScheduler {
+public class SchedulerTasks {
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private SSConfigRepository ssConfigRepository;
+
 	@Autowired
 	RewardTransactionRepository rewardTransactionRepository;
 
-	// @Scheduled(fixedRate=5000)
-	//@Scheduled(cron = "0 0/30 * * * ?")
-	@Scheduled(cron = "0 0 0/1 * * ?")
+	@Autowired
+	private NotificationRepository notificationRepository;
+
+	static RestTemplate restTemplate = new RestTemplate();
+
+	@Scheduled(cron = "*/2 * * * * *")
+	@Async
+	private void smsTrigger() {
+		try {
+			//System.out.println("SMS TRIGGER");
+			String sApiKey = "7dUGepGKDjLMq7Lagvs+rKgmztfdB/PbstEPi/oe/nk=";
+			String sClientId = "dfa59504-961e-4710-a823-8d3556e57d5c";
+			String sSenderId = "SSMRKT";
+			boolean is_Unicode = false;
+			boolean is_Flash = false;
+			List<Notification> list = notificationRepository.findByDeliveryStatusAndType("N", "SMS");
+			for (Notification notification : list) {
+
+				String url = "https://api.mylogin.co.in/api/v2/SendSMS?ApiKey=" + sApiKey + "&ClientId=" + sClientId
+						+ "&SenderId=" + sSenderId + "&Message=" + notification.getMessage() + "&MobileNumbers=+91"
+						+ notification.getMember().getPhonenumber() + "&Is_Unicode=" + is_Unicode + "&Is_Flash="
+						+ is_Flash;
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+				headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+				HttpEntity<?> reqentity = new HttpEntity<Object>(headers);
+
+				ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, reqentity, String.class);
+				if(response.getStatusCode().equals(HttpStatus.OK)) {
+					notificationRepository.deleteById(notification.getId());
+				}
+			}
+			//System.out.println("SMS END");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Scheduled(cron = "0 0 0 * * ?")
 	private void dailyAward() {
 		System.out.println("Start Daily Reward!");
 		List<SSConfiguration> levels = ssConfigRepository.getRewardLevels();
@@ -74,7 +124,8 @@ public class DailyRewardScheduler {
 		List<MemberRewardTree> subTreeList = new ArrayList<MemberRewardTree>();
 		MemberRewardTree subTree = null;
 		for (Member mem : child) {
-			// if (mem.getActive_days() != null && mem.getActive_days().isAfter(LocalDateTime.now())) {
+			// if (mem.getActive_days() != null &&
+			// mem.getActive_days().isAfter(LocalDateTime.now())) {
 			subTree = new MemberRewardTree();
 			subTree.setId(mem.getId());
 			subTree.setSponserId(mem.getReferedby());

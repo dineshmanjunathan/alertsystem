@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ss.app.entity.Category;
 import com.ss.app.entity.KYCDetails;
 import com.ss.app.entity.Member;
+import com.ss.app.entity.Notification;
 import com.ss.app.entity.Product;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.StockPointPurchase;
@@ -26,6 +27,7 @@ import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.model.AddressRepository;
 import com.ss.app.model.CategoryRepository;
 import com.ss.app.model.KYCDetailsRepository;
+import com.ss.app.model.NotificationRepository;
 import com.ss.app.model.ProductRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.StockPointPurchaseRepository;
@@ -64,6 +66,9 @@ public class AdminController {
 	@Autowired
 	private KYCDetailsRepository kycDetailsRepository;
 
+	@Autowired
+	private NotificationRepository notificationRepository;
+	
 	@RequestMapping("/admin/login")
 	public String inlogin(HttpServletRequest request, ModelMap model) {
 		model.addAttribute("ROLE", "ADMIN");
@@ -144,6 +149,7 @@ public class AdminController {
 
 			addressRepository.deleteByMember_Id(userId);
 			userRepository.deleteById(userId);
+			notificationRepository.deleteByMember_Id(userId);
 
 			model.addAttribute("deletesuccessmessage", "Member Deleted Successfully.");
 			Iterable<Member> memberList = userRepository.findAll();
@@ -484,11 +490,13 @@ public class AdminController {
 	@RequestMapping(value = "/admin/kyc/reject", method = RequestMethod.GET)
 	public String rejectKyc(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
 		try {
-			// KYCDetails kycDetails =
-			// kycDetailsRepository.findById(Long.parseLong(id)).get();
-			// Member member = userRepository.findById(kycDetails.getMemberId()).get();
+			//KYCDetails kycDetails = kycDetailsRepository.findById(Long.parseLong(id)).get();
+			//Member member = userRepository.findById(kycDetails.getMemberId()).get();
 			kycDetailsRepository.deleteById(Long.parseLong(id));
 
+			/*Notification notification=setNotificationSMS("Pan details are incorrect, please upload correct Pan Details",member);
+			notificationRepository.save(notification);*/
+			
 			List<KYCDetails> kycList = kycDetailsRepository.findByStatus("PENDING");
 			model.addAttribute("kycDetails", kycList);
 			model.addAttribute("successMessage", "KYC Rejected Successfully.");
@@ -504,6 +512,16 @@ public class AdminController {
 	private void setActiveProductListToModelMap(ModelMap model) {
 		List<Product> productList = productRepository.getActiveProducts();
 		model.addAttribute("productListing", productList);
+	}
+	
+	private Notification setNotificationSMS(String msg, Member member) {
+		Notification notification = new Notification();
+		if (msg != null && !msg.isEmpty() && member!=null) {
+			notification.setType("SMS");
+			notification.setMessage(msg);
+			notification.setMember(member);
+		}
+		return notification;
 	}
 
 }
