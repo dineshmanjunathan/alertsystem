@@ -596,11 +596,12 @@ public class TransactionManagerController {
 					model.addAttribute("successMessage",
 							"Order " + purch.getOrderNumber() + " Delivered Successfully.");
 					StockPointProduct stockPointProduct = stockPointProuctRepository.findByCode(purch.getProduct().getCode());
-					if(stockPointProduct==null) {
-						prepareStockPointProduct(purch);
-					}else {
+					if(stockPointProduct!=null && stockPointProduct.getCode()!=null && !stockPointProduct.getCode().isEmpty()) {					
 						stockPointProduct.setQuantity(stockPointProduct.getQuantity()+purch.getQuantity());
 						stockPointProuctRepository.save(stockPointProduct);
+					}else {
+						System.out.println("else part");
+						prepareStockPointProduct(purch);
 					}
 				}
 				purchaseRepository.saveAll(savePurchList);
