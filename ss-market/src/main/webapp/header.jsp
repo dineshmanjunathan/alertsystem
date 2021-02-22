@@ -621,7 +621,11 @@ body, html {
 		
 		function copyReferelLink() {			
 			  document.getElementById('reference_code').type = 'text';
-			  document.getElementById('reference_code').value = window.location.protocol+window.location.hostname+":"+window.location.port+"/register/withreferencecode?sponsorId=${sessionScope.REFERENCE_CODE}";
+			  if(window.location.port){
+			  		document.getElementById('reference_code').value = window.location.protocol+"//"+window.location.hostname+":"+window.location.port+"/register/withreferencecode?sponsorId=${sessionScope.REFERENCE_CODE}";
+			  }else{
+				  document.getElementById('reference_code').value = window.location.protocol+"//"+window.location.hostname+"/register/withreferencecode?sponsorId=${sessionScope.REFERENCE_CODE}";
+			  }
 			  var copyText = document.getElementById("reference_code");
 			  copyText.select();
 			  copyText.setSelectionRange(0, 99999)
