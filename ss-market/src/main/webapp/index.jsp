@@ -118,7 +118,13 @@
                     </div>
 
                     <div class="modal-body">
-
+						<p><b>SS MARKET</b></p>
+						<p>458 - 460, NATESH COMPLEX</p>
+						<p>100 FEET ROAD, OVER LINEN CLUB</p>
+						<p>GANDHIPURAM</p>
+						<p>COIMBATORE - 641012</p>
+						<p>Mail: caressmarket@gmail.com</p>
+						<p>Phone: +91-8610871334</p>
                     </div>
 
                     <div class="modal-footer">
