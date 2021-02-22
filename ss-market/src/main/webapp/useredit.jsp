@@ -8,52 +8,54 @@
 <meta charset="ISO-8859-1">
 </head>
 <script type="text/javascript" charset="utf-8">
+	function getSponserName() {
+		$
+				.ajax({
+					url : "/get/sponser",
+					data : {
+						"sponserId" : document.getElementById("referedby").value
+					},
+					type : "get",
+					cache : false,
+					success : function(data) {
 
-function getSponserName() {
-	$.ajax({
-        url: "/get/sponser",
-        data: {
-            "sponserId": document.getElementById("referedby").value
-        },
-        type: "get",
-        cache: false,
-        success: function (data) {
+						if (data.length > 0) {
+							var s = document.getElementById("sponsername");
+							s.value = data;
+							$("#errmsg").text("");
+						} else {
+							$("#errmsg").text("Invalid Sponsor Id");
+							$("span").css("color", "red");
+							document.getElementById("errmsg").style.visibility = "visible";
+							document.getElementById("sponsername").value = '';
+						}
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						console
+								.log('ERROR:' + XMLHttpRequest.status
+										+ ', status text: '
+										+ XMLHttpRequest.statusText);
+					}
+				});
+	}
 
-        	if(data.length>0) {
-            	var s = document.getElementById("sponsername"); s.value = data;
-            	$("#errmsg").text("");
-            }else{
-            	$("#errmsg").text("Invalid Sponsor Id");
-            	$("span").css("color", "red");
-                document.getElementById("errmsg").style.visibility = "visible";
-                document.getElementById("sponsername").value='';
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log('ERROR:' + XMLHttpRequest.status + ', status text: ' + XMLHttpRequest.statusText);
-        }
-    });
-}
+	function viewpassword() {
+		var $pwd = $(".pwd");
+		if ($pwd.attr('type') === 'password') {
+			$pwd.attr('type', 'text');
+		} else {
+			$pwd.attr('type', 'password');
+		}
+	}
 
-function viewpassword() {
-    var $pwd = $(".pwd");
-    if ($pwd.attr('type') === 'password') {
-        $pwd.attr('type', 'text');
-    } else {
-        $pwd.attr('type', 'password');
-    }
-}
-
-function adjustrequired(value)
-{
-    if(value=="MEMBER"){
-    	document.getElementById("referedby").required = true;
-    }else{
-    	document.getElementById("referedby").required = false;
-    	$("#errmsg").text("");
-    }       
-}
-
+	function adjustrequired(value) {
+		if (value == "MEMBER") {
+			document.getElementById("referedby").required = true;
+		} else {
+			document.getElementById("referedby").required = false;
+			$("#errmsg").text("");
+		}
+	}
 </script>
 <body>
 	<!-- Single pro tab review Start-->
@@ -111,10 +113,14 @@ function adjustrequired(value)
 											onsubmit="return ValidateForm(this);">
 											<p style="color: red" align="center">${errormsg}</p>
 											<input type="hidden" name="id" id="id" value="${member.id}">
-											<input type="hidden" name="walletBalance" id="walletBalance" value="${member.walletBalance}">
-											<input type="hidden" name="walletWithdrawn" id="walletWithdrawn" value="${member.walletWithdrawn}">
-											<input type="hidden" name="repurcahse" id="repurcahse" value="${member.repurcahse}">
-											<input type="hidden" name="referencecode" id="referencecode" value="${member.referencecode}">
+											<input type="hidden" name="walletBalance" id="walletBalance"
+												value="${member.walletBalance}"> <input
+												type="hidden" name="walletWithdrawn" id="walletWithdrawn"
+												value="${member.walletWithdrawn}"> <input
+												type="hidden" name="repurcahse" id="repurcahse"
+												value="${member.repurcahse}"> <input type="hidden"
+												name="referencecode" id="referencecode"
+												value="${member.referencecode}">
 
 											<div id="dropzone1" class="pro-ad">
 
@@ -135,60 +141,78 @@ function adjustrequired(value)
 
 													}
 												</script>
-												<li class="active"><a >Sponsor Details:</a></li>
+												<li class="active"><a>Sponsor Details:</a></li>
 												<c:if test="${fn:contains(sessionScope.ROLE, 'ADMIN')}">
-												<span style="color:red;">Note: Sponsor id is not required to create ADMIN and STOCK POINT.</span>
+													<span style="color: red;">Note: Sponsor id is not
+														required to create ADMIN and STOCK POINT.</span>
 												</c:if>
 												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
-													<c:choose>
-													<c:when test="${not empty member}">
-													<div class="form-group">
-																	<input name="referedby" id="referedby" type="text" onblur="getSponserName();"
-																		class="form-control" placeholder="Sponsor Id"
-																		value="${member.referedby}" readonly required>
+														<c:choose>
+															<c:when test="${not empty member}">
+																<div class="form-group">
+																	<input name="referedby" id="referedby" type="text"
+																		onblur="getSponserName();" class="form-control"
+																		placeholder="Sponsor Id" value="${member.referedby}"
+																		readonly required>
+																</div>
+															</c:when>
+															<c:otherwise>
+																<div class="form-group">
+																	<input name="referedby" id="referedby" type="text"
+																		onblur="getSponserName();" class="form-control"
+																		placeholder="Sponsor Id" value="${member.referedby}"
+																		required>
+																</div>
+															</c:otherwise>
+														</c:choose>
+														<span id="errmsg"></span>
 													</div>
-													</c:when>
-													<c:otherwise>
-													<div class="form-group">
-																	<input name="referedby" id="referedby" type="text" onblur="getSponserName();"
-																		class="form-control" placeholder="Sponsor Id"
-																		value="${member.referedby}" required>
+													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
+														<div class="form-group">
+															<input name="sponsername" id="sponsername" type="text"
+																class="form-control" placeholder="Sponsor Name"
+																value="${SPONSERNAME}" readonly>
+														</div>
 													</div>
-													</c:otherwise>
-													</c:choose>
-													<span id="errmsg"></span>
-													</div>
-												<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
-												<div class="form-group">
-																	<input name="sponsername" id="sponsername" type="text"
-																		class="form-control" placeholder="Sponsor Name"
-																		value="${SPONSERNAME}" readonly>
+
 												</div>
-												</div>
-												
-												</div>
-												<li class="active"><a >User Details:</a></li>
-													<div class="well row">
+												<li class="active"><a>User Details:</a></li>
+												<div class="well row">
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group"></div>
 														<div class="form-group">
-															<input name="name" type="text" class="form-control"
+															<c:choose>
+																<c:when test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
+																	<input name="name" type="text" class="form-control"
 																placeholder="Member Name" value="${member.name}"
 																${not empty member.name? 'readonly':''} required>
+																</c:when>
+																<c:otherwise>
+																<input name="name" type="text" class="form-control"
+																placeholder="Member Name" value="${member.name}"
+																required>
+																</c:otherwise>
+															</c:choose>
 														</div>
 														<div class="input-group">
-															<input name="password" type="password" class="form-control pwd" placeholder="Password" minlength="8"  maxlength="10"
-																value="${member.password}" required>
-																 <span class="input-group-btn">
-												            <button class="btn btn-default reveal" type="button" onclick="viewpassword();"><i class="glyphicon glyphicon-eye-open"></i></button>
-												          </span>  
-														</div><br>
-													<c:choose>
+															<input name="password" type="password"
+																class="form-control pwd" placeholder="Password"
+																minlength="8" maxlength="10" value="${member.password}"
+																required> <span class="input-group-btn">
+																<button class="btn btn-default reveal" type="button"
+																	onclick="viewpassword();">
+																	<i class="glyphicon glyphicon-eye-open"></i>
+																</button>
+															</span>
+														</div>
+														<br>
+														<c:choose>
 															<c:when test="${fn:contains(sessionScope.ROLE, 'ADMIN')}">
 
 																<div class="form-group">
-																	<select name="role" id="role" class="form-control" onchange="adjustrequired(this.value);">
+																	<select name="role" id="role" class="form-control"
+																		onchange="adjustrequired(this.value);">
 																		<option value="">-Select Role-</option>
 																		<option value="ADMIN"
 																			${member.role == 'ADMIN' ? 'selected' : ''}>ADMIN</option>
@@ -205,12 +229,12 @@ function adjustrequired(value)
 																	value="${member.role}">
 															</c:otherwise>
 														</c:choose>
-														
+
 														<div class="form-group">
 															<input name="email" type="email" class="form-control"
 																placeholder="Email" value="${member.email}">
 														</div>
-														
+
 													</div>
 													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
 														<div class="form-group">
@@ -229,9 +253,20 @@ function adjustrequired(value)
 																${member.gender eq 'Female' ?'Checked':''}>Female
 														</div>
 														<div class="form-group">
-															<input name="phonenumber" type="text"
+																<c:choose>
+																<c:when test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
+																	<input name="phonenumber" type="text"
 																class="form-control" placeholder="Phone Number"
-																value="${member.phonenumber}" ${not empty member.phonenumber ? 'readonly':''} required>
+																value="${member.phonenumber}"
+																${not empty member.phonenumber ? 'readonly':''} required>
+																</c:when>
+																<c:otherwise>
+																<input name="phonenumber" type="text"
+																class="form-control" placeholder="Phone Number"
+																value="${member.phonenumber}"
+																required>
+																</c:otherwise>
+															</c:choose>
 														</div>
 													</div>
 
@@ -253,11 +288,14 @@ function adjustrequired(value)
 
 														<c:choose>
 															<c:when test="${not empty member.id}">
-																<button class="rmk btn btn-primary waves-effect waves-light"
-																	type="submit" name="submit" value="register">Save Changes</button>
+																<button
+																	class="rmk btn btn-primary waves-effect waves-light"
+																	type="submit" name="submit" value="register">Save
+																	Changes</button>
 															</c:when>
 															<c:otherwise>
-																<button class="rmk btn btn-primary waves-effect waves-light"
+																<button
+																	class="rmk btn btn-primary waves-effect waves-light"
 																	type="submit" name="submit" value="register">Create</button>
 															</c:otherwise>
 														</c:choose>
