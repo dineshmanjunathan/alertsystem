@@ -638,7 +638,7 @@ public class MemberController {
 			}
 
 			//ADD NOTIFY
-			String msg = "Member Successfully Registered with SSMARKET. Your Login Member Id and Referral Code is "+ phMember.getId() + " and Password " + phMember.getPassword();
+			String msg = "Dear "+phMember.getName()+", Welcome to SS MARKET.\nYour User ID : "+ phMember.getId() + " Password : " + phMember.getPassword()+"\nPlease login to www.ssmarket.in";
 			Notification notification = setNotificationSMS(msg, phMember);
 			notificationRepository.save(notification);
 			
