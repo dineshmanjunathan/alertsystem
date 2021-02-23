@@ -3,6 +3,7 @@ package com.ss.app.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,10 +26,10 @@ public class Member implements Serializable {
 	private static final long serialVersionUID = -7187348510206952329L;
 
 	@Id
-	@GenericGenerator(name = "memberid_generator", strategy = "com.ss.generator.DefaultMemberIDGenerator", parameters = {
+	/*@GenericGenerator(name = "memberid_generator", strategy = "com.ss.generator.DefaultMemberIDGenerator", parameters = {
 			@org.hibernate.annotations.Parameter(name = "sequence_prefix", value = DefaultMemberIDGenerator.defaultSsequencePrefix),
 			@org.hibernate.annotations.Parameter(name = "sequence_increment", value = DefaultMemberIDGenerator.defaultSsequenceIncrement) })
-	@GeneratedValue(generator = "memberid_generator")
+	@GeneratedValue(generator = "memberid_generator")*/
 	private String id;
 	private String name;
 	private Date dob;
@@ -61,7 +62,8 @@ public class Member implements Serializable {
 		return id;
 	}
 	public void setId(String id) {
-		this.id = id;
+		Random random = new Random();
+		this.id= "SS"+(random.nextInt(999999 - 111211) + 111211); 
 	}
 	
 	public String getName() {

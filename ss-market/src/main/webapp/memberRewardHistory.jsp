@@ -21,7 +21,7 @@
 									<table class="full-right">
 									<tr>
 									<td>
-										<a href="/admin/member/listing"
+										<a href="/menu"
 											class="rmk btn btn-primary m-btn m-btn--custom m-btn--icon col-md-offset-1 col-md-12">
 											<span><i class="fa fa-arrow-left"></i> <span>Back</span>
 										</span>

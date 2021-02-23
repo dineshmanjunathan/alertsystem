@@ -35,11 +35,13 @@ import com.ss.app.entity.KYCDetails;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.Notification;
 import com.ss.app.entity.Product;
+import com.ss.app.entity.RewardTransaction;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.WithdrawnPoints;
 import com.ss.app.entity.WithdrawnPointsVo;
 import com.ss.app.model.KYCDetailsRepository;
 import com.ss.app.model.NotificationRepository;
+import com.ss.app.model.RewardTransactionRepository;
 import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.UserRepository;
 import com.ss.app.model.WithdrawnPointsRepository;
@@ -72,6 +74,9 @@ public class MemberController {
 
 	@Autowired
 	private KYCDetailsRepository kycDetailsRepository;
+	
+	@Autowired
+	private RewardTransactionRepository rewardTransactionRepository;
 
 	@RequestMapping("/")
 	public String landingPage(HttpServletRequest request, ModelMap model) {
@@ -640,7 +645,7 @@ public class MemberController {
 			// TODO SMS to member mobile number
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("errormsg", "Member Registered Failed! ");
+			model.addAttribute("errormsg", "Member Registered Failed! Tray again.");
 			return "user";
 		}
 		return "login";
@@ -805,6 +810,20 @@ public class MemberController {
 		}
 		return "kycDetails";
 	}
+	
+	@RequestMapping(value = "/purchase/reward/history", method = RequestMethod.GET)
+	public String getRewardHistory(HttpServletRequest request, ModelMap model) {
+		try {
+			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
+			Iterable<RewardTransaction> rewardhistory = rewardTransactionRepository.findByRewardedMemberWithLimit(memberId);
+			model.addAttribute("REQMEMBERID", memberId);
+			model.addAttribute("rewardList", rewardhistory);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "memberRewardHistory";
+	}
+	
 	private Notification setNotificationSMS(String msg, Member member) {
 		Notification notification = new Notification();
 		if (msg != null && !msg.isEmpty() && member!=null) {

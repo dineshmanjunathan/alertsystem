@@ -701,19 +701,6 @@ public class TransactionManagerController {
 
 	}
 
-	@RequestMapping(value = "/purchase/reward/history", method = RequestMethod.GET)
-	public String getRewardHistory(@RequestParam("id") String memberId, HttpServletRequest request, ModelMap model) {
-		try {
-			Iterable<RewardTransaction> rewardhistory = rewardTransactionRepository
-					.findByRewardedMemberWithLimit(memberId);
-			model.addAttribute("REQMEMBERID", memberId);
-			model.addAttribute("rewardList", rewardhistory);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "memberRewardHistory";
-	}
-
 	/**
 	 * @param model
 	 */

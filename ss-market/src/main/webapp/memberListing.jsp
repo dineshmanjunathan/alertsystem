@@ -61,7 +61,6 @@
 											<th data-field="role" data-editable="false">Role</th>
 											<th data-field="memberStatus">Status</th>
 											<th data-field="action">Action</th>
-											<th data-field="reward">Reward History</th>
 										</tr>
 									</thead>
                                         <tbody> 
@@ -80,15 +79,7 @@
 		        								 <a class="btn-danger" onclick="return confirm('Are you sure you want to delete?')" 
 		        								 href="<c:url value='/admin/user/delete?user_id=${details.id}' />" >
 		        								  <center><i class="fa fa-trash-o" aria-hidden="true"></i></center></a>
-		        								  </td> 
-		        								   <td>
-												  <a href="<c:url value='/purchase/reward/history?id=${details.id}' />">
-													<button class="rmk btn btn-primary" type="button">
-													<i class="glyphicon glyphicon-th-list"> </i> Click here
-												</button>
-												  </a>		
-												  </td>
-		        								 
+		        								  </td> 		        								 
                                             </tr> 
                                         </c:forEach>
                                         </tbody>
