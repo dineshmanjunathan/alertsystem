@@ -33,8 +33,9 @@
 									<a href="#"
 										class="btn btn-warning col-md-offset-5 col-md-2">
 										<span>Member Id : ${REQMEMBERID} </span>
-									</a> 
-								</div>
+									</a> 									
+									</div>
+									<span><b>Note:</b> Last 10 days reward transaction is listed below</span>
 							<div class="sparkline13-graph">
                                 <div class="datatable-dashv1-list custom-datatable-overright">
                                     <div id="toolbar">
@@ -42,8 +43,9 @@
 											<option value="">Export Basic</option>
 											<option value="all">Export All</option>
 											<option value="selected">Export Selected</option>
-										</select>
+										</select>									
                                     </div>
+                                    
                                      <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
                                         data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                                      <thead>

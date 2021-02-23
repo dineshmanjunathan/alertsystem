@@ -105,7 +105,7 @@
 															</c:choose>
 															<div class="form-group">
 																<input class="btn btn-primary" type="file" name="image" /><br>
-																<p style="color: red" align="center">NOTE: Size should not exceed 10MB</p>
+																<p style="color: red" align="center">NOTE: Size should not exceed 2MB</p>
 															</div>
 															
 															
