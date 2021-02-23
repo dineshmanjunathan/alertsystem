@@ -69,7 +69,7 @@
 												<div class="form-group">
 													<input class="btn btn-primary" type="file" name="image" required>
 												</div><br>
-												<p style="color: red" align="center">NOTE: Size should not exceed 2MB</p>
+												<p style="color: red" align="center">NOTE: Size should not exceed 10MB</p>
 												</c:otherwise>
 												</c:choose>
 
