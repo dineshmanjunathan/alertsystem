@@ -13,6 +13,6 @@ public interface RewardTransactionRepository extends CrudRepository<RewardTransa
 
 	List<RewardTransaction> findByRewardedMember(String rewardedMember);
 	
-	@Query(value="select * from t_reward_transaction where rewarded_member ='SS111472' and rewarded_on between current_date-6 and current_timestamp", nativeQuery=true)
+	@Query(value="select * from t_reward_transaction where rewarded_member =:rewardedMember and rewarded_on between current_date-6 and current_timestamp", nativeQuery=true)
 	List<RewardTransaction> findByRewardedMemberWithLimit(String rewardedMember);
 }
