@@ -1,5 +1,8 @@
 package com.ss.scheduler;
 
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,24 +48,29 @@ public class SchedulerTasks {
 	private NotificationRepository notificationRepository;
 
 	static RestTemplate restTemplate = new RestTemplate();
+	private static final String sApiKey = "7dUGepGKDjLMq7Lagvs+rKgmztfdB/PbstEPi/oe/nk=";
+	private static final String sClientId = "dfa59504-961e-4710-a823-8d3556e57d5c";
+	private static final String sSenderId = "SSMRKT";
+	private static final boolean is_Unicode = true;
+	private static final boolean is_Flash = false;
 
 	@Scheduled(cron = "*/2 * * * * *")
 	@Async
 	private void smsTrigger() {
 		try {
-			//System.out.println("SMS TRIGGER");
-			String sApiKey = "7dUGepGKDjLMq7Lagvs+rKgmztfdB/PbstEPi/oe/nk=";
-			String sClientId = "dfa59504-961e-4710-a823-8d3556e57d5c";
-			String sSenderId = "SSMRKT";
-			boolean is_Unicode = false;
-			boolean is_Flash = false;
+			// System.out.println("SMS TRIGGER");
 			List<Notification> list = notificationRepository.findByDeliveryStatusAndType("N", "SMS");
 			for (Notification notification : list) {
 
-				String url = "https://api.mylogin.co.in/api/v2/SendSMS?ApiKey=" + sApiKey + "&ClientId=" + sClientId
-						+ "&SenderId=" + sSenderId + "&Message=" + notification.getMessage() + "&MobileNumbers=+91"
-						+ notification.getMember().getPhonenumber() + "&Is_Unicode=" + is_Unicode + "&Is_Flash="
-						+ is_Flash;
+				String url = "https://api.mylogin.co.in/api/v2/SendSMS?ApiKey=" + sApiKey 
+						+ "&ClientId=" + sClientId
+						+ "&SenderId=" + sSenderId 
+						+ "&Message=" + URLEncoder.encode(notification.getMessage(), StandardCharsets.UTF_8.toString())
+						+ "&MobileNumbers=+91"+ notification.getMember().getPhonenumber() 
+						+ "&Is_Unicode=" + is_Unicode 
+						+ "&Is_Flash=" + is_Flash;
+				
+				URI uri = URI.create(url);
 
 				HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
@@ -70,12 +78,12 @@ public class SchedulerTasks {
 
 				HttpEntity<?> reqentity = new HttpEntity<Object>(headers);
 
-				ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, reqentity, String.class);
-				if(response.getStatusCode().equals(HttpStatus.OK)) {
+				ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, reqentity, String.class);
+				if (response.getStatusCode().equals(HttpStatus.OK)) {
 					notificationRepository.deleteById(notification.getId());
 				}
 			}
-			//System.out.println("SMS END");
+			// System.out.println("SMS END");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
