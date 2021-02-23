@@ -645,7 +645,7 @@ public class MemberController {
 			// TODO SMS to member mobile number
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("errormsg", "Member Registered Failed! Tray again.");
+			model.addAttribute("errormsg", "Member Registered Failed! please try again.");
 			return "user";
 		}
 		return "login";
