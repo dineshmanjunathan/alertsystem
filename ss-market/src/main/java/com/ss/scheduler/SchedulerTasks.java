@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -101,10 +99,10 @@ public class SchedulerTasks {
 	}
 	
 	private void activeReward(List<Member> memberList) {
-		Optional<SSConfiguration> configVal = ssConfigRepository.findById("1115");
-		if(!configVal.isEmpty()) {
+		Optional<SSConfiguration> config = ssConfigRepository.findById("1115");
+		if(!config.isEmpty()) {
 			for (Member member : memberList) {
-				Double rewardVal = configVal.get().getValue();
+				Double rewardVal = config.get().getValue();
 				rewardTransactionRepository.save(prepareRewarTransaction(member.getId(), rewardVal));
 				if (rewardVal > 0) {
 					member.setWalletBalance(member.getWalletBalance() + rewardVal.longValue());

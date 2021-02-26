@@ -34,7 +34,6 @@ import com.google.gson.Gson;
 import com.ss.app.entity.KYCDetails;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.Notification;
-import com.ss.app.entity.Product;
 import com.ss.app.entity.RewardTransaction;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.entity.WithdrawnPoints;
@@ -50,7 +49,6 @@ import com.ss.app.vo.MemberRewardTree;
 import com.ss.app.vo.MemberStat;
 import com.ss.app.vo.MemberTree;
 import com.ss.app.vo.MemberVo;
-import com.ss.app.vo.ProductVo;
 import com.ss.utils.MemberLevel;
 import com.ss.utils.ReportGenerator;
 
