@@ -91,6 +91,7 @@ public class Utils {
 		map.put("1112", "Admin Charges %");
 		map.put("1113", "No Pan Card Charges %");
 		map.put("1114", "Stock Point Discount %");
+		map.put("1115", "Active member REWARD");
 		map.put("L1", "LEVEL 2 REWARD");
 		map.put("L2", "LEVEL 3 REWARD");
 		map.put("L3", "LEVEL 4 REWARD");

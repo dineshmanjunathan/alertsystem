@@ -1,5 +1,6 @@
 package com.ss.scheduler;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -9,6 +10,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -24,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ss.app.entity.Member;
 import com.ss.app.entity.Notification;
+import com.ss.app.entity.RewardTransaction;
 import com.ss.app.entity.SSConfiguration;
 import com.ss.app.model.NotificationRepository;
 import com.ss.app.model.RewardTransactionRepository;
@@ -59,30 +64,7 @@ public class SchedulerTasks {
 	private void smsTrigger() {
 		try {
 			// System.out.println("SMS TRIGGER");
-			List<Notification> list = notificationRepository.findByDeliveryStatusAndType("N", "SMS");
-			for (Notification notification : list) {
-
-				String url = "https://api.mylogin.co.in/api/v2/SendSMS?ApiKey=" + sApiKey 
-						+ "&ClientId=" + sClientId
-						+ "&SenderId=" + sSenderId 
-						+ "&Message=" + URLEncoder.encode(notification.getMessage(), StandardCharsets.UTF_8.toString())
-						+ "&MobileNumbers=+91"+ notification.getMember().getPhonenumber() 
-						+ "&Is_Unicode=" + is_Unicode 
-						+ "&Is_Flash=" + is_Flash;
-				
-				URI uri = URI.create(url);
-
-				HttpHeaders headers = new HttpHeaders();
-				headers.setContentType(MediaType.APPLICATION_JSON);
-				headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-				HttpEntity<?> reqentity = new HttpEntity<Object>(headers);
-
-				ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, reqentity, String.class);
-				if (response.getStatusCode().equals(HttpStatus.OK)) {
-					notificationRepository.deleteById(notification.getId());
-				}
-			}
+			sendSMS();
 			// System.out.println("SMS END");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,16 +72,21 @@ public class SchedulerTasks {
 	}
 
 	@Scheduled(cron = "0 0 0 * * ?")
-	private void dailyAward() {
+	private void reward() {
 		System.out.println("Start Daily Reward!");
+		List<Member> memberList = userRepository.getActiveMembersOnly();
+		dailyReward(memberList);
+		activeReward(memberList);
+		System.out.println("End Daily Reward!");
+	}
+
+	private void dailyReward(List<Member> memberList) {
 		List<SSConfiguration> levels = ssConfigRepository.getRewardLevels();
 		Map<String, Double> map = new HashMap<>();
 
 		for (SSConfiguration ssConfiguration : levels) {
 			map.put(ssConfiguration.getCode(), ssConfiguration.getValue());
 		}
-		List<Member> memberList = userRepository.getActiveMembersOnly();
-
 		for (Member member : memberList) {
 			MemberRewardTree memberRewardTree = new MemberRewardTree();
 			memberRewardTree.setId(member.getId());
@@ -111,8 +98,28 @@ public class SchedulerTasks {
 				userRepository.save(member);
 			}
 		}
-
-		System.out.println("End Daily Reward!");
+	}
+	
+	private void activeReward(List<Member> memberList) {
+		Optional<SSConfiguration> configVal = ssConfigRepository.findById("1115");
+		if(!configVal.isEmpty()) {
+			for (Member member : memberList) {
+				Double rewardVal = configVal.get().getValue();
+				rewardTransactionRepository.save(prepareRewarTransaction(member.getId(), rewardVal));
+				if (rewardVal > 0) {
+					member.setWalletBalance(member.getWalletBalance() + rewardVal.longValue());
+					userRepository.save(member);
+				}
+			}
+		}
+	}
+	
+	private RewardTransaction prepareRewarTransaction(String memberId, Double rewardVal) {
+		RewardTransaction reward = new RewardTransaction();
+		reward.setPoint(rewardVal);
+		reward.setOrderNumber(100002L);
+		reward.setRewardedMember(memberId);
+		return reward;
 	}
 
 	private int getActiveDirectCount(Member member) {
@@ -148,5 +155,33 @@ public class SchedulerTasks {
 		}
 		memberRewardTree.setChildren(subTreeList);
 		return c;
+	}
+	
+	private boolean sendSMS() throws UnsupportedEncodingException {
+		List<Notification> list = notificationRepository.findByDeliveryStatusAndType("N", "SMS");
+		for (Notification notification : list) {
+
+			String url = "https://api.mylogin.co.in/api/v2/SendSMS?ApiKey=" + sApiKey 
+					+ "&ClientId=" + sClientId
+					+ "&SenderId=" + sSenderId 
+					+ "&Message=" + URLEncoder.encode(notification.getMessage(), StandardCharsets.UTF_8.toString())
+					+ "&MobileNumbers=+91"+ notification.getMember().getPhonenumber() 
+					+ "&Is_Unicode=" + is_Unicode 
+					+ "&Is_Flash=" + is_Flash;
+			
+			URI uri = URI.create(url);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<?> reqentity = new HttpEntity<Object>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, reqentity, String.class);
+			if (response.getStatusCode().equals(HttpStatus.OK)) {
+				notificationRepository.deleteById(notification.getId());
+			}
+		}
+		return true;
 	}
 }
