@@ -90,7 +90,9 @@ public class AdminController {
 	@RequestMapping("/admin/menu")
 	public String adminMenu(HttpServletRequest request, ModelMap model) {
 		model.addAttribute("ROLE", "ADMIN");
-
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		Iterable<Member> memberList = userRepository.findAll();
 		if (memberList != null) {
 			Utils utils = new Utils();
@@ -103,6 +105,9 @@ public class AdminController {
 
 	@RequestMapping("/admin/member/listing")
 	public String adminListing(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		Iterable<Member> memberList = userRepository.getAllMemberWithStatus();
 		model.addAttribute("memberList", memberList);
 		return "memberListing";
@@ -140,11 +145,17 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/user/edit", method = RequestMethod.GET)
 	public String edit(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		return "useredit";
 	}
 
 	@RequestMapping("/admin/user/delete")
 	public String delete(@RequestParam("user_id") String userId, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 
 			addressRepository.deleteByMember_Id(userId);
@@ -162,6 +173,9 @@ public class AdminController {
 
 	@RequestMapping("/admin/categoryCodeListing")
 	public String categoryCodeListing(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 			model.addAttribute("categoryCodeList", categoryCodeList);
@@ -173,6 +187,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/categoryCode/delete", method = RequestMethod.GET)
 	public String categoryCodeDelete(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			try {
 				categoryRepository.deleteByCode(id);
@@ -193,6 +210,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/categoryCode/edit", method = RequestMethod.GET)
 	public String categoryCodeEdit(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Category categoryCode = categoryRepository.findByCode(id);
 			CategoryVo categoryCodeVo = new CategoryVo();
@@ -206,6 +226,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/categoryCode/edit", method = RequestMethod.POST)
 	public String categoryCodeEditSubmit(HttpServletRequest request, CategoryVo categoryCodeVo, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		Category categoryCode = new Category();
 		try {
 			BeanUtils.copyProperties(categoryCodeVo, categoryCode);
@@ -221,11 +244,17 @@ public class AdminController {
 
 	@RequestMapping("/admin/categoryCode")
 	public String incategoryCode(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		return "categoryCode";
 	}
 
 	@RequestMapping(value = "/admin/categoryCode/save", method = RequestMethod.POST)
 	public String categoryCodeSubmit(HttpServletRequest request, CategoryVo categoryCodeVo, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Category categoryCode = new Category();
 			BeanUtils.copyProperties(categoryCodeVo, categoryCode);
@@ -241,6 +270,9 @@ public class AdminController {
 
 	@RequestMapping("/admin/productListing")
 	public String productListing(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			setActiveProductListToModelMap(model);
 		} catch (Exception e) {
@@ -251,6 +283,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/product/delete", method = RequestMethod.GET)
 	public String productDelete(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			productRepository.updateToInactiveProduct(id);
 			model.addAttribute("deletesuccessmessage", "Product Deleted Successfully.");
@@ -263,6 +298,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/product/edit", method = RequestMethod.GET)
 	public String productEdit(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Product productCode = productRepository.findByCode(id);
 			model.addAttribute("productCode", productCode);
@@ -277,6 +315,9 @@ public class AdminController {
 	@RequestMapping(value = "/admin/product/edit", method = RequestMethod.POST)
 	public String productEditSubmit(HttpServletRequest request, ProductVo productVo, ModelMap model,
 			@RequestParam(required = false) MultipartFile image) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		Product product = new Product();
 		try {
 			BeanUtils.copyProperties(productVo, product);
@@ -297,6 +338,9 @@ public class AdminController {
 
 	@RequestMapping("/admin/product")
 	public String inproduct(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 
 		List<Category> categoryCodeList = categoryRepository.findAllByOrderByCode();
 		model.addAttribute("categoryCodeList", categoryCodeList);
@@ -307,6 +351,9 @@ public class AdminController {
 	@RequestMapping(value = "/admin/product/save", method = RequestMethod.POST)
 	public String categoryCodeSubmit(HttpServletRequest request, ProductVo productVo, ModelMap model,
 			@RequestParam(required = false) MultipartFile image) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Product product = new Product();
 			Product productCode = productRepository.findByCode(productVo.getCode());
@@ -332,6 +379,9 @@ public class AdminController {
 
 	@RequestMapping("/admin/stockpurchase/listing")
 	public String stockpurchaseListing(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		Iterable<StockPointPurchase> purchaseList = stockPurchaseRepository.findAll();
 		model.addAttribute("stockPoitPurchaseList", purchaseList);
 		return "stockPointSalesHistory";
@@ -339,6 +389,9 @@ public class AdminController {
 
 	@RequestMapping("/admin/ssconfig/listing")
 	public String ssconfigListing(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		Iterable<SSConfiguration> ssConfig = ssConfigRepo.findAll();
 		model.addAttribute("ssConfigList", ssConfig);
 		return "ssConfigList";
@@ -346,6 +399,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/ssconfig/edit", method = RequestMethod.GET)
 	public String ssconfigEdit(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		SSConfiguration ssConfig = ssConfigRepo.findById(id).get();
 		model.addAttribute("ssConfigDetail", ssConfig);
 		model.addAttribute("ssConfigType", Utils.getSSConfigTypeList());
@@ -354,6 +410,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/ssconfig/edit", method = RequestMethod.POST)
 	public String ssconfigEditSubmit(HttpServletRequest request, SSConfigurationVo ssConfigurationVo, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		SSConfiguration ssConfiguration = new SSConfiguration();
 		try {
 			BeanUtils.copyProperties(ssConfigurationVo, ssConfiguration);
@@ -370,6 +429,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/ssconfig/delete", method = RequestMethod.GET)
 	public String ssconfigDelete(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Long val = ssConfigRepo.deleteByCode(id);
 			if (val > 0) {
@@ -387,6 +449,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/ssconfig/save", method = RequestMethod.POST)
 	public String ssconfigSave(HttpServletRequest request, SSConfigurationVo ssConfigurationVo, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			SSConfiguration ssConfiguration = new SSConfiguration();
 			BeanUtils.copyProperties(ssConfigurationVo, ssConfiguration);
@@ -403,13 +468,18 @@ public class AdminController {
 
 	@RequestMapping("/admin/ssconfig")
 	public String inSSConfig(HttpServletRequest request, ModelMap model) {
-
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		model.addAttribute("ssConfigType", Utils.getSSConfigTypeList());
 		return "ssConfigEdit";
 	}
 
 	@RequestMapping(value = "/admin/withdrawnPointHistory/list", method = RequestMethod.GET)
 	public String withdrawnPointsHistory(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Iterable<WithdrawnPoints> withdrawnPointsHistoryList = withdrawnPointsRepository.findAll();
 			model.addAttribute("withdrawnPointsHistoryList", withdrawnPointsHistoryList);
@@ -421,6 +491,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/memberWithdrawnApproval/list", method = RequestMethod.GET)
 	public String approveWithdrawnPoints(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			List<WithdrawnPoints> withdrawnPointsHistoryList = withdrawnPointsRepository.findByStatus("PENDING");
 			model.addAttribute("withdrawnPointsHistoryList", withdrawnPointsHistoryList);
@@ -432,6 +505,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/withdrawn/approve", method = RequestMethod.GET)
 	public String approveWithdrawnTxn(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			WithdrawnPoints withdrawnPoints = withdrawnPointsRepository.findById(Long.parseLong(id)).get();
 
@@ -453,6 +529,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/kyc/list", method = RequestMethod.GET)
 	public String getkycList(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			List<KYCDetails> kycList = kycDetailsRepository.findByStatus("PENDING");
 			model.addAttribute("kycDetails", kycList);
@@ -464,6 +543,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/kyc/approve", method = RequestMethod.GET)
 	public String approveKyc(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			KYCDetails kycDetails = kycDetailsRepository.findById(Long.parseLong(id)).get();
 
@@ -489,6 +571,9 @@ public class AdminController {
 
 	@RequestMapping(value = "/admin/kyc/reject", method = RequestMethod.GET)
 	public String rejectKyc(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			//KYCDetails kycDetails = kycDetailsRepository.findById(Long.parseLong(id)).get();
 			//Member member = userRepository.findById(kycDetails.getMemberId()).get();

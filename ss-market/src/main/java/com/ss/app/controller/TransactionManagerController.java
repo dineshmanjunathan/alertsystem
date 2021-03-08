@@ -95,6 +95,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/confirm", method = RequestMethod.POST)
 	public String savePurchase(HttpServletRequest request, AddressVo address, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			
 			Double redeemTotal = 0.0;
@@ -180,6 +183,9 @@ public class TransactionManagerController {
 	@RequestMapping(value = "/purchase/manual/confirm", method = RequestMethod.GET)
 	public String saveManualPurchase(HttpServletRequest request, ModelMap model,
 			@RequestParam(required = true) String memberid) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			HttpSession session = request.getSession();
 			String memberId = (String) session.getAttribute("MEMBER_ID");
@@ -331,6 +337,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/detail", method = RequestMethod.GET)
 	public String loadPurchase(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			List<Purchase> purchaseList = purchaseRepository.findByMemberid(memberId);
@@ -343,6 +352,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/list", method = RequestMethod.GET)
 	public String purchaseList(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			setActiveProductListToModelMap(model);
 			Iterable<Category> catIterable = categoryRepository.findAll();
@@ -355,6 +367,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/loadProduct/{catId}", method = RequestMethod.GET)
 	public String loadProduct(@PathVariable String catId, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			Iterable<Product> productList = productRepository.findByCategory(catId);
 			model.addAttribute("productList", productList);
@@ -368,6 +383,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/review", method = RequestMethod.GET)
 	public String purchaseReview(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			List<Cart> cart = cartRepository.findByMemberid(memberId);
@@ -380,6 +398,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/address", method = RequestMethod.GET)
 	public String purchaseAddress(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
 			String role = (String) request.getSession().getAttribute("ROLE");
@@ -433,6 +454,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/manual/review", method = RequestMethod.GET)
 	public String purchasemanualReview(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			List<Cart> cart = cartRepository.findByMemberid(memberId);
@@ -445,6 +469,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/review/edit", method = RequestMethod.GET)
 	public String reviewEdit(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			List<Cart> cart = cartRepository.findByMemberid(memberId);
@@ -468,6 +495,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/manual/edit", method = RequestMethod.GET)
 	public String reviewManualEdit(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			List<Cart> cart = cartRepository.findByMemberid(memberId);
@@ -553,6 +583,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/allmanual/list", method = RequestMethod.GET)
 	public String allManualTxnList(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Iterable<Purchase> purchaseList = purchaseRepository.findByMember("STOCK_POINT");
 			model.addAttribute("purchaseList", purchaseList);
@@ -564,6 +597,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/allMember/list", method = RequestMethod.GET)
 	public String allMemberTxnList(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Iterable<Purchase> purchaseList = purchaseRepository.findByMember("MEMBER");
 			model.addAttribute("purchaseList", purchaseList);
@@ -575,6 +611,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/pending/list", method = RequestMethod.GET)
 	public String pendingTxnList(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			Iterable<Purchase> purchaseList = purchaseRepository.findByOrderStatus("PENDING");
 			model.addAttribute("purchaseList", purchaseList);
@@ -586,6 +625,9 @@ public class TransactionManagerController {
 
 	@RequestMapping(value = "/purchase/approve", method = RequestMethod.GET)
 	public String approvePurchase(HttpServletRequest request, ModelMap model, @RequestParam("id") String id) {
+		if(Utils.validateAdmin(request)) {
+			return "commonLogin";
+		}
 		try {
 			List<Purchase> purchase = purchaseRepository.findByOrderNumber(Long.parseLong(id));
 			List<Purchase> savePurchList = new ArrayList<Purchase>();

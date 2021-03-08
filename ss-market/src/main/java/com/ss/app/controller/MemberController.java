@@ -51,6 +51,7 @@ import com.ss.app.vo.MemberTree;
 import com.ss.app.vo.MemberVo;
 import com.ss.utils.MemberLevel;
 import com.ss.utils.ReportGenerator;
+import com.ss.utils.Utils;
 
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -102,11 +103,17 @@ public class MemberController {
 
 	@RequestMapping("/menu")
 	public String menu(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		return "menu";
 	}
 
 	@RequestMapping("/home")
 	public String home(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		MemberVo ab = (MemberVo) request.getSession().getAttribute("USER");
 		model.addAttribute("CURRENT_USER", ab);
 		return "home";
@@ -114,10 +121,6 @@ public class MemberController {
 
 	@RequestMapping("/register")
 	public String user(HttpServletRequest request, ModelMap model) {
-		/*
-		 * Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-		 * model.addAttribute("countryCodeList", countryCodeList);
-		 */
 		if (request.getSession() != null && request.getSession().getAttribute("MEMBER_ID") != null) {
 			request.getSession().invalidate();
 		}
@@ -126,6 +129,9 @@ public class MemberController {
 
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		String redirectPath = "login";
 		if (request.getSession() != null) {
 			if (request.getSession().getAttribute("ROLE") != null
@@ -197,6 +203,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/wallet", method = RequestMethod.GET)
 	public String getWalletBalance(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
 
@@ -217,6 +226,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/member/repurchase/wallet", method = RequestMethod.GET)
 	public String getRePurchaseWallet(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
 
@@ -237,6 +249,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/wallet/rePurchase", method = RequestMethod.POST)
 	public String redirectToRePurcahse(HttpServletRequest request, MemberVo user, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		Member userEntity = new Member();
 		try {
 
@@ -250,6 +265,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/wallet/withdrawn", method = RequestMethod.POST)
 	public String redirectToWithdrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		Member userEntity = new Member();
 		try {
 
@@ -263,7 +281,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/wallet/deduction/compute", method = RequestMethod.GET)
 	public String validateRepurchase(HttpServletRequest request, MemberVo user, ModelMap model) {
-
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getRepurcahse() != null
 				&& user.getRepurcahse() > 0) {
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
@@ -307,6 +327,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/updateRePurchase", method = RequestMethod.POST)
 	public String updateToRePurcahse(HttpServletRequest request, MemberVo user, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
 			Member member = userRepository.findById(userId).get();
@@ -371,6 +394,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/withdrawn", method = RequestMethod.POST)
 	public String updateToWithdrawn(HttpServletRequest request, WithdrawnPointsVo vo, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
 			Member member = userRepository.findById(userId).get();
@@ -448,6 +474,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/withdrawn/deduction/compute", method = RequestMethod.GET)
 	public String validateWithDrawn(HttpServletRequest request, MemberVo user, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getWalletWithdrawn() != null
 					&& user.getWalletWithdrawn() > 0) {
@@ -491,6 +520,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/userlisting", method = RequestMethod.GET)
 	public String adminListingSubmit(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			Iterable<Member> userList = userRepository.findAll();
 			model.addAttribute("userList", userList);
@@ -502,6 +534,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/member/tree", method = RequestMethod.GET)
 	public String memberTree(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			List<MemberTree> treeList = new ArrayList<>();
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
@@ -523,6 +558,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/member/stat", method = RequestMethod.GET)
 	public String memberStat(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			Member member = userRepository.findByIdAndRole(memberId, "MEMBER").get();
@@ -651,6 +689,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/user/edit", method = RequestMethod.GET)
 	public String edit(@RequestParam("user_id") String userId, HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			Member user = userRepository.findById(userId).get();
 			if (user != null && user.getReferedby() != null) {
@@ -670,6 +711,9 @@ public class MemberController {
 
 	@RequestMapping(value = "/user/edit", method = RequestMethod.POST)
 	public String editSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		Member userEntity = new Member();
 		try {
 			Member actualmember = userRepository.findById(user.getId()).get();
@@ -717,6 +761,9 @@ public class MemberController {
 
 	@RequestMapping("/contactus")
 	public String contactus(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		return "contactus";
 	}
 
@@ -756,6 +803,9 @@ public class MemberController {
 
 	@GetMapping("/member/kycdetails")
 	public String kycDetails(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			KYCDetails details = kycDetailsRepository.findByMemberId(memberId);
@@ -771,6 +821,9 @@ public class MemberController {
 	@RequestMapping(value = "/member/kycdetails/save", method = RequestMethod.POST)
 	public String productEditSubmit(HttpServletRequest request, KYCDetailsVo kycDetailsVo, ModelMap model,
 			@RequestParam(required = false) MultipartFile image) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		
 		try {
 			String panExists = userRepository.checkIfPanExists(kycDetailsVo.getPancardNumber());
@@ -811,6 +864,9 @@ public class MemberController {
 	
 	@RequestMapping(value = "/purchase/reward/history", method = RequestMethod.GET)
 	public String getRewardHistory(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateMember(request)) {
+			return "login";
+		}
 		try {
 			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 			Iterable<RewardTransaction> rewardhistory = rewardTransactionRepository.findByRewardedMemberWithLimit(memberId);

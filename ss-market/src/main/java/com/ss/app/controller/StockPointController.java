@@ -17,6 +17,7 @@ import com.ss.app.model.StockPointProuctRepository;
 import com.ss.app.model.StockPointPurchaseRepository;
 import com.ss.app.model.UserRepository;
 import com.ss.app.vo.MemberVo;
+import com.ss.utils.Utils;
 
 @Controller
 public class StockPointController {
@@ -44,11 +45,17 @@ public class StockPointController {
 	
 	@RequestMapping("/stock/point/menu")
 	public String toStockMenu(HttpServletRequest request,ModelMap model) {
+		if(Utils.validateStockPoint(request)) {
+			return "index";
+		}
 		return "stockPointMenu";
 	}
 	
 	@RequestMapping("/stock/point/salehistory")
 	public String stockSalesHistory(HttpServletRequest request,ModelMap model) {
+		if(Utils.validateStockPoint(request)) {
+			return "index";
+		}
 		String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 		Iterable<StockPointPurchase> spList = stockPointPurchaseRepository.findByStockPointId(memberId);
 		model.addAttribute("stockPointPurchaseList",spList);
@@ -57,6 +64,9 @@ public class StockPointController {
 	
 	@RequestMapping("/stock/point/inventory")
 	public String stockPointInventory(HttpServletRequest request,ModelMap model) {
+		if(Utils.validateStockPoint(request)) {
+			return "index";
+		}
 		String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
 		Iterable<StockPointProduct> spList = stockPointProuctRepository.findByMemberId(memberId);
 		model.addAttribute("stockPointInventory",spList);
@@ -86,6 +96,9 @@ public class StockPointController {
 	
 	@RequestMapping(value="/stock/point/manual/purchase",method=RequestMethod.GET)
 	public String manualPurchase(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateStockPoint(request)) {
+			return "index";
+		}
 		try {
 			Iterable<Category> categoryList = categoryRepository.findAll();
 			model.addAttribute("categoryList", categoryList);

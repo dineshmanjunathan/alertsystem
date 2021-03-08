@@ -12,6 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.http.HttpRequest;
+
 import com.google.common.collect.Lists;
 import com.ss.app.entity.Member;
 import com.ss.app.entity.SSConfiguration;
@@ -91,7 +95,7 @@ public class Utils {
 		map.put("1112", "Admin Charges %");
 		map.put("1113", "No Pan Card Charges %");
 		map.put("1114", "Stock Point Discount %");
-		map.put("1115", "Active member REWARD");
+		//map.put("1115", "Active member REWARD");
 		map.put("L1", "LEVEL 2 REWARD");
 		map.put("L2", "LEVEL 3 REWARD");
 		map.put("L3", "LEVEL 4 REWARD");
@@ -115,8 +119,8 @@ public class Utils {
 
 		return list;
 	}
-	
-	public static void sendSMS(String Message,String MobileNumbers) {
+
+	public static void sendSMS(String Message, String MobileNumbers) {
 
 		try {
 			String ApiKey = "";
@@ -125,10 +129,11 @@ public class Utils {
 			boolean Is_Unicode = true;
 			boolean Is_Flash = true;
 
-			URL url = new URL(
-					"https://api.mylogin.co.in/api/v2/SendSMS?ApiKey="+ApiKey+"&ClientId="+ClientId+"&SenderId="+SenderId+"&Message="+Message+"&MobileNumbers="+MobileNumbers+"&Is_Unicode="+Is_Unicode+"&Is_Flash="+Is_Flash);// your
-																																														// from
-																																																					// .
+			URL url = new URL("https://api.mylogin.co.in/api/v2/SendSMS?ApiKey=" + ApiKey + "&ClientId=" + ClientId
+					+ "&SenderId=" + SenderId + "&Message=" + Message + "&MobileNumbers=" + MobileNumbers
+					+ "&Is_Unicode=" + Is_Unicode + "&Is_Flash=" + Is_Flash);// your
+			// from
+			// .
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("Accept", "application/json");
@@ -147,12 +152,52 @@ public class Utils {
 			System.out.println("Exception in NetClientGet:- " + e);
 		}
 	}
-	
-	
+
+	public static boolean validateSession(HttpServletRequest request) {
+		if (request.getSession() != null && request.getSession().getAttribute("LOGGED_ON") != null) {
+			return false;
+		}
+		if (request.getSession() != null)
+			request.getSession().invalidate();
+		return true;
+	}
+
+	public static boolean validateAdmin(HttpServletRequest request) {
+		if (request.getSession() != null && request.getSession().getAttribute("LOGGED_ON") != null) {
+			if (request.getSession().getAttribute("ROLE").equals("ADMIN")) {
+				return false;
+			}
+		}
+		if (request.getSession() != null)
+			request.getSession().invalidate();
+		return true;
+	}
+
+	public static boolean validateStockPoint(HttpServletRequest request) {
+		if (request.getSession() != null && request.getSession().getAttribute("LOGGED_ON") != null) {
+			if (request.getSession().getAttribute("ROLE").equals("STOCK_POINT")) {
+				return false;
+			}
+		}
+		if (request.getSession() != null)
+			request.getSession().invalidate();
+		return true;
+	}
+
+	public static boolean validateMember(HttpServletRequest request) {
+		if (request.getSession() != null && request.getSession().getAttribute("LOGGED_ON") != null) {
+			if (request.getSession().getAttribute("ROLE").equals("MEMBER")) {
+				return false;
+			}
+		}
+		if (request.getSession() != null)
+			request.getSession().invalidate();
+		return true;
+	}
 
 	public static void main(String[] arg) {
-		String str="1.0";
-		Double d =Double.parseDouble(str);
+		String str = "1.0";
+		Double d = Double.parseDouble(str);
 		System.out.println(d.longValue());
 	}
 }

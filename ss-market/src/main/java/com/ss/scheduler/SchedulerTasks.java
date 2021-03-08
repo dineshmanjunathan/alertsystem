@@ -74,7 +74,7 @@ public class SchedulerTasks {
 		System.out.println("Start Daily Reward!");
 		List<Member> memberList = userRepository.getActiveMembersOnly();
 		dailyReward(memberList);
-		activeReward(memberList);
+		//activeReward(memberList);
 		System.out.println("End Daily Reward!");
 	}
 
@@ -99,16 +99,20 @@ public class SchedulerTasks {
 	}
 	
 	private void activeReward(List<Member> memberList) {
-		Optional<SSConfiguration> config = ssConfigRepository.findById("1115");
-		if(!config.isEmpty()) {
-			for (Member member : memberList) {
-				Double rewardVal = config.get().getValue();
-				rewardTransactionRepository.save(prepareRewarTransaction(member.getId(), rewardVal));
-				if (rewardVal > 0) {
-					member.setWalletBalance(member.getWalletBalance() + rewardVal.longValue());
-					userRepository.save(member);
+		try {
+			SSConfiguration config = ssConfigRepository.findById("1115").get();
+			if (config != null) {
+				for (Member member : memberList) {
+					Double rewardVal = config.getValue();
+					rewardTransactionRepository.save(prepareRewarTransaction(member.getId(), rewardVal));
+					if (rewardVal > 0) {
+						member.setWalletBalance(member.getWalletBalance() + rewardVal.longValue());
+						userRepository.save(member);
+					}
 				}
 			}
+		} catch (Exception e) {
+			// do nothing
 		}
 	}
 	

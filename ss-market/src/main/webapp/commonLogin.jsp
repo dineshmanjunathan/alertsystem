@@ -14,13 +14,13 @@
 			<div class="well col-md-4 col-md-offset-4">
 			<!-- <h3 >SS MARKET</h3>  -->
 		<c:choose>
-			<c:when test="${ROLE == 'ADMIN'}">
-				<c:set var="url" scope="session" value="/admin/login" />
-				<h3 >Admin Login</h3>
-			</c:when>
-			<c:otherwise>
+			<c:when test="${ROLE == 'STOCK_POINT'}">
 				<c:set var="url" scope="session" value="/stock/point/login" />
 				<h3 >Stock Point Login</h3>
+			</c:when>
+			<c:otherwise>
+				<c:set var="url" scope="session" value="/admin/login" />
+				<h3 >Admin Login</h3>
 			</c:otherwise>
 		</c:choose>
 		<form action="${url}" method="post">
@@ -48,7 +48,7 @@
                          <div class="col-md-6">
                               <button class="rmk btn btn-success btn-block loginbtn" type="submit" name="submit" value="login">Login</button>
                               <c:choose>
-                              <c:when test="${ROLE != 'ADMIN'}">
+                              <c:when test="${ROLE == 'STOCK_POINT'}">
 									<a class="rmk btn btn-success btn-block loginbtn" href="/index.jsp">Back</a>
 							</c:when>
                             </c:choose>

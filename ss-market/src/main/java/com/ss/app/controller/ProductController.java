@@ -16,6 +16,7 @@ import com.ss.app.entity.Category;
 import com.ss.app.entity.Product;
 import com.ss.app.model.CategoryRepository;
 import com.ss.app.model.ProductRepository;
+import com.ss.utils.Utils;
 
 @Controller
 public class ProductController {
@@ -36,6 +37,9 @@ public class ProductController {
 
 	@RequestMapping("/product")
 	public String inlogin(HttpServletRequest request, ModelMap model) {
+		if(Utils.validateSession(request)) {
+			return "index";
+		}
 		Iterable<Category> categoryList = categoryRepository.findAll();
 		model.addAttribute("categoryList", categoryList);
 		return "productListing";
