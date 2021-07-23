@@ -14,11 +14,8 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.http.HttpRequest;
-
 import com.google.common.collect.Lists;
 import com.ss.app.entity.Member;
-import com.ss.app.entity.SSConfiguration;
 
 public class Utils {
 	/**
@@ -26,46 +23,7 @@ public class Utils {
 	 * @param memberList
 	 * @return
 	 */
-	public HashMap<String, Long> computeMemberCount(Iterable<Member> memberList) {
-		HashMap<String, Long> userList = new HashMap<String, Long>();
-		long active = 0;
-		long inactive = 0;
-		long stock = 0;
-		long todaycount = 0;
-		try {
-			if (memberList != null) {
-				ArrayList<Member> importOrderList = Lists.newArrayList(memberList);
-				for (Member member : importOrderList) {
-					LocalDateTime computeDate = member.getActive_days();
-
-					if (member.getRole() != null && member.getRole().equalsIgnoreCase("ADMIN")) {
-						continue;
-					}
-
-					if (computeDate == null) {
-						computeDate = LocalDateTime.now();
-					}
-					if (computeDate.isAfter(LocalDateTime.now())) {
-						++active;
-					} else {
-						++inactive;
-					}
-					if (member.getRole() != null && member.getRole().equalsIgnoreCase("STOCK_POINT"))
-						++stock;
-					if (member.getCreateon() != null && member.getCreateon().toLocalDate().equals(LocalDate.now()))
-						++todaycount;
-				}
-			}
-			userList.put("ACTIVE_MEMBER", active);
-			userList.put("INACTIVE_MEMBER", inactive);
-			userList.put("STOCK_MEMBER", stock);
-			userList.put("TOTAL_MEMBER", active + inactive);
-			userList.put("TOTAY_MEMBER", todaycount);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return userList;
-	}
+	
 
 	public static String checkNull(String str, String _default) {
 		String result = null;
@@ -104,20 +62,6 @@ public class Utils {
 		map.put("L6", "LEVEL 7 REWARD");
 
 		return map;
-	}
-
-	public static ArrayList<SSConfiguration> getSSConfigTypeList() {
-
-		Map<String, String> map = getSSConfigTypeMap();
-		ArrayList<SSConfiguration> list = new ArrayList<SSConfiguration>();
-		for (String key : map.keySet()) {
-			SSConfiguration ssConfiguration = new SSConfiguration();
-			ssConfiguration.setCode(key);
-			ssConfiguration.setDescription(map.get(key));
-			list.add(ssConfiguration);
-		}
-
-		return list;
 	}
 
 	public static void sendSMS(String Message, String MobileNumbers) {

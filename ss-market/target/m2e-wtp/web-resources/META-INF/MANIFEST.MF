@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Implementation-Title: ssmarket
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: DELL
+Implementation-Vendor-Id: com.hc
+Build-Jdk: 1.8.0_281
+Created-By: Maven Integration for Eclipse
+

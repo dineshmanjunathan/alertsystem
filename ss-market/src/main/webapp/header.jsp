@@ -618,122 +618,19 @@ body, html {
 		        $('#wrapper').toggleClass('toggled');
 		    });
 		});
-		
-		function copyReferelLink() {			
-			  document.getElementById('reference_code').type = 'text';
-			  if(window.location.port){
-			  		document.getElementById('reference_code').value = window.location.protocol+"//"+window.location.hostname+":"+window.location.port+"/register/withreferencecode?sponsorId=${sessionScope.REFERENCE_CODE}";
-			  }else{
-				  document.getElementById('reference_code').value = window.location.protocol+"//"+window.location.hostname+"/register/withreferencecode?sponsorId=${sessionScope.REFERENCE_CODE}";
-			  }
-			  var copyText = document.getElementById("reference_code");
-			  copyText.select();
-			  copyText.setSelectionRange(0, 99999)
-			  document.execCommand("copy");
-			  document.getElementById('reference_code').type = 'hidden';
-			  alert("Link copied to clipboard!");
-		}
 	</script> 
 </head>
-
 
 <nav style="background-image: linear-gradient(#0f68b4,#1a1e2c)" class="navbar navbar-dark bg-primary">
 
 	<div class="header-right-info">
-		<ul class="nav navbar-nav mai-top-nav header-right-menu"
-			style="padding: 20px 60px;">
-			<li class="nav-item"><c:choose>
-					<c:when test="${ not empty sessionScope.LOGGED_ON}">
-						<a href="#" data-toggle="dropdown" role="button"
-							aria-expanded="false" class="nav-link dropdown-toggle"> <span
-							class="admin-name">Logged In as -
-								&nbsp;${sessionScope.MEMBER_NAME}</span> <i
-							class="fa fa-angle-down edu-icon edu-down-arrow"></i>
-						</a>
-						<ul role="menu"
-							class="dropdown-header-top author-log dropdown-menu animated zoomIn">
-							<li><a href="/logout"><span
-									class="edu-icon edu-locked author-log-ic"></span>Logout</a></li>
-						</ul>
-					</c:when>
-				</c:choose></li>
+		<ul class="nav navbar-nav mai-top-nav header-right-menu" style="padding: 20px 60px;">
+			<li class="nav-item">
+					
+				</li>
 		</ul>
 	</div>
 </nav>
-
-<!-- Start Left menu area -->
-<c:if test="${not empty sessionScope.LOGGED_ON}">
-<input type="hidden" name="reference_code" id="reference_code" value="${sessionScope.REFERENCE_CODE}">
-<div id="wrapper" class="">
-   <!--  <div class="overlay"></div> -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
-        <ul class="nav sidebar-nav">
-        <li class="sidebar-brand">
-            <strong><a><img class="main-logo" src="../../img/logo/logo.jpg" alt=""></a></strong>
-            </li>
-            <br><br> <br><br><br>
-        	<c:if test="${fn:contains(sessionScope.ROLE, 'MEMBER')}">
-            <li>
-                <a href="/menu"> <i class="glyphicon glyphicon-home"></i> Home </a>
-            </li>
-            <br><br>
-            <li>
-                <a href="/wallet"><i class="glyphicon glyphicon-folder-close"></i> My Wallet</a>
-            </li><br><br>
-            <li>
-                <a href="/member/repurchase/wallet"><i class="glyphicon glyphicon-hdd"></i> Re-Purchase Wallet</a>
-            </li><br><br>
-            <!--<li>
-                <a href="/purchase/review/edit"><i class="glyphicon glyphicon-check"></i> Click to Purchase</a>
-            </li><br><br>-->
-            <li>
-                <a href="/contactus"><i class="glyphicon glyphicon-pushpin"></i> Contact Us</a>
-            </li>
-            <br><br>
-			<li>
-                 <a href="javascript:copyReferelLink();"><i class="glyphicon glyphicon glyphicon-link"></i> Reference Link </a>
-                <input type="hidden" value="" id="reference_code">
-            </li>
-            
-             <br><br><br>
-            <%@ include file="timmer.jsp"%>
-            </c:if>
-            <c:if test="${fn:contains(sessionScope.ROLE, 'STOCK_POINT')}">
-            <li>
-                <a href="/stock/point/menu"> <i class="glyphicon glyphicon-home"></i> Home </a>
-            </li>
-            <br><br>
-            <li>
-                <a href="/purchase/review/edit"><i class="glyphicon glyphicon-check"></i> Stock Purchase</a>
-            </li><br><br>
-            <li>
-                <a href="/contactus"><i class="glyphicon glyphicon-pushpin"></i> Contact Us</a>
-            </li>
-			</c:if>
-			 <c:if test="${fn:contains(sessionScope.ROLE, 'ADMIN')}">		 
-			<li>
-               <a href="javascript:copyReferelLink();"><i class="glyphicon glyphicon glyphicon-link"></i> Reference Link </a>
-            </li>
-           <input type="hidden" value="" id="reference_code">
-			 </c:if>
-			
-        </ul>
-    </nav>
-    <div id="page-content-wrapper">
-        <button type="button" id = "headerbtn" class="hamburger animated fadeInLeft is-close" data-toggle="offcanvas">
-            <span class="hamb-top"></span>
-            <span class="hamb-middle"></span>
-            <span class="hamb-bottom"></span>
-        </button>
-       <!--  <div class="container">MENU</div> -->
-    </div>
-</div>
-			
-		
-</c:if>
-<!-- <div class="footer" style="background-image: linear-gradient(#0f68b4,#1a1e2c)"><p>© 2021 Copyright: SS Marketing</p>
-</div>
- -->
  
 </html>
 

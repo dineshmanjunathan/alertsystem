@@ -7,68 +7,6 @@
 <%@ include file="header.jsp"%>
 <meta charset="ISO-8859-1">
 <script type="text/javascript" charset="utf-8">
-
-function getSponserName() {
-    	$.ajax({
-            url: "/get/sponser",
-            data: {
-                "sponserId": document.getElementById("referedby").value
-            },
-            type: "get",
-            cache: false,
-            success: function (data) {
-
-            	if(data.length>0) {
-                	var s = document.getElementById("sponsername"); s.value = data;
-                	$("#errmsg").text("");
-                }else{
-                	$("#errmsg").text("Invalid Sponsor Id");
-                	$("span").css("color", "red");
-                    document.getElementById("errmsg").style.visibility = "visible";
-                    document.getElementById("sponsername").value='';
-                }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log('ERROR:' + XMLHttpRequest.status + ', status text: ' + XMLHttpRequest.statusText);
-            }
-        });
-}
-function enableTermsAndCond(){
-	var checker = document.getElementById('terms').checked;
-	var prichecker = document.getElementById('pripolicy').checked;
-	var bt = document.getElementById('btSubmit');
-	if(checker && prichecker){
-		bt.disabled = false;
-	} else {
-		bt.disabled = true;
-	}
-}
-
-function checkPhNumExists() {
-	$.ajax({
-        url: "/member/phNoExists",
-        data: {
-            "phonenumber": document.getElementById("phonenumber").value
-        },
-        type: "get",
-        cache: false,
-        success: function (data) {
-        	if(data.length>0) {
-        		$("#errmsgmobno").text("Mobile Number Already Exists");
-            	$("span").css("color", "red");
-                document.getElementById("errmsgmobno").style.visibility = "visible";
-                document.getElementById("phonenumber").value='';
-            }else{
-            	var s = document.getElementById("phonenumber"); 
-            	s.value = data;
-            	$("#errmsgmobno").text("");
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log('ERROR:' + XMLHttpRequest.status + ', status text: ' + XMLHttpRequest.statusText);
-        }
-    });
-}
 </script>
 </head>
 <body>
@@ -78,7 +16,7 @@ function checkPhNumExists() {
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="product-payment-inner-st">
 					<ul id="myTabedu1" class="tab-review-design">
-						<li class="active"><a href="">Member Registration</a></li>
+						<li class="active"><a href="">User Registration</a></li>
 					</ul>
 				 <div class="payment-adress">
 						<a
@@ -104,37 +42,8 @@ function checkPhNumExists() {
 
 												<p style="color: green" align="center">${successMessage}</p>
 												<p style="color: red" align="center">${deletesuccessmessage}</p>
-												
-												<li class="active"><a >Sponsor Details:</a></li>
-												
-												<div class="well row">
-													<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
-													<c:choose>
-													<c:when test="${not empty member}">
-													<div class="form-group">
-																	<input name="referedby" id="referedby" type="text" onblur="getSponserName();"
-																		class="form-control" placeholder="Sponsor Id"
-																		value="${member.referedby}" readonly>
-													</div>
-													</c:when>
-													<c:otherwise>
-													<div class="form-group">
-																	<input name="referedby" id="referedby" type="text" onblur="getSponserName();"
-																		class="form-control" placeholder="Sponsor Id"
-																		value="${member.referedby}" required>
-													</div>
-													</c:otherwise>
-													</c:choose>
-													<span id="errmsg"></span>
-													</div>
-												<div class=" col-lg-6 col-md-5 col-sm-6 col-xs-12">
-												<div class="form-group">
-																	<input name="sponsername" id="sponsername" type="text"
-																		class="form-control" placeholder="Sponsor Name"
-																		value="${SPONSERNAME}" readonly required>
-												</div>
-												</div>
-												</div>
+																								
+											
 												<li class="active"><a >User Details:</a></li>
 												
 
@@ -184,7 +93,7 @@ function checkPhNumExists() {
 
 													</div>
 														</div>
-														<div class="form-group">
+														<!-- <div class="form-group">
 														<input type="checkbox" name="pripolicy" id="pripolicy" value="Privacy Policy" onclick="enableTermsAndCond();" > I have read and agree to the following 
 														<a target="_blank" data-toggle="modal" data-target="#PrivacyPolicy" rel="nofollow noopener ugc" >Company terms and condition.</a>
 													</div>
@@ -192,7 +101,7 @@ function checkPhNumExists() {
 													<div class="form-group">
 														<input type="checkbox" name="terms" id="terms" value="Conditions" onclick="enableTermsAndCond();"> I have read and agree to the following 
 														<a target="_blank" data-toggle="modal" data-target="#Termsandconditions" rel="nofollow noopener ugc" >Marketing terms and condition.</a>
-													</div>
+													</div> -->
 											</div>
 											<div class="row">
 												<div class="col-lg-12">

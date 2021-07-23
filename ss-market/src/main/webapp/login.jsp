@@ -15,7 +15,7 @@
 		<br />
 	</div>
 	<div class="well col-md-4 col-md-offset-4">
-		<h3>Member Login</h3>
+		<h3>Login</h3>
 		<form action="/login" method="post">
 			<p style="color: red" align="center">${errormsg}</p>
 			<p style="color: green" align="center">${adminlogout}</p>
@@ -48,6 +48,8 @@
 				<div class="col-md-6">
 					<button class="rmk btn btn-success btn-block loginbtn"
 						type="submit" name="submit" value="login">Login</button>
+						<button class="rmk btn btn-success btn-block loginbtn"
+						type="button" href='/user.jsp' value="login">Register</button>
 					<a class="rmk btn btn-success btn-block loginbtn" href="/index.jsp">Back</a>
 
 				</div>
