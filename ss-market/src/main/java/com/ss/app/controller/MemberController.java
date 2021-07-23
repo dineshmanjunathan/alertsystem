@@ -2,10 +2,6 @@ package com.ss.app.controller;
 
 import java.io.OutputStream;
 import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,15 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.Gson;
-import com.ss.app.entity.CountryCode;
 import com.ss.app.entity.Member;
-import com.ss.app.entity.SSConfiguration;
-import com.ss.app.model.CountryCodeRepository;
-import com.ss.app.model.SSConfigRepository;
 import com.ss.app.model.UserRepository;
-import com.ss.app.vo.CountryCodeVo;
-import com.ss.app.vo.MemberTree;
 import com.ss.app.vo.MemberVo;
 import com.ss.utils.ReportGenerator;
 
@@ -42,12 +31,6 @@ public class MemberController {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private CountryCodeRepository countryCodeRepository;
-	
-	@Autowired
-	private SSConfigRepository ssConfigRepository;
 
 	@RequestMapping("/")
 	public String login(HttpServletRequest request, ModelMap model) {
@@ -73,10 +56,7 @@ public class MemberController {
 
 	@RequestMapping("/register")
 	public String user(HttpServletRequest request, ModelMap model) {
-		/*
-		 * Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-		 * model.addAttribute("countryCodeList", countryCodeList);
-		 */
+
 		return "user";
 	}
 
@@ -92,26 +72,28 @@ public class MemberController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String loginSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
 		try {
-			Member member = userRepository.findByIdAndPasswordAndRole(user.getId(), user.getPassword(), "MEMBER").get();
-			if (member != null && member.getId()!=null) {
-				if (!user.getPassword().equals(member.getPassword())) {
-					model.addAttribute("errormsg", "Password is incorrect!");
-					return "login";
-				}
-				request.getSession().setAttribute("LOGGED_ON", "true");
-				request.getSession().setAttribute("MEMBER_ID", user.getId());
-				request.getSession().setAttribute("MEMBER_NAME", member.getName());
-				request.getSession().setAttribute("ROLE", member.getRole());
-				if(member.getActive_days() !=null) {
-					long numOfDays = ChronoUnit.DAYS.between( LocalDateTime.now(), member.getActive_days())+1;
-					request.getSession().setAttribute("ACTIVE_DAYS", numOfDays);
-				} else {
-					request.getSession().setAttribute("ACTIVE_DAYS", 0);
-				}
-				return "menu";
-			} else {
-				model.addAttribute("errormsg", "User Id or Password is incorrect!");
-			}
+//			Member member = userRepository.findByIdAndPasswordAndRole(user.getId(), user.getPassword(), "MEMBER").get();
+//			if (member != null && member.getId()!=null) {
+//				if (!user.getPassword().equals(member.getPassword())) {
+//					model.addAttribute("errormsg", "Password is incorrect!");
+//					return "login";
+//				}
+//				request.getSession().setAttribute("LOGGED_ON", "true");
+//				request.getSession().setAttribute("MEMBER_ID", user.getId());
+//				request.getSession().setAttribute("MEMBER_NAME", member.getName());
+//				request.getSession().setAttribute("ROLE", member.getRole());
+//				if(member.getActive_days() !=null) {
+//					long numOfDays = ChronoUnit.DAYS.between( LocalDateTime.now(), member.getActive_days())+1;
+//					request.getSession().setAttribute("ACTIVE_DAYS", numOfDays);
+//				} else {
+//					request.getSession().setAttribute("ACTIVE_DAYS", 0);
+//				}
+//				return "menu";
+//			} else {
+//				model.addAttribute("errormsg", "User Id or Password is incorrect!");
+//			}
+			
+			return "menu";
 		} catch (Exception e) {
 			model.addAttribute("errormsg", "Member does not Exists!");
 		}
@@ -151,146 +133,7 @@ public class MemberController {
 		return "rePurchase";
 	}
 	
-	@RequestMapping(value = "/wallet/deduction/compute", method = RequestMethod.GET)
-	public String validateRepurchase(HttpServletRequest request, MemberVo user, ModelMap model) {
-		
-		if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) &&
-				user.getRepurcahse() != null && user.getRepurcahse() > 0) {
 
-			SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
-			SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
-
-			try {
-				Long rp = user.getRepurcahse();
-				Long remaningPoint = user.getWalletBalance();
-
-				if (rp > 0) {
-					Double config1 = configurations1.getValue();
-					Double config2 = configurations2.getValue();
-					Double deductAmt1 = (rp.doubleValue() / 100) * config1;
-					Double deductAmt2 = (rp.doubleValue() / 100) * config2;
-					Long totaldeduct = (long) (deductAmt1 + deductAmt2);
-					remaningPoint = remaningPoint - rp;
-					model.addAttribute("DEBIT", totaldeduct);
-					model.addAttribute("REPURCHASE_POINT", (rp - totaldeduct));
-				}
-
-				model.addAttribute("member", user);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
-			}
-
-		}else {
-			model.addAttribute("member", user);
-		}
-		return "rePurchase";
-	}
-
-	@RequestMapping(value = "/updateRePurchase", method = RequestMethod.POST)
-	public String updateToRePurcahse(HttpServletRequest request, MemberVo user, ModelMap model) {
-		try {
-			String userId = (String) request.getSession().getAttribute("MEMBER_ID");
-			Member member = userRepository.findById(userId).get();
-
-			if (user.getWalletBalance() <= user.getRepurcahse()) {
-				model.addAttribute("errormsg", "Given value is greater than available balance!");
-
-				model.addAttribute("member", member);
-
-				return "rePurchase";
-			}
-
-			if ((user.getWalletBalance() != null && user.getWalletBalance() > 0) && user.getRepurcahse() != null
-					&& user.getRepurcahse() > 0) {
-
-				// INCENTIVE DEDUCTION STARTS
-				SSConfiguration configurations1 = ssConfigRepository.findById("1111").get();
-				SSConfiguration configurations2 = ssConfigRepository.findById("1112").get();
-				Long rp = user.getRepurcahse();
-				Long remaningPoint = user.getWalletBalance();
-				Double config1 = configurations1.getValue();
-				Double config2 = configurations2.getValue();
-				Double deductAmt1 = (rp.doubleValue() / 100) * config1;
-				Double deductAmt2 = (rp.doubleValue() / 100) * config2;
-				Long totaldeduct = (long) (deductAmt1 + deductAmt2);
-				remaningPoint = remaningPoint - rp;
-				model.addAttribute("DEBIT", totaldeduct);
-				model.addAttribute("REPURCHASE_POINT", (rp - totaldeduct));
-				// INCENTIVE DEDUCTION ENDS
-
-				member.setRepurcahse(member.getRepurcahse() + (rp - totaldeduct));
-				member.setWalletBalance(remaningPoint);
-				member.setUpdatedon(new Date(System.currentTimeMillis()));
-
-				member = userRepository.save(member);
-
-				member.setTotalbalance(member.getWalletBalance() + member.getWalletWithdrawn());
-				model.addAttribute("userwallet", member);
-
-				model.addAttribute("successMessage", "Points successfully added to Re Purchase!");
-			} else {
-				model.addAttribute("errormsg", "Insufficient balance!");
-				model.addAttribute("member", member);
-				return "rePurchase";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("errormsg", "Failed to add points in  Re Purchase!");
-		}
-		return "wallet";
-	}
-
-	@RequestMapping(value = "/userlisting", method = RequestMethod.GET)
-	public String adminListingSubmit(HttpServletRequest request, ModelMap model) {
-		try {
-			Iterable<Member> userList = userRepository.findAll();
-			model.addAttribute("userList", userList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "userListing";
-	}
-
-	@RequestMapping(value = "/member/tree", method = RequestMethod.GET)
-	public String memberTree(HttpServletRequest request, ModelMap model) {
-		try {
-			List<MemberTree> treeList = new ArrayList<>();
-			String memberId = (String) request.getSession().getAttribute("MEMBER_ID");
-			Member member = userRepository.findById(memberId).get();
-			MemberTree tree = new MemberTree();
-			tree.setId(memberId);
-			tree.setParent("#");
-			tree.setText(memberId);
-			treeList.add(tree);
-			findTree(member.getReferencecode(), memberId, treeList);
-			String json = new Gson().toJson(treeList);
-			System.out.println(json);
-			model.addAttribute("JSON_TREE", json);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "memberTree";
-	}
-
-
-	private void findTree(String basekeyCode, String memberId, List<MemberTree> treeList) {
-		try {
-			List<Member> child = userRepository.findByReferedby(basekeyCode);
-			MemberTree subTree = null;
-			for (Member mem : child) {
-				subTree = new MemberTree();
-				subTree.setId(mem.getId());
-				subTree.setParent(memberId);
-				subTree.setText(mem.getId() + "    [ " + mem.getName() + " ]");
-				treeList.add(subTree);
-				findTree(mem.getReferencecode(), mem.getId(), treeList);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registerSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
@@ -362,71 +205,7 @@ public class MemberController {
 		return "useredit";
 	}
 
-	@RequestMapping("/countryCodeListing")
-	public String countryCodeListing(HttpServletRequest request, ModelMap model) {
-		try {
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
-	}
-
-	@RequestMapping(value = "/countryCode/delete", method = RequestMethod.GET)
-	public String countryCodeDelete(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
-		try {
-			countryCodeRepository.deleteById(Long.parseLong(id));
-			model.addAttribute("deletesuccessmessage", "Deleted Successfully");
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
-	}
-
-	@RequestMapping(value = "/countryCode/edit", method = RequestMethod.GET)
-	public String countryCodeEdit(@RequestParam("id") String id, HttpServletRequest request, ModelMap model) {
-		try {
-			CountryCode countryCode = countryCodeRepository.findById(Long.parseLong(id)).get();
-			CountryCodeVo countryCodeVo = new CountryCodeVo();
-			BeanUtils.copyProperties(countryCodeVo, countryCode);
-			model.addAttribute("countryCode", countryCodeVo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCode";
-	}
-
-	@RequestMapping(value = "/countryCode/edit", method = RequestMethod.POST)
-	public String countryCodeEditSubmit(HttpServletRequest request, CountryCodeVo countryCodeVo, ModelMap model) {
-		CountryCode countryCode = new CountryCode();
-		try {
-			BeanUtils.copyProperties(countryCode, countryCodeVo);
-			countryCodeRepository.save(countryCode);
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-			model.addAttribute("successMessage", "Successfully Edited Admin Record");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
-	}
-
-	@RequestMapping(value = "/countryCode/save", method = RequestMethod.POST)
-	public String countryCodeSubmit(HttpServletRequest request, CountryCodeVo countryCodeVo, ModelMap model) {
-		try {
-			CountryCode countryCode = new CountryCode();
-			BeanUtils.copyProperties(countryCode, countryCodeVo);
-			countryCodeRepository.save(countryCode);
-			Iterable<CountryCode> countryCodeList = countryCodeRepository.findAll();
-			model.addAttribute("countryCodeList", countryCodeList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "countryCodeListing";
-	}
+	
 
 	@RequestMapping(value = "/user/generate/pdf", method = RequestMethod.GET)
 	public void export(@RequestParam("user_id") String userId, ModelAndView model, HttpServletResponse response) {

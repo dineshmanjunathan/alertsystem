@@ -9,7 +9,6 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 import com.ss.app.entity.Member;
-import com.ss.app.entity.SSConfiguration;
 
 public class Utils {
 	/**
@@ -93,19 +92,17 @@ public class Utils {
 		return map;
 	}
 
-	public static ArrayList<SSConfiguration> getSSConfigTypeList() {
-
-		Map<String, String> map = getSSConfigTypeMap();
-		ArrayList<SSConfiguration> list = new ArrayList<SSConfiguration>();
-		for (String key : map.keySet()) {
-			SSConfiguration ssConfiguration = new SSConfiguration();
-			ssConfiguration.setCode(key);
-			ssConfiguration.setDescription(map.get(key));
-			list.add(ssConfiguration);
-		}
-
-		return list;
-	}
+	/*
+	 * public static ArrayList<SSConfiguration> getSSConfigTypeList() {
+	 * 
+	 * Map<String, String> map = getSSConfigTypeMap(); ArrayList<SSConfiguration>
+	 * list = new ArrayList<SSConfiguration>(); for (String key : map.keySet()) {
+	 * SSConfiguration ssConfiguration = new SSConfiguration();
+	 * ssConfiguration.setCode(key); ssConfiguration.setDescription(map.get(key));
+	 * list.add(ssConfiguration); }
+	 * 
+	 * return list; }
+	 */
 
 	public static void main(String[] arg) {
 

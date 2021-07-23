@@ -5,12 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hc</groupId>
-	<artifactId>ssmarket</artifactId>
+	<artifactId>alertsystem</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>ssmarket</name>
-	<description>SS Market</description>
+	<name>alertsystem</name>
+	<description>Alert System</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

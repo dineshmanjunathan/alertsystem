@@ -14,70 +14,44 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="product-payment-inner-st">
 						<center><ul id="myTabedu1" class="tab-review-design">
-							<li class="active"><a href="">Manage Product</a></li>
+							<li class="active"><a href="">Send Messagey</a></li>
 						</ul></center>
-							<div class="payment-adress">
+							<!-- <div class="payment-adress">
 								<a
-									class="btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2" href="/admin/productListing"
+									class="btn btn-primary waves-effect waves-light col-md-offset-10 col-md-2" href="/admin/categoryCodeListing"
 									type="submit" name="submit" value="adminListing">Back</a>
-							</div>
+							</div> -->
 						<!-- </form> -->
 						
 						<div id="myTabContent" class="tab-content custom-product-edit">
 							<div class="product-tab-list tab-pane fade active in"
 								id="description">
 								<div class="row">
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-right: 21%; padding-left: 21%;" >
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-right: 21%; padding-left: 21%;">
 										<div class="review-content-section">
-										<c:choose>
-												<c:when test="${not empty productCode}">
-													<c:url var="action" value="/admin/product/edit"/>
-												</c:when>
-												<c:otherwise>
-													<c:url var="action" value="/admin/product/save"/>
-												</c:otherwise>
-											</c:choose>
-											<form action="${action}" method="post" onsubmit="return ValidateForm(this);">
+
+											<form action="/admin/categoryCode/save" method="post" onsubmit="return ValidateForm(this);">
 											<div id="dropzone1" class="pro-ad">
 											
 													<p style="color: green" align="center">${successMessage}</p>
 													<p style="color: red" align="center">${deletesuccessmessage}</p>
+
 													<div class="row">
 														<div class=" well col-lg-12 col-md-12 col-sm-12 col-xs-12">
 															<div class="form-group">
 															</div>
-															<div class="form-group">															
-															<select name="category" id="category"
-																class="form-control">
-																<option value="">-Select category-</option>
-																<c:forEach var="options" items="${categoryCodeList}" varStatus="status">
-																	<option value="${options.code}" ${options.code == productCode.category.code ? 'selected' : ''}>${options.description}</option>
-																</c:forEach>
-															</select>
-														</div>
 															<div class="form-group">
 																<input name="code" type="text" class="form-control"
-																	placeholder="Product Code" value="${productCode.code}" required>
+																	placeholder="Reference Id" value="${categoryCode.code}" required>
 															</div>
 															<div class="form-group">
-																<input name="prodDesc" type="text" class="form-control"
-																	placeholder="Product Description" value="${productCode.prodDesc}" required>
+																<input name="description" type="textarea" class="form-control"
+																	placeholder="Message" value="${categoryCode.message}" required>
 															</div>
-															
 															<div class="form-group">
-																<input name="quantity" type="number" class="form-control"
-																	placeholder="Quantity" value="${productCode.quantity}" required>
+																<input name="mobileno" type="textarea" class="form-control"
+																	placeholder="Mobile no" value="${categoryCode.mobileno}" required>
 															</div>
-															
-															<div class="form-group">
-																<input name="price" type="text" class="form-control"
-																	placeholder="Price Per-Item" value="${productCode.price}" required>
-															</div>
-															
-															<div class="form-group">
-																<input type="file" name="file" />
-															</div>
-															
 															
 													</div>
 													</div>

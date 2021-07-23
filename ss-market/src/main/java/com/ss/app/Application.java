@@ -5,7 +5,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Component;
 
 import com.ss.app.entity.HibernateSequence;
 import com.ss.app.model.HibernateSequenceRepository;
-import com.ss.app.model.SSConfigRepository;
-import com.ss.config.SessionFilter;
 import com.ss.scheduler.DailyRewardScheduler;
 
 @SpringBootApplication
@@ -53,9 +50,6 @@ class DemoCommandLineRunner implements CommandLineRunner {
 
 	@Autowired
 	private HibernateSequenceRepository hibernateSequenceRepository;
-
-	@Autowired
-	private SSConfigRepository dbConfigRepository;
 
 	@Override
 	public void run(String... args) throws Exception {

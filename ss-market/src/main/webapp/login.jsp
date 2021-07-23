@@ -15,7 +15,6 @@
 			 <h3 >Member Login</h3>  
                   <form action="/login" method="post">
                       	<p style="color:red" align="center">${errormsg}</p>  
-                      	<p style="color:green" align="center">${adminlogout}</p>
                       	<p style="color:green" align="center">${registersuccess}</p> 
                       	<input type="hidden" name="role" value="MEMBER">
                      <div class="row">

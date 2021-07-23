@@ -15,18 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ss.app.entity.Category;
 import com.ss.app.entity.Member;
-import com.ss.app.entity.Product;
-import com.ss.app.entity.SSConfiguration;
-import com.ss.app.entity.StockPointPurchase;
 import com.ss.app.model.CategoryRepository;
-import com.ss.app.model.ProductRepository;
-import com.ss.app.model.SSConfigRepository;
-import com.ss.app.model.StockPointPurchaseRepository;
 import com.ss.app.model.UserRepository;
 import com.ss.app.vo.CategoryVo;
 import com.ss.app.vo.MemberVo;
-import com.ss.app.vo.ProductVo;
-import com.ss.app.vo.SSConfigurationVo;
 import com.ss.utils.Utils;
 
 @Controller
@@ -38,14 +30,6 @@ public class AdminController {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	@Autowired
-	private ProductRepository productRepository;
-	
-	@Autowired
-	private SSConfigRepository ssConfigRepo;
-	
-	@Autowired
-	private StockPointPurchaseRepository stockPurchaseRepository;
 	
 	@RequestMapping("/admin/login")
 	public String inlogin(HttpServletRequest request,ModelMap model) {
@@ -205,169 +189,5 @@ public class AdminController {
 		}
 		return "categoryCodeListing";
 	}
-	
-	
-	@RequestMapping("/admin/productListing")
-	public String productListing(HttpServletRequest request,ModelMap model) { 
-		try {
-			Iterable<Product> productList = productRepository.findAll();
-			model.addAttribute("productListing", productList); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}  
-		return "productListing";
-	}
 
-	@RequestMapping(value="/admin/product/delete",method=RequestMethod.GET)
-	public String productDelete(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) { 
-		try {
-			
-			Long val=productRepository.deleteByCode(id);
-			if(val>0) {
-				model.addAttribute("deletesuccessmessage","Product Deleted Successfully.");
-			}else {
-				model.addAttribute("deletesuccessmessage","Unable To Deleted Product.");
-			}
-			Iterable<Product> productList = productRepository.findAll();
-			model.addAttribute("productListing", productList); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}  
-		return "productListing";
-	}
-	
-	@RequestMapping(value="/admin/product/edit",method=RequestMethod.GET)
-	public String productEdit(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) { 
-		try {
-			Product productCode = productRepository.findByCode(id);
-			ProductVo productVo=new ProductVo();
-			BeanUtils.copyProperties(productCode,productVo);
-			model.addAttribute("productCode", productVo); 
-			
-			Iterable<Category> categoryCodeList = categoryRepository.findAll();
-			model.addAttribute("categoryCodeList", categoryCodeList); 
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "product";  
-	}
-
-
-	@RequestMapping(value="/admin/product/edit",method=RequestMethod.POST)
-	public String productEditSubmit(HttpServletRequest request,ProductVo productVo,ModelMap model) {
-		Product product=new Product();
-		try {
-			BeanUtils.copyProperties(productVo,product);
-			productRepository.save(product);
-			Iterable<Product> productList = productRepository.findAll();
-			model.addAttribute("productListing", productList); 
-			model.addAttribute("successMessage","Product Updated Successfully."); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "productListing";
-	}	
-	
-	@RequestMapping("/admin/product")
-	public String inproduct(HttpServletRequest request,ModelMap model) {
-		
-		Iterable<Category> categoryCodeList = categoryRepository.findAll();
-		model.addAttribute("categoryCodeList", categoryCodeList); 
-		
-		return "product";
-	} 
-	
-	@RequestMapping(value="/admin/product/save",method=RequestMethod.POST)
-	public String categoryCodeSubmit(HttpServletRequest request,ProductVo productVo,ModelMap model) {
-		try {
-			Product product=new Product();
-			
-			BeanUtils.copyProperties(productVo,product);			
-			productRepository.save(product);
-			Iterable<Product> productList = productRepository.findAll();
-			model.addAttribute("productListing", productList); 
-			model.addAttribute("successMessage","Product Added Successfully."); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "productListing";
-	}
-	
-	@RequestMapping("/admin/stockpurchase/listing")
-	public String stockpurchaseListing(HttpServletRequest request,ModelMap model) {
-		Iterable<StockPointPurchase> purchaseList = stockPurchaseRepository.findAll();
-		model.addAttribute("stockPoitPurchaseList",purchaseList);
-		return "stockPointPurcahseList";
-	} 
-	
-	@RequestMapping("/admin/ssconfig/listing")
-	public String ssconfigListing(HttpServletRequest request,ModelMap model) {
-		Iterable<SSConfiguration> ssConfig = ssConfigRepo.findAll();
-		model.addAttribute("ssConfigList",ssConfig);
-		return "ssConfigList";
-	}
-	
-	@RequestMapping(value="/admin/ssconfig/edit",method=RequestMethod.GET)
-	public String ssconfigEdit(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) {
-		SSConfiguration ssConfig = ssConfigRepo.findById(id).get();
-		model.addAttribute("ssConfigDetail",ssConfig);
-		model.addAttribute("ssConfigType", Utils.getSSConfigTypeList()); 
-		return "ssConfigEdit";
-	}
-	
-	@RequestMapping(value="/admin/ssconfig/edit",method=RequestMethod.POST)
-	public String ssconfigEditSubmit(HttpServletRequest request,SSConfigurationVo ssConfigurationVo,ModelMap model) {
-		SSConfiguration ssConfiguration=new SSConfiguration();
-		try {
-			BeanUtils.copyProperties(ssConfigurationVo,ssConfiguration);
-			ssConfiguration.setDescription(Utils.getSSConfigTypeMap().get(ssConfiguration.getCode()));
-			ssConfigRepo.save(ssConfiguration);
-			Iterable<SSConfiguration> ssConfig = ssConfigRepo.findAll();
-			model.addAttribute("ssConfigList",ssConfig);
-			model.addAttribute("successMessage","Configuration Updated Successfully.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "ssConfigList";
-	}
-	
-	@RequestMapping(value="/admin/ssconfig/delete",method=RequestMethod.GET)
-	public String ssconfigDelete(@RequestParam("id")String id,HttpServletRequest request,ModelMap model) { 
-		try {
-			Long val=ssConfigRepo.deleteByCode(id);
-			if(val>0) {
-				model.addAttribute("deletesuccessmessage", id+" - Configuration Deleted Successfully.");
-			}else {
-				model.addAttribute("deletesuccessmessage",id+" - Unable to Deleted.");
-			}
-			Iterable<SSConfiguration> ssConfig = ssConfigRepo.findAll();
-			model.addAttribute("ssConfigList",ssConfig);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}  
-		return "ssConfigList";
-	}
-	
-	@RequestMapping(value="/admin/ssconfig/save",method=RequestMethod.POST)
-	public String ssconfigSave(HttpServletRequest request,SSConfigurationVo ssConfigurationVo,ModelMap model) {
-		try {
-			SSConfiguration ssConfiguration=new SSConfiguration();
-			BeanUtils.copyProperties(ssConfigurationVo,ssConfiguration);
-			ssConfiguration.setDescription(Utils.getSSConfigTypeMap().get(ssConfiguration.getCode()));
-			ssConfigRepo.save(ssConfiguration);
-			Iterable<SSConfiguration> ssConfig = ssConfigRepo.findAll();
-			model.addAttribute("ssConfigList",ssConfig);
-			model.addAttribute("successMessage","Configuration Added Successfully."); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "ssConfigList";
-	}
-	@RequestMapping("/admin/ssconfig")
-	public String inSSConfig(HttpServletRequest request,ModelMap model) {
-
-		model.addAttribute("ssConfigType", Utils.getSSConfigTypeList()); 
-		return "ssConfigEdit";
-	} 
 }
