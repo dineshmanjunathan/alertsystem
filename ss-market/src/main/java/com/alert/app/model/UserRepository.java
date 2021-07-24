@@ -1,4 +1,4 @@
-package com.ss.app.model;
+package com.alert.app.model;
 
 
 import java.util.Optional;
@@ -8,12 +8,12 @@ import javax.transaction.Transactional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import com.ss.app.entity.Member;
+import com.alert.app.entity.User;
 
 @Service
-public interface UserRepository extends CrudRepository<Member, String>{
+public interface UserRepository extends CrudRepository<User, String>{
 		
-	Optional<Member> findById(String id);
+	Optional<User> findById(String id);
 	
 	@Transactional
 	void deleteById(String id);

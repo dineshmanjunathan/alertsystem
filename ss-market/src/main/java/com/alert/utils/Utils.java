@@ -1,4 +1,4 @@
-package com.ss.utils;
+package com.alert.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -7,15 +7,17 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alert.app.entity.User;
 import com.google.common.collect.Lists;
-import com.ss.app.entity.Member;
 
 public class Utils {
 	/**
@@ -138,10 +140,25 @@ public class Utils {
 			request.getSession().invalidate();
 		return true;
 	}
+	
+	public static List<String> stringtolist(String value) {
+		List<String> list = new ArrayList<String>();
+
+		try {
+			if (value != null) {
+				String str[] = value.split(",");
+				list = Arrays.asList(str);
+				for (String s : list) {
+					//System.out.println(s);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 	public static void main(String[] arg) {
-		String str = "1.0";
-		Double d = Double.parseDouble(str);
-		System.out.println(d.longValue());
+		System.out.println(stringtolist("1,2,6"));
 	}
 }

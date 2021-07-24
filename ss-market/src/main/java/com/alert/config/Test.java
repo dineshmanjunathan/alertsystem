@@ -1,4 +1,4 @@
-package com.ss.config;
+package com.alert.config;
 
 import java.util.ArrayList;
 

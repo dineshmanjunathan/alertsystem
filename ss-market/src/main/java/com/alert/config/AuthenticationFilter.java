@@ -1,4 +1,4 @@
-package com.ss.config;
+package com.alert.config;
 
 import java.io.IOException;
 import javax.servlet.Filter;

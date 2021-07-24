@@ -1,9 +1,9 @@
-package com.ss.app.vo;
+package com.alert.app.vo;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
 
-public class MemberVo {
+public class UserVo {
 
 	private String id;
 	private String name;

@@ -1,10 +1,9 @@
-package com.ss.app.controller;
+package com.alert.app.controller;
 
 import java.sql.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,20 +13,27 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.ss.app.entity.Member;
-import com.ss.app.entity.Notification;
-import com.ss.app.model.NotificationRepository;
-import com.ss.app.model.UserRepository;
-import com.ss.app.vo.MemberVo;
-import com.ss.utils.Utils;
+import com.alert.app.entity.Message;
+import com.alert.app.entity.Notification;
+import com.alert.app.entity.User;
+import com.alert.app.model.MessageRepository;
+import com.alert.app.model.NotificationRepository;
+import com.alert.app.model.UserRepository;
+import com.alert.app.vo.MessageVo;
+import com.alert.app.vo.UserVo;
+import com.alert.utils.Utils;
 
 @Controller
-public class MemberController {
+public class MessageController {
 
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private MessageRepository messageRepository;
+	
 	@Autowired
 	private NotificationRepository notificationRepository;
 	
@@ -89,7 +95,7 @@ public class MemberController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String loginSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
+	public String loginSubmit(HttpServletRequest request, UserVo user, ModelMap model) {
 		try {
 //			Member member = userRepository.findByIdAndPasswordAndRole(user.getId(), user.getPassword(), "MEMBER").get();
 //			if (member != null && member.getId() != null) {
@@ -117,7 +123,7 @@ public class MemberController {
 //				model.addAttribute("errormsg", "User Id or Password is incorrect!");
 //			}
 			
-			return "entermsg";
+			return "message";
 		} catch (Exception e) {
 			model.addAttribute("errormsg", "Member does not Exists!");
 		}
@@ -127,29 +133,15 @@ public class MemberController {
 
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
+	public String registerSubmit(HttpServletRequest request, UserVo user, ModelMap model) {
 		try {
 			String role = (String) request.getSession().getAttribute("ROLE");
 
-			Member userEntity = new Member();
+			User userEntity = new User();
 			model.addAttribute("member", user);
 
 			BeanUtils.copyProperties(user, userEntity, "createon", "updatedon");
 
-			Member phMember = userRepository.save(userEntity);
-
-			phMember = userRepository.save(phMember);
-
-			model.addAttribute("registersuccess", "Member Registered Successfully!");
-			model.addAttribute("successMsgMemberId",
-					"Your Login Member Id and Referral Code is <b>" + phMember.getId() + "</b>");
-			model.addAttribute("successMsgNote", "<b>Note:</b> Please save above details for future reference.");
-
-			// ADD NOTIFY
-			String msg = "Dear " + phMember.getName() + ", Welcome to Xylo Alert System.\nYour User ID : "
-					+ phMember.getId() + " Password : " + phMember.getPassword() + "\nPlease login to #";
-			Notification notification = setNotificationSMS(msg, phMember);
-			notificationRepository.save(notification);
 
 			// TODO SMS to member mobile number
 		} catch (Exception e) {
@@ -166,7 +158,7 @@ public class MemberController {
 			return "login";
 		}
 		try {
-			Member user = userRepository.findById(userId).get();
+			User user = userRepository.findById(userId).get();
 			model.addAttribute("member", user);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,18 +167,18 @@ public class MemberController {
 	}
 
 	@RequestMapping(value = "/user/edit", method = RequestMethod.POST)
-	public String editSubmit(HttpServletRequest request, MemberVo user, ModelMap model) {
+	public String editSubmit(HttpServletRequest request, UserVo user, ModelMap model) {
 		if(Utils.validateMember(request)) {
 			return "login";
 		}
-		Member userEntity = new Member();
+		User userEntity = new User();
 		try {
-			Member actualmember = userRepository.findById(user.getId()).get();
+			User actualmember = userRepository.findById(user.getId()).get();
 			BeanUtils.copyProperties(user, userEntity);
 			
 			userEntity.setUpdatedon(new Date(System.currentTimeMillis()));
 
-			Member member = userRepository.save(userEntity);
+			User member = userRepository.save(userEntity);
 
 			model.addAttribute("member", member);
 			model.addAttribute("successMessage", "Member profile updated successfully");
@@ -196,21 +188,44 @@ public class MemberController {
 		return "useredit";
 	}
 
-	
 
 	@RequestMapping("/get/member")
 	public ResponseEntity<String> findMember(@RequestParam("memberId") String memberId, HttpServletRequest request,
 			ModelMap model) {
-		Member member = userRepository.findById(memberId).get();
+		User member = userRepository.findById(memberId).get();
 		return new ResponseEntity<String>(member.getName(), HttpStatus.OK);
 	}
 	
-	private Notification setNotificationSMS(String msg, Member member) {
+	@RequestMapping("message/trigger")
+	public String triggerMsg(HttpServletRequest request, MessageVo message,
+			ModelMap model,@RequestParam(required = false) MultipartFile file) {
+		Notification notifyEntity = new Notification();
+		try {
+
+			if (file!=null && !file.isEmpty()) {
+				byte[] fileByte = file.getBytes();
+				notifyEntity.setFile(fileByte);
+			}
+			notifyEntity.setMobileno(message.getMobileno());
+			notifyEntity.setMessage(message.getMessage());
+			notifyEntity.setType(message.getType());
+			notificationRepository.save(notifyEntity);
+			
+			// model.addAttribute("message", msgEntity);
+			model.addAttribute("successMessage",
+					"Your Request is taken.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "message";
+	}
+	
+	private Notification setNotificationSMS(String msg, User member) {
 		Notification notification = new Notification();
 		if (msg != null && !msg.isEmpty() && member!=null) {
 			notification.setType("SMS");
 			notification.setMessage(msg);
-			notification.setMember(member);
 		}
 		return notification;
 	}

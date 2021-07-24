@@ -1,4 +1,4 @@
-package com.ss.app.controller;
+package com.alert.app.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ss.app.entity.EnterMessage;
-import com.ss.app.entity.Member;
-import com.ss.app.model.CategoryRepository;
-import com.ss.app.model.NotificationRepository;
-import com.ss.app.model.UserRepository;
-import com.ss.app.vo.EnterMessageVo;
-import com.ss.app.vo.MemberVo;
-import com.ss.utils.Utils;
+import com.alert.app.entity.Message;
+import com.alert.app.entity.User;
+import com.alert.app.model.MessageRepository;
+import com.alert.app.model.NotificationRepository;
+import com.alert.app.model.UserRepository;
+import com.alert.app.vo.MessageVo;
+import com.alert.app.vo.UserVo;
+import com.alert.utils.Utils;
 
 @Controller
 public class AdminController {
@@ -30,7 +30,7 @@ public class AdminController {
 	private UserRepository userRepository;
 
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private MessageRepository categoryRepository;
 
 	
 	@Autowired
@@ -59,7 +59,7 @@ public class AdminController {
 		if(Utils.validateAdmin(request)) {
 			return "commonLogin";
 		}
-		Iterable<Member> memberList = userRepository.findAll();
+		Iterable<User> memberList = userRepository.findAll();
 		model.addAttribute("memberList", memberList);
 		return "memberListing";
 	}
@@ -73,25 +73,7 @@ public class AdminController {
 		return "useredit";
 	}
 
-	@RequestMapping("/admin/user/delete")
-	public String delete(@RequestParam("user_id") String userId, HttpServletRequest request, ModelMap model) {
-		if(Utils.validateAdmin(request)) {
-			return "commonLogin";
-		}
-		try {
-
-			//addressRepository.deleteByMember_Id(userId);
-			userRepository.deleteById(userId);
-			notificationRepository.deleteByMember_Id(userId);
-
-			model.addAttribute("deletesuccessmessage", "Member Deleted Successfully.");
-			Iterable<Member> memberList = userRepository.findAll();
-			model.addAttribute("memberList", memberList);
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
-		return "memberListing";
-	}
+	
 
 	@RequestMapping("/admin/categoryCodeListing")
 	public String categoryCodeListing(HttpServletRequest request, ModelMap model) {
@@ -99,7 +81,7 @@ public class AdminController {
 			return "commonLogin";
 		}
 		try {
-			List<EnterMessage> categoryCodeList = (List<EnterMessage>) categoryRepository.findAll();
+			List<Message> categoryCodeList = (List<Message>) categoryRepository.findAll();
 			model.addAttribute("categoryCodeList", categoryCodeList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,15 +103,15 @@ public class AdminController {
 	 */
 
 	@RequestMapping(value = "/admin/categoryCode/edit", method = RequestMethod.POST)
-	public String categoryCodeEditSubmit(HttpServletRequest request, EnterMessageVo categoryCodeVo, ModelMap model) {
+	public String categoryCodeEditSubmit(HttpServletRequest request, MessageVo categoryCodeVo, ModelMap model) {
 		if(Utils.validateAdmin(request)) {
 			return "commonLogin";
 		}
-		EnterMessage categoryCode = new EnterMessage();
+		Message categoryCode = new Message();
 		try {
 			BeanUtils.copyProperties(categoryCodeVo, categoryCode);
 			categoryRepository.save(categoryCode);
-			Iterable<EnterMessage> categoryCodeList = categoryRepository.findAll();
+			Iterable<Message> categoryCodeList = categoryRepository.findAll();
 			model.addAttribute("categoryCodeList", categoryCodeList);
 			model.addAttribute("successMessage", "Category Updated Successfully.");
 		} catch (Exception e) {
@@ -147,15 +129,15 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/admin/categoryCode/save", method = RequestMethod.POST)
-	public String categoryCodeSubmit(HttpServletRequest request, EnterMessageVo categoryCodeVo, ModelMap model) {
+	public String categoryCodeSubmit(HttpServletRequest request, MessageVo categoryCodeVo, ModelMap model) {
 		if(Utils.validateAdmin(request)) {
 			return "commonLogin";
 		}
 		try {
-			EnterMessage categoryCode = new EnterMessage();
+			Message categoryCode = new Message();
 			BeanUtils.copyProperties(categoryCodeVo, categoryCode);
 			categoryRepository.save(categoryCode);
-			Iterable<EnterMessage> categoryCodeList = categoryRepository.findAll();
+			Iterable<Message> categoryCodeList = categoryRepository.findAll();
 			model.addAttribute("categoryCodeList", categoryCodeList);
 			model.addAttribute("successMessage", "Category Added Successfully.");
 		} catch (Exception e) {

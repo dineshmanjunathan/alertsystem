@@ -1,5 +1,5 @@
 
-package com.ss.utils;
+package com.alert.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

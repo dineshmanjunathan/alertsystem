@@ -74,7 +74,7 @@
 																placeholder="Date of Birth" value="${member.dob}"
 																required>
 														</div>
-
+															
 														<div class="form-group">
 															<label>Gender :</label> <input name="gender"
 																class=" required " id="gender" type="radio" value="Male"

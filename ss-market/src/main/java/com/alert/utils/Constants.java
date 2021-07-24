@@ -1,4 +1,4 @@
-package com.ss.utils;
+package com.alert.utils;
 
 public class Constants {
 	

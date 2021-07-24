@@ -1,4 +1,4 @@
-package com.ss.app.entity;
+package com.alert.app.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "t_member")
-public class Member implements Serializable {
+public class User implements Serializable {
 	
 	/**
 	 * 
